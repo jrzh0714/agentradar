@@ -1,85 +1,177 @@
-export default function HomePage() {
+// Force dynamic rendering — data changes as new items are ingested and ranked.
+export const dynamic = 'force-dynamic'
+
+import { formatCount } from '@/lib/utils'
+import { ItemSection } from '@/components/ItemSection'
+import {
+  getTopPicks,
+  getLatestHighSignal,
+  getTrendingGithub,
+  getAiNews,
+  getAgentTools,
+  getHomepageStats,
+} from '@/lib/db/homepage'
+
+export default async function HomePage() {
+  // Fetch all sections in parallel — single round-trip latency.
+  const [topPicks, latestSignal, trending, aiNews, agentTools, stats] =
+    await Promise.all([
+      getTopPicks(),
+      getLatestHighSignal(),
+      getTrendingGithub(),
+      getAiNews(),
+      getAgentTools(),
+      getHomepageStats(),
+    ])
+
   return (
-    <div className="flex min-h-screen flex-col">
-      <header className="border-b border-zinc-800 px-6 py-4">
-        <div className="mx-auto flex max-w-5xl items-center justify-between">
+    <div className="flex min-h-screen flex-col bg-zinc-950">
+      {/* ── Header ─────────────────────────────────────────────────────────── */}
+      <header className="sticky top-0 z-10 border-b border-zinc-800/80 bg-zinc-950/90 backdrop-blur-sm">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-3">
-            <span className="font-mono text-sm font-semibold tracking-tight text-zinc-100">
+            <span className="font-mono text-sm font-bold tracking-tight text-zinc-100">
               AgentRadar
             </span>
-            <span className="rounded bg-zinc-800 px-2 py-0.5 font-mono text-xs text-zinc-400">
+            <span className="rounded-full bg-zinc-800 px-2 py-0.5 font-mono text-xs text-zinc-500">
               beta
             </span>
           </div>
-          <nav className="flex items-center gap-6 font-mono text-sm text-zinc-400">
-            <a href="/search" className="transition-colors hover:text-zinc-100">
+          <nav className="flex items-center gap-6 font-mono text-xs text-zinc-500">
+            <a href="/search" className="transition-colors hover:text-zinc-200">
               search
             </a>
-            <a href="/digest" className="transition-colors hover:text-zinc-100">
+            <a href="/digest" className="transition-colors hover:text-zinc-200">
               digest
             </a>
           </nav>
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-16">
-        <div className="mb-16">
-          <h1 className="mb-4 font-mono text-3xl font-semibold tracking-tight text-zinc-100">
-            AI tool discovery,
-            <br />
-            ranked for developers.
+      <main className="mx-auto w-full max-w-6xl flex-1 px-6">
+        {/* ── Hero ───────────────────────────────────────────────────────────── */}
+        <section className="py-16">
+          <div className="mb-3 flex items-center gap-2">
+            <span className="inline-block h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_8px_2px_rgba(52,211,153,0.4)]" />
+            <span className="font-mono text-xs text-emerald-500">live feed</span>
+          </div>
+
+          <h1 className="mb-5 font-mono text-4xl font-bold tracking-tight text-zinc-100 sm:text-5xl">
+            Agent<span className="text-zinc-400">Radar</span>
           </h1>
-          <p className="max-w-xl text-base leading-relaxed text-zinc-400">
-            AgentRadar tracks GitHub repos, Hacker News discussions, and technical blogs for
-            emerging GenAI tools, agent frameworks, and developer workflows — then summarizes what
-            matters and why.
-          </p>
-        </div>
 
-        <div className="mb-16 grid grid-cols-1 gap-4 sm:grid-cols-3">
-          {[
-            {
-              label: 'GitHub',
-              description: 'Repos matching agent, LLM, RAG, and MCP queries',
-              indicator: 'bg-emerald-500',
-            },
-            {
-              label: 'Hacker News',
-              description: 'Stories and discussions from the AI engineering community',
-              indicator: 'bg-orange-500',
-            },
-            {
-              label: 'RSS',
-              description: 'OpenAI, Anthropic, LangChain, Vercel, Simon Willison, and more',
-              indicator: 'bg-sky-500',
-            },
-          ].map((source) => (
-            <div
-              key={source.label}
-              className="rounded-lg border border-zinc-800 bg-zinc-900 p-5"
-            >
-              <div className="mb-3 flex items-center gap-2">
-                <span className={`h-2 w-2 rounded-full ${source.indicator}`} />
-                <span className="font-mono text-sm font-medium text-zinc-100">{source.label}</span>
-              </div>
-              <p className="text-sm leading-relaxed text-zinc-400">{source.description}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="rounded-lg border border-zinc-800 bg-zinc-900 px-6 py-8 text-center">
-          <p className="mb-1 font-mono text-sm text-zinc-400">Ingestion pipeline coming in Phase 2.</p>
-          <p className="font-mono text-xs text-zinc-600">
-            Feed will appear here once items are ingested and ranked.
+          <p className="mb-3 max-w-2xl text-lg leading-relaxed text-zinc-300">
+            Track emerging AI agents, developer tools, open-source projects, and model
+            updates in one curated feed.
           </p>
+
+          <p className="mb-10 max-w-2xl text-sm leading-relaxed text-zinc-500">
+            Items are continuously ingested from GitHub, Hacker News, and technical blogs,
+            enriched by AI to extract category, maturity, and relevance, then ranked by a
+            composite score that weighs signal quality, recency, and community adoption.
+          </p>
+
+          {/* Stats strip */}
+          <div className="flex flex-wrap gap-6">
+            <Stat value={formatCount(stats.total)} label="enriched items" />
+            <Stat value={formatCount(stats.github)} label="GitHub repos" indicator="bg-emerald-500" />
+            <Stat value={formatCount(stats.rss)} label="RSS articles" indicator="bg-sky-500" />
+            <Stat value={String(stats.hackernews)} label="HN stories" indicator="bg-orange-500" />
+          </div>
+        </section>
+
+        {/* ── Divider ────────────────────────────────────────────────────────── */}
+        <hr className="border-zinc-800" />
+
+        {/* ── Sections ───────────────────────────────────────────────────────── */}
+        <div className="space-y-16 py-14">
+
+          {/* 1. Top Picks */}
+          <ItemSection
+            title="Top Picks"
+            description="Highest-signal tools and updates across all sources."
+            items={topPicks}
+            columns={3}
+            compact
+            emptyMessage="No top picks yet — run enrichment and ranking first."
+          />
+
+          {/* 2. Latest High-Signal */}
+          <ItemSection
+            title="Latest High-Signal Updates"
+            description="Recently published items with strong AI/engineering relevance."
+            items={latestSignal}
+            columns={2}
+            emptyMessage="No recent items found."
+          />
+
+          {/* 3. Trending GitHub */}
+          <ItemSection
+            title="Trending GitHub Projects"
+            description="Open-source repos gaining momentum in the AI engineering ecosystem."
+            items={trending}
+            columns={2}
+            emptyMessage="No GitHub projects found — run the GitHub ingestion script."
+          />
+
+          {/* 4. AI News & Research */}
+          <ItemSection
+            title="AI News & Research"
+            description="Model launches, research papers, and platform updates from blogs and HN."
+            items={aiNews}
+            columns={2}
+            emptyMessage="No news or research items found."
+          />
+
+          {/* 5. Agent & MCP Tools */}
+          <ItemSection
+            title="Agent & MCP Tools"
+            description="Frameworks, tool-use libraries, and automation platforms for AI builders."
+            items={agentTools}
+            columns={2}
+            emptyMessage="No agent or MCP tools found."
+          />
+
         </div>
       </main>
 
-      <footer className="border-t border-zinc-800 px-6 py-6">
-        <div className="mx-auto max-w-5xl font-mono text-xs text-zinc-600">
-          AgentRadar — built with Next.js, Supabase, and Claude
+      {/* ── Footer ─────────────────────────────────────────────────────────── */}
+      <footer className="border-t border-zinc-800 py-8">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <span className="font-mono text-xs text-zinc-600">
+              AgentRadar — built with Next.js, Supabase, and Claude
+            </span>
+            <div className="flex items-center gap-4 font-mono text-xs text-zinc-700">
+              <span>{formatCount(stats.total)} items indexed</span>
+              <span>·</span>
+              <span>AI-enriched & ranked</span>
+            </div>
+          </div>
         </div>
       </footer>
+    </div>
+  )
+}
+
+// ── Small helpers ─────────────────────────────────────────────────────────────
+
+function Stat({
+  value,
+  label,
+  indicator,
+}: {
+  value: string
+  label: string
+  indicator?: string
+}) {
+  return (
+    <div className="flex items-center gap-2">
+      {indicator && (
+        <span className={`h-2 w-2 rounded-full ${indicator}`} />
+      )}
+      <span className="font-mono text-sm font-semibold text-zinc-100">{value}</span>
+      <span className="font-mono text-sm text-zinc-500">{label}</span>
     </div>
   )
 }
