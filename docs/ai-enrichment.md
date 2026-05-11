@@ -85,6 +85,18 @@ The AI must return this JSON shape:
 
 **relevance_score:** integer 1–10. Divided by 10 before writing to the DB (`ai_relevance_score` column is `numeric(4,3)` with a 0–1 constraint).
 
+### Scoring anchors
+
+| Score | Meaning |
+|---|---|
+| 9–10 | Breakthrough: major model release, foundational new agent framework, seminal research |
+| 7–8 | Strong: solid open-source AI tool, meaningful framework update, practical LLM tutorial |
+| 5–6 | Useful but narrower: adjacent tool, interesting experiment, niche library |
+| 3–4 | Adjacent or minor: platform feature, pricing update, marketing, general dev tool |
+| 1–2 | Off-topic: company news, hiring, events, non-technical marketing |
+
+RSS product/pricing announcements (Vercel, GitHub, etc.) default to 2–4 unless the content is directly about AI agents, LLM integration, or AI developer workflows.
+
 ## Cost controls
 
 - Default batch: 10 items per run (`--limit N` to change).
@@ -114,10 +126,20 @@ If step 2, 3, or 4 fails → retry once. If still invalid → mark item `failed`
 
 ## Re-enriching items
 
-Items are fetched where `status = 'new' OR ai_summary IS NULL`. To re-enrich already-enriched items (e.g., to replace mock output with real AI output), reset them in Supabase:
+Items are fetched where `status = 'new' OR ai_summary IS NULL`. To re-enrich already-enriched items (e.g., to replace mock output with real AI output), reset them in Supabase SQL Editor:
 
 ```sql
-UPDATE items SET status = 'new', ai_summary = NULL WHERE status = 'enriched';
+-- Reset ALL enriched items (e.g. after a mock run or prompt change)
+UPDATE items
+SET status = 'new', ai_summary = NULL, ai_why_it_matters = NULL
+WHERE status = 'enriched';
 ```
 
-Then run `npm run enrich -- --limit 500`.
+Then run enrichment in batches:
+
+```bash
+npm run enrich -- --limit 200
+# repeat until "Nothing to do"
+```
+
+After a prompt change that affects scoring or categorisation, always reset and re-enrich to maintain consistent data quality.
