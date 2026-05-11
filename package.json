@@ -8,13 +8,14 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "echo \"No tests yet\"",
+    "test": "npx tsx --test lib/ranking/score.test.ts",
     "ingest:github": "npx tsx scripts/ingest-github.ts",
     "ingest:hn": "npx tsx scripts/ingest-hn.ts",
     "ingest:rss": "npx tsx scripts/ingest-rss.ts",
     "ingest:all": "npx tsx scripts/ingest-all.ts",
     "fix:rss-feeds": "npx tsx scripts/fix-rss-feeds.ts",
-    "enrich": "npx tsx scripts/enrich-items.ts"
+    "enrich": "npx tsx scripts/enrich-items.ts",
+    "rank": "npx tsx scripts/rank-items.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.52.0",
