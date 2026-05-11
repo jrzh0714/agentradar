@@ -40,6 +40,16 @@ External sources (GitHub API, HN Algolia, RSS) → ingestion API routes or cron 
 - **Read layer**: API routes (or Server Components) that query Supabase and return typed, validated data to the UI.
 - **UI**: Client and Server Components using shadcn/ui + Tailwind. No direct database or AI calls from client components.
 
+### Supabase keys
+
+Supabase now issues **publishable keys** (`sb_publishable_...`) in place of the legacy anon key.
+
+| Variable | Used in | Notes |
+|---|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | client + server | safe to expose |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | browser client only | replaces old `ANON_KEY` |
+| `SUPABASE_SERVICE_ROLE_KEY` | server only | never expose to browser |
+
 ### Security invariants
 
 `SUPABASE_SERVICE_ROLE_KEY`, `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, and `GITHUB_TOKEN` are server-side only. Never import or reference them in client components or expose them in API responses.
