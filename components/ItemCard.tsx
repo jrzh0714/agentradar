@@ -2,7 +2,7 @@ import { cn, formatRelativeDate, formatCount } from '@/lib/utils'
 import { SourceBadge } from '@/components/ui/SourceBadge'
 import { CategoryBadge } from '@/components/ui/CategoryBadge'
 import { MaturityBadge } from '@/components/ui/MaturityBadge'
-import { ScorePill, RankScoreBadge } from '@/components/ui/ScorePill'
+import { ScorePill } from '@/components/ui/ScorePill'
 import { TagList } from '@/components/ui/TagList'
 import type { HomepageItem } from '@/lib/db/homepage'
 
@@ -15,7 +15,6 @@ interface ItemCardProps {
 
 export function ItemCard({ item, compact = false, className }: ItemCardProps) {
   const relScore = item.ai_relevance_score != null ? item.ai_relevance_score * 10 : null
-  const rankScore = Number(item.ranking_score)
   const dateLabel = formatRelativeDate(item.published_at)
 
   return (
@@ -26,15 +25,21 @@ export function ItemCard({ item, compact = false, className }: ItemCardProps) {
         className,
       )}
     >
-      {/* ── Top row: badges + score ─────────────────────────────────────── */}
-      <div className="mb-3 flex flex-wrap items-center gap-1.5">
+      {/* ── Row 1: source + relevance score ─────────────────────────────── */}
+      <div className="mb-1.5 flex items-center justify-between gap-1.5">
         <SourceBadge source={item.source} />
-        {item.ai_category && <CategoryBadge category={item.ai_category} />}
-        {item.ai_maturity && <MaturityBadge maturity={item.ai_maturity} />}
         {relScore != null && (
-          <ScorePill score={relScore} className="ml-auto shrink-0" />
+          <ScorePill score={relScore} className="shrink-0" />
         )}
       </div>
+
+      {/* ── Row 2: category + maturity ───────────────────────────────────── */}
+      {(item.ai_category || item.ai_maturity) && (
+        <div className="mb-3 flex flex-wrap items-center gap-1.5">
+          {item.ai_category && <CategoryBadge category={item.ai_category} />}
+          {item.ai_maturity && <MaturityBadge maturity={item.ai_maturity} />}
+        </div>
+      )}
 
       {/* ── Title ───────────────────────────────────────────────────────── */}
       <a
@@ -116,9 +121,6 @@ export function ItemCard({ item, compact = false, className }: ItemCardProps) {
 
         {/* Date */}
         {dateLabel && <span>{dateLabel}</span>}
-
-        {/* Ranking score */}
-        {rankScore > 0 && <RankScoreBadge score={rankScore} />}
       </div>
     </article>
   )

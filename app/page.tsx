@@ -6,7 +6,6 @@ import { ItemSection } from '@/components/ItemSection'
 import {
   getTopPicks,
   getLatestHighSignal,
-  getTrendingGithub,
   getAiNews,
   getAgentTools,
   getHomepageStats,
@@ -14,15 +13,27 @@ import {
 
 export default async function HomePage() {
   // Fetch all sections in parallel — single round-trip latency.
-  const [topPicks, latestSignal, trending, aiNews, agentTools, stats] =
+  const [topPicks, aiNewsRaw, latestRaw, agentToolsRaw, stats] =
     await Promise.all([
       getTopPicks(),
-      getLatestHighSignal(),
-      getTrendingGithub(),
       getAiNews(),
-      getAgentTools(),
+      getLatestHighSignal(),
+      getAgentTools(28),
       getHomepageStats(),
     ])
+
+  // ── In-memory deduplication ───────────────────────────────────────────────
+  // Top Picks have first priority. Each subsequent section filters against all
+  // IDs already claimed, then slices to its display limit.
+  const seenIds = new Set(topPicks.map((i) => i.id))
+
+  const aiNews = aiNewsRaw.filter((i) => !seenIds.has(i.id)).slice(0, 8)
+  aiNews.forEach((i) => seenIds.add(i.id))
+
+  const latestSignal = latestRaw.filter((i) => !seenIds.has(i.id)).slice(0, 8)
+  latestSignal.forEach((i) => seenIds.add(i.id))
+
+  const agentTools = agentToolsRaw.filter((i) => !seenIds.has(i.id)).slice(0, 8)
 
   return (
     <div className="flex min-h-screen flex-col bg-zinc-950">
@@ -96,25 +107,7 @@ export default async function HomePage() {
             emptyMessage="No top picks yet — run enrichment and ranking first."
           />
 
-          {/* 2. Latest High-Signal */}
-          <ItemSection
-            title="Latest High-Signal Updates"
-            description="Recently published items with strong AI/engineering relevance."
-            items={latestSignal}
-            columns={2}
-            emptyMessage="No recent items found."
-          />
-
-          {/* 3. Trending GitHub */}
-          <ItemSection
-            title="Trending GitHub Projects"
-            description="Open-source repos gaining momentum in the AI engineering ecosystem."
-            items={trending}
-            columns={2}
-            emptyMessage="No GitHub projects found — run the GitHub ingestion script."
-          />
-
-          {/* 4. AI News & Research */}
+          {/* 2. AI News & Research */}
           <ItemSection
             title="AI News & Research"
             description="Model launches, research papers, and platform updates from blogs and HN."
@@ -123,7 +116,16 @@ export default async function HomePage() {
             emptyMessage="No news or research items found."
           />
 
-          {/* 5. Agent & MCP Tools */}
+          {/* 3. Latest High-Signal */}
+          <ItemSection
+            title="Latest High-Signal Updates"
+            description="Recently published items with strong AI/engineering relevance."
+            items={latestSignal}
+            columns={2}
+            emptyMessage="No recent items found."
+          />
+
+          {/* 4. Agent & MCP Tools */}
           <ItemSection
             title="Agent & MCP Tools"
             description="Frameworks, tool-use libraries, and automation platforms for AI builders."

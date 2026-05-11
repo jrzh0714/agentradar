@@ -1,6 +1,9 @@
 /**
  * Homepage data-fetching helpers.
  * All functions use the service-role server client — never import from client components.
+ *
+ * Deduplication strategy: each section fetches more items than displayed (headroom).
+ * app/page.tsx filters duplicates in-memory after all queries resolve in parallel.
  */
 import { createServerClient } from '@/lib/supabase/server'
 import type { Item } from '@/lib/db/types'
@@ -56,7 +59,8 @@ async function safeQuery<T>(
 }
 
 // ── Section 1: Top Picks ─────────────────────────────────────────────────────
-// Highest composite ranking_score items — likely GitHub-heavy, which is fine.
+// Highest composite ranking_score — establishes the deduplication baseline.
+// Fetches exactly 12 (no headroom needed — it has first priority).
 
 export async function getTopPicks(): Promise<HomepageItem[]> {
   return safeQuery<HomepageItem>((sb) =>
@@ -70,40 +74,10 @@ export async function getTopPicks(): Promise<HomepageItem[]> {
   )
 }
 
-// ── Section 2: Latest High-Signal ────────────────────────────────────────────
-// Recent items with decent relevance — surfaces RSS/HN articles alongside GitHub.
-
-export async function getLatestHighSignal(): Promise<HomepageItem[]> {
-  return safeQuery<HomepageItem>((sb) =>
-    sb
-      .from('items')
-      .select(ITEM_SELECT)
-      .eq('status', 'enriched')
-      .gte('ai_relevance_score', 0.5)
-      .not('published_at', 'is', null)
-      .order('published_at', { ascending: false, nullsFirst: false })
-      .order('ranking_score', { ascending: false })
-      .limit(8),
-  )
-}
-
-// ── Section 3: Trending GitHub Projects ──────────────────────────────────────
-
-export async function getTrendingGithub(): Promise<HomepageItem[]> {
-  return safeQuery<HomepageItem>((sb) =>
-    sb
-      .from('items')
-      .select(ITEM_SELECT)
-      .eq('status', 'enriched')
-      .eq('source', 'github')
-      .gte('ai_relevance_score', 0.5)
-      .order('ranking_score', { ascending: false })
-      .limit(8),
-  )
-}
-
-// ── Section 4: AI News & Research ────────────────────────────────────────────
-// RSS / HN articles in model, research, or infra categories.
+// ── Section 2: AI News & Research ────────────────────────────────────────────
+// RSS / HN articles in model, research, or infrastructure categories.
+// Fetches 16 so dedup against Top Picks still leaves ≥8 unique items.
+// (Low real overlap since Top Picks is GitHub-heavy; headroom is precautionary.)
 
 const NEWS_CATEGORIES = [
   'Research',
@@ -123,11 +97,33 @@ export async function getAiNews(): Promise<HomepageItem[]> {
       .in('ai_category', NEWS_CATEGORIES)
       .gte('ai_relevance_score', 0.6)
       .order('ranking_score', { ascending: false })
-      .limit(8),
+      .limit(16),
   )
 }
 
-// ── Section 5: Agent & MCP Tools ─────────────────────────────────────────────
+// ── Section 3: Latest High-Signal Updates ────────────────────────────────────
+// Only RSS and HN — sorts by publish date to surface genuinely recent content.
+// GitHub is excluded because the ingester stamps repos with today's date,
+// which would otherwise crowd out real articles.
+// Fetches 16 for dedup headroom against Top Picks + AI News.
+
+export async function getLatestHighSignal(): Promise<HomepageItem[]> {
+  return safeQuery<HomepageItem>((sb) =>
+    sb
+      .from('items')
+      .select(ITEM_SELECT)
+      .eq('status', 'enriched')
+      .in('source', ['rss', 'hackernews'])
+      .gte('ai_relevance_score', 0.5)
+      .not('published_at', 'is', null)
+      .order('published_at', { ascending: false, nullsFirst: false })
+      .limit(16),
+  )
+}
+
+// ── Section 4: Agent & MCP Tools ─────────────────────────────────────────────
+// Fetches 28 (12 Top Picks + up to 8 AI News + 8 buffer = 28 to guarantee 8 unique).
+// Deduplication against all prior sections happens in app/page.tsx.
 
 const AGENT_CATEGORIES = [
   'AI Agents',
@@ -136,7 +132,7 @@ const AGENT_CATEGORIES = [
   'Workflow Automation',
 ]
 
-export async function getAgentTools(): Promise<HomepageItem[]> {
+export async function getAgentTools(limit = 28): Promise<HomepageItem[]> {
   return safeQuery<HomepageItem>((sb) =>
     sb
       .from('items')
@@ -145,7 +141,7 @@ export async function getAgentTools(): Promise<HomepageItem[]> {
       .in('ai_category', AGENT_CATEGORIES)
       .gte('ai_relevance_score', 0.6)
       .order('ranking_score', { ascending: false })
-      .limit(8),
+      .limit(limit),
   )
 }
 
