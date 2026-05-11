@@ -1,33 +1,40 @@
 export interface RssFeedConfig {
   name: string
   url: string
+  categoryHint?: string
 }
 
-// Seed list for Phase 2 ingestion. Move to rss_feeds Supabase table when
-// runtime configurability is needed.
+// Canonical feed list — keep in sync with supabase/migrations/001_initial_schema.sql seed.
+// The rss_feeds table is the live source of truth; this file is for reference and re-seeding.
 export const RSS_FEEDS: RssFeedConfig[] = [
   {
     name: 'OpenAI Blog',
     url: 'https://openai.com/blog/rss.xml',
+    categoryHint: 'ai-research',
   },
   {
-    name: 'Anthropic News',
-    url: 'https://www.anthropic.com/rss.xml',
+    name: 'Hugging Face Blog',
+    url: 'https://huggingface.co/blog/feed.xml',
+    categoryHint: 'ai-research',
   },
   {
     name: 'GitHub Blog',
     url: 'https://github.blog/feed/',
+    categoryHint: 'developer-tools',
   },
   {
     name: 'LangChain Blog',
-    url: 'https://blog.langchain.dev/rss/',
+    url: 'https://www.langchain.com/blog/rss.xml',
+    categoryHint: 'agent-frameworks',
   },
   {
     name: 'Vercel Blog',
     url: 'https://vercel.com/atom',
+    categoryHint: 'developer-tools',
   },
   {
     name: "Simon Willison's Blog",
     url: 'https://simonwillison.net/atom/everything/',
+    categoryHint: 'ai-engineering',
   },
 ]

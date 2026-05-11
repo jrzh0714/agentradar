@@ -7,6 +7,7 @@ export const GithubRepoSchema = z.object({
   description: z.string().nullable(),
   html_url: z.string().url(),
   stargazers_count: z.number(),
+  forks_count: z.number().default(0),
   language: z.string().nullable(),
   topics: z.array(z.string()).default([]),
   owner: z.object({

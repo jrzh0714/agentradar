@@ -183,10 +183,10 @@ create policy "rss_feeds: public read"
 -- ============================================================
 
 insert into rss_feeds (name, url, category_hint) values
-  ('OpenAI Blog',          'https://openai.com/blog/rss.xml',           'ai-research'),
-  ('Anthropic News',       'https://www.anthropic.com/rss.xml',          'ai-research'),
+  ('OpenAI Blog',          'https://openai.com/blog/rss.xml',            'ai-research'),
+  ('Hugging Face Blog',    'https://huggingface.co/blog/feed.xml',       'ai-research'),
   ('GitHub Blog',          'https://github.blog/feed/',                  'developer-tools'),
-  ('LangChain Blog',       'https://blog.langchain.dev/rss/',            'agent-frameworks'),
+  ('LangChain Blog',       'https://www.langchain.com/blog/rss.xml',     'agent-frameworks'),
   ('Vercel Blog',          'https://vercel.com/atom',                    'developer-tools'),
   ('Simon Willison''s Blog','https://simonwillison.net/atom/everything/', 'ai-engineering')
 on conflict (url) do nothing;
