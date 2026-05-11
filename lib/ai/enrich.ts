@@ -12,16 +12,36 @@ function extractJson(raw: string): string {
   return trimmed
 }
 
-/** Build the user message from an item's fields. */
-function buildUserMessage(item: Pick<Item, 'title' | 'url' | 'source' | 'description' | 'raw_content' | 'github_stars' | 'github_language' | 'hn_points' | 'hn_comments'>): string {
+// Character budgets — keeps API costs low while giving the model enough context.
+const DESC_LIMIT = 500
+const CONTENT_LIMIT = 4000
+
+/** Build the user message from an item's fields, safely truncated. */
+function buildUserMessage(
+  item: Pick<
+    Item,
+    | 'title'
+    | 'url'
+    | 'source'
+    | 'description'
+    | 'raw_content'
+    | 'github_stars'
+    | 'github_language'
+    | 'hn_points'
+    | 'hn_comments'
+  >,
+): string {
   const lines: string[] = [
     `Title: ${item.title}`,
     `URL: ${item.url}`,
     `Source: ${item.source}`,
   ]
 
-  if (item.description) lines.push(`Description: ${item.description.slice(0, 800)}`)
-  if (item.raw_content) lines.push(`Content snippet: ${item.raw_content.slice(0, 1200)}`)
+  if (item.description) lines.push(`Description: ${item.description.slice(0, DESC_LIMIT)}`)
+  if (item.raw_content) {
+    const snippet = item.raw_content.slice(0, CONTENT_LIMIT)
+    lines.push(`Content snippet: ${snippet}`)
+  }
   if (item.github_stars != null) lines.push(`GitHub stars: ${item.github_stars}`)
   if (item.github_language) lines.push(`Language: ${item.github_language}`)
   if (item.hn_points != null) lines.push(`HN points: ${item.hn_points}`)
