@@ -1,3 +1,6 @@
+// Force dynamic — results depend on live DB data and query params.
+export const dynamic = 'force-dynamic'
+
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ItemCard } from '@/components/ItemCard'
@@ -68,12 +71,12 @@ export default async function SearchPage({
             </span>
           </div>
           <nav className="flex items-center gap-6 font-mono text-xs text-zinc-500">
-            <a href="/search" className="text-zinc-200">
+            <Link href="/search" className="text-zinc-200">
               search
-            </a>
-            <a href="/digest" className="transition-colors hover:text-zinc-200">
+            </Link>
+            <Link href="/digest" className="transition-colors hover:text-zinc-200">
               digest
-            </a>
+            </Link>
           </nav>
         </div>
       </header>

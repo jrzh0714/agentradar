@@ -1,6 +1,7 @@
 // Force dynamic rendering — data changes as new items are ingested and ranked.
 export const dynamic = 'force-dynamic'
 
+import Link from 'next/link'
 import { formatCount } from '@/lib/utils'
 import { ItemSection } from '@/components/ItemSection'
 import {
@@ -49,12 +50,12 @@ export default async function HomePage() {
             </span>
           </div>
           <nav className="flex items-center gap-6 font-mono text-xs text-zinc-500">
-            <a href="/search" className="transition-colors hover:text-zinc-200">
+            <Link href="/search" className="transition-colors hover:text-zinc-200">
               search
-            </a>
-            <a href="/digest" className="transition-colors hover:text-zinc-200">
+            </Link>
+            <Link href="/digest" className="transition-colors hover:text-zinc-200">
               digest
-            </a>
+            </Link>
           </nav>
         </div>
       </header>
