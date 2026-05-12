@@ -34,3 +34,6 @@ npm-debug.log*
 
 # vercel
 .vercel
+
+.vercel
+.superpowers/
