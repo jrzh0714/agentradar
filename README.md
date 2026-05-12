@@ -46,19 +46,19 @@ graph TD
     end
 
     subgraph Pipeline ["Enrichment & Ranking"]
-        EN[enrich-items.ts\nOpenAI / Anthropic]
+        EN["enrich-items.ts<br/>OpenAI / Anthropic"]
         RK[rank-items.ts]
     end
 
     subgraph DB [Supabase Postgres]
-        IT[(items table\nstatus: new → enriched)]
+        IT[("items table<br/>status: new → enriched")]
     end
 
     subgraph App ["Next.js App Router (Server Components)"]
-        HP[/ Homepage]
-        SP[/search]
-        DP[/digest]
-        IP[/items/id]
+        HP["/ Homepage"]
+        SP["/search"]
+        DP["/digest"]
+        IP["/items/[id]"]
     end
 
     GH --> IG --> IT
