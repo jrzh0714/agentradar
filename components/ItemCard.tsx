@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { cn, formatRelativeDate, formatCount } from '@/lib/utils'
 import { SourceBadge } from '@/components/ui/SourceBadge'
 import { CategoryBadge } from '@/components/ui/CategoryBadge'
@@ -50,12 +51,23 @@ export function ItemCard({ item, compact = false, className }: ItemCardProps) {
         className,
       )}
     >
-      {/* ── Row 1: source + relevance score ─────────────────────────────── */}
+      {/* ── Row 1: source + relevance score + external link ─────────────── */}
       <div className="mb-1.5 flex items-center justify-between gap-1.5">
         <SourceBadge source={item.source} />
-        {relScore != null && (
-          <ScorePill score={relScore} className="shrink-0" />
-        )}
+        <div className="flex shrink-0 items-center gap-1.5">
+          {relScore != null && <ScorePill score={relScore} />}
+          {hasUrl && (
+            <a
+              href={item.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Open source"
+              className="text-xs text-zinc-600 transition-colors hover:text-zinc-300"
+            >
+              ↗
+            </a>
+          )}
+        </div>
       </div>
 
       {/* ── Row 2: category + maturity ───────────────────────────────────── */}
@@ -66,40 +78,18 @@ export function ItemCard({ item, compact = false, className }: ItemCardProps) {
         </div>
       )}
 
-      {/* ── Title ───────────────────────────────────────────────────────── */}
-      {hasUrl ? (
-        <a
-          href={item.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mb-2 block"
-          aria-label={`Open ${title}`}
+      {/* ── Title — links to internal detail page ───────────────────────── */}
+      <Link href={`/items/${item.id}`} className="mb-2 block">
+        <h3
+          className={cn(
+            'font-mono font-semibold leading-snug text-zinc-100',
+            'transition-colors group-hover:text-white',
+            'line-clamp-2 text-sm',
+          )}
         >
-          <h3
-            className={cn(
-              'font-mono font-semibold leading-snug text-zinc-100',
-              'transition-colors group-hover:text-white',
-              'line-clamp-2 text-sm',
-            )}
-          >
-            {title}
-            <span className="ml-1 inline-block text-zinc-600 opacity-0 transition-opacity group-hover:opacity-100">
-              ↗
-            </span>
-          </h3>
-        </a>
-      ) : (
-        <div className="mb-2">
-          <h3
-            className={cn(
-              'font-mono font-semibold leading-snug text-zinc-100',
-              'line-clamp-2 text-sm',
-            )}
-          >
-            {title}
-          </h3>
-        </div>
-      )}
+          {title}
+        </h3>
+      </Link>
 
       {/* ── Summary ─────────────────────────────────────────────────────── */}
       <p
