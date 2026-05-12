@@ -6,7 +6,9 @@ import type { Metadata } from 'next'
 import { SourceBadge } from '@/components/ui/SourceBadge'
 import { CategoryBadge } from '@/components/ui/CategoryBadge'
 import { ScorePill } from '@/components/ui/ScorePill'
+import { HnPrefixBadge } from '@/components/ui/HnPrefixBadge'
 import { formatRelativeDate } from '@/lib/utils'
+import { getDisplayTitle, getTitlePrefix } from '@/lib/ingestion/title'
 import { getDigestSections, ITEMS_PER_SECTION } from '@/lib/db/digest'
 import type { DigestSection } from '@/lib/db/digest'
 import type { HomepageItem } from '@/lib/db/homepage'
@@ -196,11 +198,12 @@ function DigestSectionBlock({
 // ── DigestRow ─────────────────────────────────────────────────────────────────
 
 function DigestRow({ item, rank }: { item: HomepageItem; rank: number }) {
-  const relScore = item.ai_relevance_score != null ? item.ai_relevance_score * 10 : null
+  const relScore  = item.ai_relevance_score != null ? item.ai_relevance_score * 10 : null
   const dateLabel = formatRelativeDate(item.published_at)
-  const summary = item.ai_summary?.trim() || item.description?.trim() || ''
-  const title = item.title?.trim() || 'Untitled'
-  const hasUrl = Boolean(item.url?.trim())
+  const summary   = item.ai_summary?.trim() || item.description?.trim() || ''
+  const title     = getDisplayTitle(item)
+  const prefix    = getTitlePrefix(item.title)
+  const hasUrl    = Boolean(item.url?.trim())
 
   return (
     <div className="group py-4">
@@ -209,6 +212,7 @@ function DigestRow({ item, rank }: { item: HomepageItem; rank: number }) {
         <span className="w-5 shrink-0 font-mono text-xs tabular-nums text-zinc-700">{rank}.</span>
         <SourceBadge source={item.source} />
         {item.ai_category && <CategoryBadge category={item.ai_category} />}
+        {prefix && <HnPrefixBadge prefix={prefix} />}
         {relScore != null && <ScorePill score={relScore} />}
         <span className="flex-1" />
         {dateLabel && (

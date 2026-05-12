@@ -11,6 +11,8 @@ import { ScorePill } from '@/components/ui/ScorePill'
 import { TagList } from '@/components/ui/TagList'
 import { formatRelativeDate, formatCount } from '@/lib/utils'
 import { getItemById, getRelatedItems } from '@/lib/db/items-detail'
+import { HnPrefixBadge } from '@/components/ui/HnPrefixBadge'
+import { getDisplayTitle, getTitlePrefix } from '@/lib/ingestion/title'
 
 // ── Metadata ───────────────────────────────────────────────────────────────────
 
@@ -23,7 +25,7 @@ export async function generateMetadata({
   const item = await getItemById(id)
   if (!item) return { title: 'Not found — AgentRadar' }
   return {
-    title: `${item.title} — AgentRadar`,
+    title: `${getDisplayTitle(item)} — AgentRadar`,
     description: item.ai_summary?.trim() || item.description?.trim() || undefined,
   }
 }
@@ -41,10 +43,12 @@ export default async function ItemDetailPage({
 
   const related = await getRelatedItems(item)
 
-  const relScore = item.ai_relevance_score != null ? item.ai_relevance_score * 10 : null
-  const dateLabel = formatRelativeDate(item.published_at)
+  const relScore     = item.ai_relevance_score != null ? item.ai_relevance_score * 10 : null
+  const dateLabel    = formatRelativeDate(item.published_at)
   const createdLabel = formatRelativeDate(item.created_at)
-  const hasUrl = Boolean(item.url?.trim())
+  const hasUrl       = Boolean(item.url?.trim())
+  const displayTitle = getDisplayTitle(item)
+  const hnPrefix     = getTitlePrefix(item.title)
 
   return (
     <div className="flex min-h-screen flex-col bg-zinc-950">
@@ -94,12 +98,13 @@ export default async function ItemDetailPage({
           <div className="mb-4 flex flex-wrap items-center gap-2">
             <SourceBadge source={item.source} />
             {item.ai_maturity && <MaturityBadge maturity={item.ai_maturity} />}
+            {hnPrefix && <HnPrefixBadge prefix={hnPrefix} />}
             {relScore != null && <ScorePill score={relScore} />}
           </div>
 
           {/* Title */}
           <h1 className="mb-4 font-mono text-2xl font-bold leading-snug tracking-tight text-zinc-100 sm:text-3xl">
-            {item.title || 'Untitled'}
+            {displayTitle}
           </h1>
 
           {/* Source metadata row */}
