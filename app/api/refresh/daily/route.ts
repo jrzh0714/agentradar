@@ -9,7 +9,7 @@
  * the project environment variables.
  *
  * Returns a JSON summary of the run:
- *   { success, ingestionCounts, enrichedCount, failedCount, rankedCount, durationMs }
+ *   { success, ingestionCounts, titleFixedCount, enrichedCount, failedCount, rankedCount, durationMs }
  */
 import { type NextRequest, NextResponse } from 'next/server'
 import { runDailyRefresh, DEFAULT_ENRICH_LIMIT } from '@/lib/workflows/daily-refresh'

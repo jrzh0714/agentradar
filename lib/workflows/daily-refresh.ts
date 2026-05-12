@@ -12,6 +12,7 @@ import { upsertItems } from '@/lib/db/items'
 import { enrichItem } from '@/lib/ai/enrich'
 import { ProviderBillingError } from '@/lib/ai/provider'
 import { computeRankingScore } from '@/lib/ranking/score'
+import { normalizeTitle, deriveTitleFromUrl, deriveTitleFromDescription } from '@/lib/ingestion/title'
 import { createServerClient } from '@/lib/supabase/server'
 import type { Item, ItemEnrichmentUpdate } from '@/lib/db/types'
 
@@ -40,6 +41,7 @@ export interface IngestionCounts {
 export interface RefreshResult {
   success: boolean
   ingestionCounts: IngestionCounts
+  titleFixedCount: number
   enrichedCount: number
   failedCount: number
   rankedCount: number
@@ -81,6 +83,71 @@ async function runIngestion(): Promise<IngestionCounts> {
     hn: hnResult.inserted,
     rss: rssResult.inserted,
   }
+}
+
+// ── Phase 1.5: Title cleanup ──────────────────────────────────────────────────
+
+/**
+ * Fix blank or placeholder titles on newly ingested items before enrichment
+ * runs, so the AI receives the best possible title as input context.
+ *
+ * Resolution order (mirrors scripts/cleanup-titles.ts):
+ *   1. raw_data title fields (for RSS items where the parser returned empty string).
+ *   2. URL path slug derivation.
+ *   3. First sentence of description.
+ *
+ * HN items are skipped — their "Show HN:" prefixes are handled at display time.
+ */
+async function runTitleCleanup(): Promise<number> {
+  const supabase = createServerClient()
+
+  type Row = {
+    id: string
+    source: string
+    title: string | null
+    url: string
+    description: string | null
+    raw_data: Record<string, unknown> | null
+  }
+
+  // Fetch items with null or empty-string titles (the two bad-title forms found in audit).
+  const [nullResult, emptyResult] = await Promise.all([
+    supabase.from('items').select('id, source, title, url, description, raw_data').is('title', null),
+    supabase.from('items').select('id, source, title, url, description, raw_data').eq('title', ''),
+  ])
+
+  const seen = new Set<string>()
+  const toFix: Row[] = []
+  for (const row of [...(nullResult.data ?? []), ...(emptyResult.data ?? [])] as Row[]) {
+    if (!seen.has(row.id)) {
+      seen.add(row.id)
+      toFix.push(row)
+    }
+  }
+
+  if (toFix.length === 0) return 0
+
+  let fixed = 0
+  for (const item of toFix) {
+    // HN prefix handling is display-only — stored title is not changed.
+    if (item.source === 'hackernews') continue
+
+    const rd = item.raw_data as Record<string, unknown> | null
+    const better =
+      (rd && normalizeTitle(rd.title as string | null)) ??
+      deriveTitleFromUrl(item.url) ??
+      deriveTitleFromDescription(item.description)
+
+    if (!better) continue
+
+    const { error } = await supabase.from('items').update({ title: better }).eq('id', item.id)
+    if (!error) {
+      console.log(`[daily-refresh] Title fixed for ${item.id}: "${better}"`)
+      fixed++
+    }
+  }
+
+  return fixed
 }
 
 // ── Phase 2: Enrichment ───────────────────────────────────────────────────────
@@ -240,6 +307,9 @@ export async function runDailyRefresh(
     // 1. Ingestion — all three sources in parallel.
     const ingestionCounts = await runIngestion()
 
+    // 1.5. Title cleanup — fix blank/placeholder titles before enrichment.
+    const titleFixedCount = await runTitleCleanup()
+
     // 2. Enrichment — sequential with rate-limit delay, capped at limit.
     const { enriched, failed, billingAbort } = await runEnrichment(enrichLimit)
 
@@ -249,6 +319,7 @@ export async function runDailyRefresh(
     return {
       success: !billingAbort,
       ingestionCounts,
+      titleFixedCount,
       enrichedCount: enriched,
       failedCount: failed,
       rankedCount,
@@ -263,6 +334,7 @@ export async function runDailyRefresh(
     return {
       success: false,
       ingestionCounts: { github: 0, hn: 0, rss: 0 },
+      titleFixedCount: 0,
       enrichedCount: 0,
       failedCount: 0,
       rankedCount: 0,
