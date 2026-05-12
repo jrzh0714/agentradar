@@ -1,0 +1,991 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - link "AgentRadar" [ref=e6] [cursor=pointer]:
+            - /url: /
+          - generic [ref=e7]: beta
+        - navigation [ref=e8]:
+          - link "search" [ref=e9] [cursor=pointer]:
+            - /url: /search
+          - link "digest" [ref=e10] [cursor=pointer]:
+            - /url: /digest
+    - main [ref=e11]:
+      - generic [ref=e12]:
+        - heading "Search" [level=1] [ref=e13]
+        - paragraph [ref=e14]: AI-enriched tools, repos, and articles indexed from GitHub, HN, and blogs.
+      - generic [ref=e15]:
+        - generic [ref=e16]:
+          - generic [ref=e17]:
+            - generic:
+              - img
+            - textbox "Search AgentRadar… try 'claude', 'mcp', 'rag'" [ref=e18]: openai
+          - button "Search" [ref=e19]
+        - generic [ref=e20]:
+          - generic [ref=e21]:
+            - button "all" [ref=e22]
+            - button "github" [ref=e23]
+            - button "HN" [ref=e24]
+            - button "rss" [ref=e25]
+          - combobox [ref=e26]:
+            - option "All categories" [selected]
+            - option "AI Agents"
+            - option "Code Agents"
+            - option "LLM Frameworks"
+            - option "MCP / Tool Use"
+            - option "Workflow Automation"
+            - option "RAG"
+            - option "Research"
+            - option "Product Updates"
+            - option "AI Infrastructure"
+            - option "Open Source Models"
+            - option "Prompt Engineering"
+            - option "Developer Tools"
+            - option "Other"
+          - generic [ref=e27]:
+            - button "any" [ref=e28]
+            - button "stable" [ref=e29]
+            - button "promising" [ref=e30]
+            - button "experimental" [ref=e31]
+          - combobox [ref=e32]:
+            - option "Any score" [selected]
+            - option "≥ 5 / 10"
+            - option "≥ 6 / 10"
+            - option "≥ 7 / 10"
+            - option "≥ 8 / 10"
+          - combobox [ref=e33]:
+            - option "Best match" [selected]
+            - option "Highest relevance"
+            - option "Newest"
+          - button "clear all" [ref=e34]
+      - generic [ref=e35]:
+        - generic [ref=e36]: 40 results for "openai"
+        - generic [ref=e37]: · sorted by radar score
+      - generic [ref=e38]:
+        - article [ref=e39]:
+          - generic [ref=e40]:
+            - generic [ref=e41]: GitHub
+            - 'generic "AI relevance: 9.0/10" [ref=e43]':
+              - generic [ref=e44]: "9.0"
+              - generic [ref=e45]: /10
+          - generic [ref=e46]:
+            - generic [ref=e47]: AI Agents
+            - generic [ref=e48]: stable
+          - link "Open promptfoo/promptfoo" [ref=e49] [cursor=pointer]:
+            - /url: https://github.com/promptfoo/promptfoo
+            - heading "promptfoo/promptfoo ↗" [level=3] [ref=e50]:
+              - text: promptfoo/promptfoo
+              - generic [ref=e51]: ↗
+          - paragraph [ref=e52]: Promptfoo is a TypeScript library designed for testing prompts and agents, offering red teaming and vulnerability scanning for AI models like GPT, Claude, and Llama.
+          - paragraph [ref=e53]: By enabling engineers to evaluate the performance and security of AI prompts and agents, Promptfoo helps ensure robust and reliable AI deployments.
+          - generic [ref=e54]:
+            - generic [ref=e55]: prompt-testing
+            - generic [ref=e56]: red-teaming
+            - generic [ref=e57]: typescript
+            - generic [ref=e58]: ci-cd
+            - generic [ref=e59]: vulnerability-scanning
+          - generic [ref=e60]:
+            - generic [ref=e61]:
+              - generic [ref=e62]: ⭐
+              - generic [ref=e63]: 21.1k
+              - generic [ref=e64]: · 1.8k forks
+            - generic [ref=e65]: today
+        - article [ref=e66]:
+          - generic [ref=e67]:
+            - generic [ref=e68]: GitHub
+            - 'generic "AI relevance: 7.0/10" [ref=e70]':
+              - generic [ref=e71]: "7.0"
+              - generic [ref=e72]: /10
+          - generic [ref=e73]:
+            - generic [ref=e74]: AI Agents
+            - generic [ref=e75]: promising
+          - link "Open JackLuguibin/OpenPawlet" [ref=e76] [cursor=pointer]:
+            - /url: https://github.com/JackLuguibin/OpenPawlet
+            - heading "JackLuguibin/OpenPawlet ↗" [level=3] [ref=e77]:
+              - text: JackLuguibin/OpenPawlet
+              - generic [ref=e78]: ↗
+          - paragraph [ref=e79]: OpenPawlet is a single-process web console that offers an HTTP API and browser UI for the OpenPawlet ecosystem, featuring an OpenAI-compatible interface and embedded agent runtime.
+          - paragraph [ref=e80]: The integrated HTTP API and browser UI streamline the development of AI agents by providing a cohesive environment for managing interactions with OpenAI's models and facilitating agent execution.
+          - generic [ref=e81]:
+            - generic [ref=e82]: open-pawlet
+            - generic [ref=e83]: http-api
+            - generic [ref=e84]: python
+            - generic [ref=e85]: agent-runtime
+            - generic [ref=e86]: browser-ui
+          - generic [ref=e87]:
+            - generic [ref=e88]:
+              - generic [ref=e89]: ⭐
+              - generic [ref=e90]: "104"
+              - generic [ref=e91]: · 37 forks
+            - generic [ref=e92]: today
+        - article [ref=e93]:
+          - generic [ref=e94]:
+            - generic [ref=e95]: RSS
+            - 'generic "AI relevance: 9.0/10" [ref=e97]':
+              - generic [ref=e98]: "9.0"
+              - generic [ref=e99]: /10
+          - generic [ref=e100]:
+            - generic [ref=e101]: Open Source Models
+            - generic [ref=e102]: stable
+          - link "Open GPT-5.5 Instant System Card" [ref=e103] [cursor=pointer]:
+            - /url: https://openai.com/index/gpt-5-5-instant-system-card
+            - heading "GPT-5.5 Instant System Card ↗" [level=3] [ref=e104]:
+              - text: GPT-5.5 Instant System Card
+              - generic [ref=e105]: ↗
+          - paragraph [ref=e106]: OpenAI has released the GPT-5.5 Instant System Card, detailing the capabilities and limitations of the latest model in the GPT series.
+          - paragraph [ref=e107]: This system card provides essential insights for AI engineers on how to leverage GPT-5.5 effectively, including its performance metrics and usage guidelines.
+          - generic [ref=e108]:
+            - generic [ref=e109]: gpt-5.5
+            - generic [ref=e110]: system-card
+            - generic [ref=e111]: model-capabilities
+            - generic [ref=e112]: openai
+            - generic [ref=e113]: ai-development
+          - generic [ref=e115]: 1w ago
+        - article [ref=e116]:
+          - generic [ref=e117]:
+            - generic [ref=e118]: RSS
+            - 'generic "AI relevance: 8.0/10" [ref=e120]':
+              - generic [ref=e121]: "8.0"
+              - generic [ref=e122]: /10
+          - generic [ref=e123]:
+            - generic [ref=e124]: AI Agents
+            - generic [ref=e125]: stable
+          - link "Open Scaling Trusted Access for Cyber with GPT-5.5 and GPT-5.5-Cyber" [ref=e126] [cursor=pointer]:
+            - /url: https://openai.com/index/gpt-5-5-with-trusted-access-for-cyber
+            - heading "Scaling Trusted Access for Cyber with GPT-5.5 and GPT-5.5-Cyber ↗" [level=3] [ref=e127]:
+              - text: Scaling Trusted Access for Cyber with GPT-5.5 and GPT-5.5-Cyber
+              - generic [ref=e128]: ↗
+          - paragraph [ref=e129]: OpenAI expands Trusted Access for Cyber using GPT-5.5 and GPT-5.5-Cyber to enhance vulnerability research and infrastructure protection.
+          - paragraph [ref=e130]: This development provides cybersecurity professionals with advanced AI capabilities that can streamline the identification and mitigation of vulnerabilities, ultimately strengthening critical infrastructure security.
+          - generic [ref=e131]:
+            - generic [ref=e132]: gpt-5-5
+            - generic [ref=e133]: cybersecurity
+            - generic [ref=e134]: vulnerability-research
+            - generic [ref=e135]: trusted-access
+            - generic [ref=e136]: ai-application
+          - generic [ref=e138]: 5d ago
+        - article [ref=e139]:
+          - generic [ref=e140]:
+            - generic [ref=e141]: RSS
+            - 'generic "AI relevance: 8.0/10" [ref=e143]':
+              - generic [ref=e144]: "8.0"
+              - generic [ref=e145]: /10
+          - generic [ref=e146]:
+            - generic [ref=e147]: AI Infrastructure
+            - generic [ref=e148]: stable
+          - link "Open Advancing voice intelligence with new models in the API" [ref=e149] [cursor=pointer]:
+            - /url: https://openai.com/index/advancing-voice-intelligence-with-new-models-in-the-api
+            - heading "Advancing voice intelligence with new models in the API ↗" [level=3] [ref=e150]:
+              - text: Advancing voice intelligence with new models in the API
+              - generic [ref=e151]: ↗
+          - paragraph [ref=e152]: OpenAI has introduced new realtime voice models in their API that enhance speech reasoning, translation, and transcription capabilities.
+          - paragraph [ref=e153]: These advancements can significantly improve the development of voice-driven applications by providing more natural and intelligent interaction through accurate speech understanding.
+          - generic [ref=e154]:
+            - generic [ref=e155]: voice-intelligence
+            - generic [ref=e156]: speech-processing
+            - generic [ref=e157]: api
+            - generic [ref=e158]: real-time
+            - generic [ref=e159]: translation
+          - generic [ref=e161]: 5d ago
+        - article [ref=e162]:
+          - generic [ref=e163]:
+            - generic [ref=e164]: RSS
+            - 'generic "AI relevance: 10.0/10" [ref=e166]':
+              - generic [ref=e167]: "10.0"
+              - generic [ref=e168]: /10
+          - generic [ref=e169]:
+            - generic [ref=e170]: Open Source Models
+            - generic [ref=e171]: stable
+          - link "Open Introducing GPT-5.5" [ref=e172] [cursor=pointer]:
+            - /url: https://openai.com/index/introducing-gpt-5-5
+            - heading "Introducing GPT-5.5 ↗" [level=3] [ref=e173]:
+              - text: Introducing GPT-5.5
+              - generic [ref=e174]: ↗
+          - paragraph [ref=e175]: OpenAI has released GPT-5.5, an advanced model designed for coding, research, and complex data analysis tasks.
+          - paragraph [ref=e176]: The improvements in speed and capability of GPT-5.5 enhance developer workflows and productivity, making it a critical upgrade for engineers working in AI and software development.
+          - generic [ref=e177]:
+            - generic [ref=e178]: gpt-5-5
+            - generic [ref=e179]: openai
+            - generic [ref=e180]: llm
+            - generic [ref=e181]: model-release
+            - generic [ref=e182]: ai-engineering
+          - generic [ref=e184]: 2w ago
+        - article [ref=e185]:
+          - generic [ref=e186]:
+            - generic [ref=e187]: RSS
+            - 'generic "AI relevance: 7.0/10" [ref=e189]':
+              - generic [ref=e190]: "7.0"
+              - generic [ref=e191]: /10
+          - generic [ref=e192]:
+            - generic [ref=e193]: Code Agents
+            - generic [ref=e194]: stable
+          - link "Open Running Codex safely at OpenAI" [ref=e195] [cursor=pointer]:
+            - /url: https://openai.com/index/running-codex-safely
+            - heading "Running Codex safely at OpenAI ↗" [level=3] [ref=e196]:
+              - text: Running Codex safely at OpenAI
+              - generic [ref=e197]: ↗
+          - paragraph [ref=e198]: OpenAI outlines its strategies for securely running Codex using techniques such as sandboxing, network policies, and agent-native telemetry.
+          - paragraph [ref=e199]: Understanding these security measures is vital for engineers deploying coding agents to ensure safe and compliant integration within their workflows.
+          - generic [ref=e200]:
+            - generic [ref=e201]: security
+            - generic [ref=e202]: sandboxing
+            - generic [ref=e203]: codex
+            - generic [ref=e204]: compliance
+            - generic [ref=e205]: telemetry
+          - generic [ref=e207]: 4d ago
+        - article [ref=e208]:
+          - generic [ref=e209]:
+            - generic [ref=e210]: RSS
+            - 'generic "AI relevance: 7.0/10" [ref=e212]':
+              - generic [ref=e213]: "7.0"
+              - generic [ref=e214]: /10
+          - generic [ref=e215]:
+            - generic [ref=e216]: AI Infrastructure
+            - generic [ref=e217]: promising
+          - link "Open Unlocking large scale AI training networks with MRC (Multipath Reliable Connection)" [ref=e218] [cursor=pointer]:
+            - /url: https://openai.com/index/mrc-supercomputer-networking
+            - heading "Unlocking large scale AI training networks with MRC (Multipath Reliable Connection) ↗" [level=3] [ref=e219]:
+              - text: Unlocking large scale AI training networks with MRC (Multipath Reliable Connection)
+              - generic [ref=e220]: ↗
+          - paragraph [ref=e221]: OpenAI has introduced MRC (Multipath Reliable Connection), a new networking protocol designed to enhance resilience and performance in large-scale AI training clusters.
+          - paragraph [ref=e222]: Improving networking performance in AI training clusters can lead to more efficient training processes, thereby accelerating the development of AI models for engineers.
+          - generic [ref=e223]:
+            - generic [ref=e224]: networking
+            - generic [ref=e225]: ai-training
+            - generic [ref=e226]: openai
+            - generic [ref=e227]: protocol
+            - generic [ref=e228]: supercomputer
+          - generic [ref=e230]: 1w ago
+        - article [ref=e231]:
+          - generic [ref=e232]:
+            - generic [ref=e233]: RSS
+            - 'generic "AI relevance: 9.0/10" [ref=e235]':
+              - generic [ref=e236]: "9.0"
+              - generic [ref=e237]: /10
+          - generic [ref=e238]:
+            - generic [ref=e239]: Open Source Models
+            - generic [ref=e240]: stable
+          - link "Open GPT-5.5 System Card" [ref=e241] [cursor=pointer]:
+            - /url: https://openai.com/index/gpt-5-5-system-card
+            - heading "GPT-5.5 System Card ↗" [level=3] [ref=e242]:
+              - text: GPT-5.5 System Card
+              - generic [ref=e243]: ↗
+          - paragraph [ref=e244]: OpenAI has released the system card for GPT-5.5, detailing its capabilities, limitations, and considerations for deployment.
+          - paragraph [ref=e245]: Understanding the system card is crucial for engineers to assess the model's application scope, ethical considerations, and performance benchmarks for developing AI applications.
+          - generic [ref=e246]:
+            - generic [ref=e247]: gpt-5.5
+            - generic [ref=e248]: model-card
+            - generic [ref=e249]: openai
+            - generic [ref=e250]: ai-safety
+            - generic [ref=e251]: ethical-ai
+          - generic [ref=e253]: 2w ago
+        - article [ref=e254]:
+          - generic [ref=e255]:
+            - generic [ref=e256]: RSS
+            - 'generic "AI relevance: 8.0/10" [ref=e258]':
+              - generic [ref=e259]: "8.0"
+              - generic [ref=e260]: /10
+          - generic [ref=e261]:
+            - generic [ref=e262]: AI Agents
+            - generic [ref=e263]: stable
+          - link "Open Tuning Deep Agents to Work Well with Different Models" [ref=e264] [cursor=pointer]:
+            - /url: https://www.langchain.com/blog/tuning-deep-agents-different-models
+            - heading "Tuning Deep Agents to Work Well with Different Models ↗" [level=3] [ref=e265]:
+              - text: Tuning Deep Agents to Work Well with Different Models
+              - generic [ref=e266]: ↗
+          - paragraph [ref=e267]: LangChain has introduced model-specific profiles for Deep Agents to optimize prompt, tool, and middleware adjustments across different AI models.
+          - paragraph [ref=e268]: These model-specific enhancements can significantly improve the performance of agents, providing engineers with better tools for creating more effective AI applications.
+          - generic [ref=e269]:
+            - generic [ref=e270]: model-profiles
+            - generic [ref=e271]: deep-agents
+            - generic [ref=e272]: langchain
+            - generic [ref=e273]: prompt-tuning
+            - generic [ref=e274]: middleware
+          - generic [ref=e276]: 1w ago
+        - article [ref=e277]:
+          - generic [ref=e278]:
+            - generic [ref=e279]: RSS
+            - 'generic "AI relevance: 7.0/10" [ref=e281]':
+              - generic [ref=e282]: "7.0"
+              - generic [ref=e283]: /10
+          - generic [ref=e284]:
+            - generic [ref=e285]: AI Infrastructure
+            - generic [ref=e286]: stable
+          - link "Open How OpenAI delivers low-latency voice AI at scale" [ref=e287] [cursor=pointer]:
+            - /url: https://openai.com/index/delivering-low-latency-voice-ai-at-scale
+            - heading "How OpenAI delivers low-latency voice AI at scale ↗" [level=3] [ref=e288]:
+              - text: How OpenAI delivers low-latency voice AI at scale
+              - generic [ref=e289]: ↗
+          - paragraph [ref=e290]: OpenAI has rebuilt its WebRTC stack to enable real-time voice AI with low latency and global scalability.
+          - paragraph [ref=e291]: This improvement allows developers to implement more responsive and interactive voice applications, enhancing user experience in voice-driven systems.
+          - generic [ref=e292]:
+            - generic [ref=e293]: webrtc
+            - generic [ref=e294]: voice-ai
+            - generic [ref=e295]: low-latency
+            - generic [ref=e296]: scalability
+            - generic [ref=e297]: real-time
+          - generic [ref=e299]: 1w ago
+        - article [ref=e300]:
+          - generic [ref=e301]:
+            - generic [ref=e302]: RSS
+            - 'generic "AI relevance: 6.0/10" [ref=e304]':
+              - generic [ref=e305]: "6.0"
+              - generic [ref=e306]: /10
+          - generic [ref=e307]:
+            - generic [ref=e308]: AI Agents
+            - generic [ref=e309]: stable
+          - link "Open Parloa builds service agents customers want to talk to" [ref=e310] [cursor=pointer]:
+            - /url: https://openai.com/index/parloa
+            - heading "Parloa builds service agents customers want to talk to ↗" [level=3] [ref=e311]:
+              - text: Parloa builds service agents customers want to talk to
+              - generic [ref=e312]: ↗
+          - paragraph [ref=e313]: Parloa is a service that uses OpenAI models to create scalable, voice-driven AI customer service agents for enterprises.
+          - paragraph [ref=e314]: This tool allows enterprises to enhance customer interactions with real-time, reliable AI-powered voice agents, streamlining customer service workflows.
+          - generic [ref=e315]:
+            - generic [ref=e316]: customer-service
+            - generic [ref=e317]: voice-ai
+            - generic [ref=e318]: openai
+            - generic [ref=e319]: scalable-solutions
+            - generic [ref=e320]: real-time-interactions
+          - generic [ref=e322]: 5d ago
+        - article [ref=e323]:
+          - generic [ref=e324]:
+            - generic [ref=e325]: RSS
+            - 'generic "AI relevance: 10.0/10" [ref=e327]':
+              - generic [ref=e328]: "10.0"
+              - generic [ref=e329]: /10
+          - generic [ref=e330]:
+            - generic [ref=e331]: Open Source Models
+            - generic [ref=e332]: stable
+          - link "Open Introducing GPT-5.4" [ref=e333] [cursor=pointer]:
+            - /url: https://openai.com/index/introducing-gpt-5-4
+            - heading "Introducing GPT-5.4 ↗" [level=3] [ref=e334]:
+              - text: Introducing GPT-5.4
+              - generic [ref=e335]: ↗
+          - paragraph [ref=e336]: OpenAI has introduced GPT-5.4, an advanced AI model designed for professional use, featuring state-of-the-art capabilities in coding, tool search, and a 1M-token context.
+          - paragraph [ref=e337]: The enhanced capabilities of GPT-5.4 allow engineers to build more sophisticated AI applications, improving productivity through its advanced coding and tool integration features.
+          - generic [ref=e338]:
+            - generic [ref=e339]: gpt-5
+            - generic [ref=e340]: openai
+            - generic [ref=e341]: language-model
+            - generic [ref=e342]: ai-coding
+            - generic [ref=e343]: tool-search
+          - generic [ref=e345]: Mar 5, 2026
+        - article [ref=e346]:
+          - generic [ref=e347]:
+            - generic [ref=e348]: RSS
+            - 'generic "AI relevance: 10.0/10" [ref=e350]':
+              - generic [ref=e351]: "10.0"
+              - generic [ref=e352]: /10
+          - generic [ref=e353]:
+            - generic [ref=e354]: Code Agents
+            - generic [ref=e355]: promising
+          - link "Open Introducing GPT-5.3-Codex-Spark" [ref=e356] [cursor=pointer]:
+            - /url: https://openai.com/index/introducing-gpt-5-3-codex-spark
+            - heading "Introducing GPT-5.3-Codex-Spark ↗" [level=3] [ref=e357]:
+              - text: Introducing GPT-5.3-Codex-Spark
+              - generic [ref=e358]: ↗
+          - paragraph [ref=e359]: GPT-5.3-Codex-Spark is OpenAI's first real-time coding model, featuring 15x faster generation and a 128k context window.
+          - paragraph [ref=e360]: This model significantly enhances coding assistance capabilities, enabling developers to generate code much more quickly and efficiently, which is essential for rapid application development.
+          - generic [ref=e361]:
+            - generic [ref=e362]: real-time-coding
+            - generic [ref=e363]: gpt-5
+            - generic [ref=e364]: code-generation
+            - generic [ref=e365]: chatgpt
+            - generic [ref=e366]: openai
+          - generic [ref=e368]: Feb 12, 2026
+        - article [ref=e369]:
+          - generic [ref=e370]:
+            - generic [ref=e371]: RSS
+            - 'generic "AI relevance: 10.0/10" [ref=e373]':
+              - generic [ref=e374]: "10.0"
+              - generic [ref=e375]: /10
+          - generic [ref=e376]:
+            - generic [ref=e377]: LLM Frameworks
+            - generic [ref=e378]: stable
+          - link "Open Introducing GPT-5.2" [ref=e379] [cursor=pointer]:
+            - /url: https://openai.com/index/introducing-gpt-5-2
+            - heading "Introducing GPT-5.2 ↗" [level=3] [ref=e380]:
+              - text: Introducing GPT-5.2
+              - generic [ref=e381]: ↗
+          - paragraph [ref=e382]: GPT-5.2 is OpenAI's latest frontier model featuring advanced reasoning, long-context understanding, and enhanced capabilities for coding and vision tasks.
+          - paragraph [ref=e383]: The introduction of GPT-5.2 enables AI engineers to develop faster, more reliable workflows for professional applications by leveraging its state-of-the-art features.
+          - generic [ref=e384]:
+            - generic [ref=e385]: gpt-5-2
+            - generic [ref=e386]: llm
+            - generic [ref=e387]: reasoning
+            - generic [ref=e388]: context-understanding
+            - generic [ref=e389]: coding
+          - generic [ref=e391]: Dec 10, 2025
+        - article [ref=e392]:
+          - generic [ref=e393]:
+            - generic [ref=e394]: RSS
+            - 'generic "AI relevance: 10.0/10" [ref=e396]':
+              - generic [ref=e397]: "10.0"
+              - generic [ref=e398]: /10
+          - generic [ref=e399]:
+            - generic [ref=e400]: Open Source Models
+            - generic [ref=e401]: stable
+          - link "Open Hello GPT-4o" [ref=e402] [cursor=pointer]:
+            - /url: https://openai.com/index/hello-gpt-4o
+            - heading "Hello GPT-4o ↗" [level=3] [ref=e403]:
+              - text: Hello GPT-4o
+              - generic [ref=e404]: ↗
+          - paragraph [ref=e405]: OpenAI has announced GPT-4 Omni, a new flagship model capable of real-time reasoning across audio, vision, and text.
+          - paragraph [ref=e406]: GPT-4 Omni's integration of audio, vision, and text processing enhances the capabilities of AI models, enabling developers to create more versatile applications that leverage multiple data types.
+          - generic [ref=e407]:
+            - generic [ref=e408]: gpt-4
+            - generic [ref=e409]: multimodal
+            - generic [ref=e410]: real-time-reasoning
+            - generic [ref=e411]: openai
+            - generic [ref=e412]: model-release
+          - generic [ref=e414]: May 13, 2024
+        - article [ref=e415]:
+          - generic [ref=e416]:
+            - generic [ref=e417]: RSS
+            - 'generic "AI relevance: 10.0/10" [ref=e419]':
+              - generic [ref=e420]: "10.0"
+              - generic [ref=e421]: /10
+          - generic [ref=e422]:
+            - generic [ref=e423]: Open Source Models
+            - generic [ref=e424]: stable
+          - link "Open Introducing GPT-5" [ref=e425] [cursor=pointer]:
+            - /url: https://openai.com/index/introducing-gpt-5
+            - heading "Introducing GPT-5 ↗" [level=3] [ref=e426]:
+              - text: Introducing GPT-5
+              - generic [ref=e427]: ↗
+          - paragraph [ref=e428]: GPT-5 is OpenAI's latest AI model, boasting significant advancements in intelligence and performance across various domains including coding and visual perception.
+          - paragraph [ref=e429]: With its state-of-the-art capabilities, GPT-5 can enhance productivity and efficiency for engineers working on diverse AI applications, including coding assistance and creative writing.
+          - generic [ref=e430]:
+            - generic [ref=e431]: gpt-5
+            - generic [ref=e432]: openai
+            - generic [ref=e433]: ai-model
+            - generic [ref=e434]: coding-assistance
+            - generic [ref=e435]: visual-perception
+          - generic [ref=e437]: Aug 6, 2025
+        - article [ref=e438]:
+          - generic [ref=e439]:
+            - generic [ref=e440]: RSS
+            - 'generic "AI relevance: 10.0/10" [ref=e442]':
+              - generic [ref=e443]: "10.0"
+              - generic [ref=e444]: /10
+          - generic [ref=e445]:
+            - generic [ref=e446]: Open Source Models
+            - generic [ref=e447]: stable
+          - link "Open Introducing GPT-5 for developers" [ref=e448] [cursor=pointer]:
+            - /url: https://openai.com/index/introducing-gpt-5-for-developers
+            - heading "Introducing GPT-5 for developers ↗" [level=3] [ref=e449]:
+              - text: Introducing GPT-5 for developers
+              - generic [ref=e450]: ↗
+          - paragraph [ref=e451]: OpenAI has introduced GPT-5 in their API platform, featuring enhanced reasoning performance and developer controls for improved coding tasks.
+          - paragraph [ref=e452]: The new controls and performance improvements in GPT-5 can significantly streamline coding workflows and enhance the capabilities of AI-driven development tools.
+          - generic [ref=e453]:
+            - generic [ref=e454]: gpt-5
+            - generic [ref=e455]: api
+            - generic [ref=e456]: reasoning
+            - generic [ref=e457]: ai-coding
+            - generic [ref=e458]: developer-tools
+          - generic [ref=e460]: Aug 7, 2025
+        - article [ref=e461]:
+          - generic [ref=e462]:
+            - generic [ref=e463]: RSS
+            - 'generic "AI relevance: 10.0/10" [ref=e465]':
+              - generic [ref=e466]: "10.0"
+              - generic [ref=e467]: /10
+          - generic [ref=e468]:
+            - generic [ref=e469]: Open Source Models
+            - generic [ref=e470]: stable
+          - link "Open Introducing GPT-4.1 in the API" [ref=e471] [cursor=pointer]:
+            - /url: https://openai.com/index/gpt-4-1
+            - heading "Introducing GPT-4.1 in the API ↗" [level=3] [ref=e472]:
+              - text: Introducing GPT-4.1 in the API
+              - generic [ref=e473]: ↗
+          - paragraph [ref=e474]: OpenAI has announced the release of GPT-4.1 in its API, featuring significant improvements in coding, instruction following, and long-context understanding alongside a new nano model.
+          - paragraph [ref=e475]: The enhancements in coding and instruction following capabilities will enable developers to build more sophisticated applications, improving the overall efficiency of AI-powered systems.
+          - generic [ref=e476]:
+            - generic [ref=e477]: gpt-4-1
+            - generic [ref=e478]: openai
+            - generic [ref=e479]: api
+            - generic [ref=e480]: coding
+            - generic [ref=e481]: instruction-following
+          - generic [ref=e483]: Apr 14, 2025
+        - article [ref=e484]:
+          - generic [ref=e485]:
+            - generic [ref=e486]: RSS
+            - 'generic "AI relevance: 10.0/10" [ref=e488]':
+              - generic [ref=e489]: "10.0"
+              - generic [ref=e490]: /10
+          - generic [ref=e491]:
+            - generic [ref=e492]: Open Source Models
+            - generic [ref=e493]: stable
+          - link "Open GPT-4" [ref=e494] [cursor=pointer]:
+            - /url: https://openai.com/index/gpt-4-research
+            - heading "GPT-4 ↗" [level=3] [ref=e495]:
+              - text: GPT-4
+              - generic [ref=e496]: ↗
+          - paragraph [ref=e497]: GPT-4 is OpenAI's latest large multimodal model that accepts both image and text inputs, producing text outputs with human-level performance on various benchmarks.
+          - paragraph [ref=e498]: Engineers can leverage GPT-4's advanced multimodal capabilities to enhance applications requiring complex input formats and improve overall performance in AI-driven tasks.
+          - generic [ref=e499]:
+            - generic [ref=e500]: multimodal
+            - generic [ref=e501]: gpt-4
+            - generic [ref=e502]: deep-learning
+            - generic [ref=e503]: natural-language-processing
+          - generic [ref=e505]: Mar 14, 2023
+        - article [ref=e506]:
+          - generic [ref=e507]:
+            - generic [ref=e508]: RSS
+            - 'generic "AI relevance: 7.0/10" [ref=e510]':
+              - generic [ref=e511]: "7.0"
+              - generic [ref=e512]: /10
+          - generic [ref=e514]: Research
+          - link "Open Our evaluation of OpenAI's GPT-5.5 cyber capabilities" [ref=e515] [cursor=pointer]:
+            - /url: https://simonwillison.net/2026/Apr/30/gpt-55-cyber-capabilities/#atom-everything
+            - heading "Our evaluation of OpenAI's GPT-5.5 cyber capabilities ↗" [level=3] [ref=e516]:
+              - text: Our evaluation of OpenAI's GPT-5.5 cyber capabilities
+              - generic [ref=e517]: ↗
+          - paragraph [ref=e518]: The article evaluates the cyber capabilities of OpenAI's GPT-5.5, focusing on its potential applications in cybersecurity.
+          - paragraph [ref=e519]: Understanding the capabilities of GPT-5.5 in cybersecurity can help engineers leverage advanced AI for security measures and threat detection.
+          - generic [ref=e520]:
+            - generic [ref=e521]: openai
+            - generic [ref=e522]: gpt-5.5
+            - generic [ref=e523]: cybersecurity
+            - generic [ref=e524]: ai-capabilities
+          - generic [ref=e526]: 1w ago
+        - article [ref=e527]:
+          - generic [ref=e528]:
+            - generic [ref=e529]: RSS
+            - 'generic "AI relevance: 7.0/10" [ref=e531]':
+              - generic [ref=e532]: "7.0"
+              - generic [ref=e533]: /10
+          - generic [ref=e534]:
+            - generic [ref=e535]: AI Agents
+            - generic [ref=e536]: promising
+          - link "Open Chat with your data using OpenAI, Pinecone, Airbyte and Langchain" [ref=e537] [cursor=pointer]:
+            - /url: https://www.langchain.com/blog/chat-with-your-data-using-openai-pinecone-airbyte-langchain
+            - heading "Chat with your data using OpenAI, Pinecone, Airbyte and Langchain ↗" [level=3] [ref=e538]:
+              - text: Chat with your data using OpenAI, Pinecone, Airbyte and Langchain
+              - generic [ref=e539]: ↗
+          - paragraph [ref=e540]: This article details how to build an AI chatbot that utilizes OpenAI, Pinecone, Airbyte, and LangChain to answer questions based on specific data sources like GitHub and Slack.
+          - paragraph [ref=e541]: Integrating multiple tools for data querying enhances chatbot capabilities, making it easier for engineers to deploy interactive data-driven applications.
+          - generic [ref=e542]:
+            - generic [ref=e543]: chatbot
+            - generic [ref=e544]: data-integration
+            - generic [ref=e545]: openai
+            - generic [ref=e546]: pinecone
+            - generic [ref=e547]: langchain
+          - generic [ref=e549]: 1w ago
+        - article [ref=e550]:
+          - generic [ref=e551]:
+            - generic [ref=e552]: RSS
+            - 'generic "AI relevance: 8.0/10" [ref=e554]':
+              - generic [ref=e555]: "8.0"
+              - generic [ref=e556]: /10
+          - generic [ref=e557]:
+            - generic [ref=e558]: AI Agents
+            - generic [ref=e559]: stable
+          - link "Open Speeding up agentic workflows with WebSockets in the Responses API" [ref=e560] [cursor=pointer]:
+            - /url: https://openai.com/index/speeding-up-agentic-workflows-with-websockets
+            - heading "Speeding up agentic workflows with WebSockets in the Responses API ↗" [level=3] [ref=e561]:
+              - text: Speeding up agentic workflows with WebSockets in the Responses API
+              - generic [ref=e562]: ↗
+          - paragraph [ref=e563]: OpenAI's article details the use of WebSockets in the Responses API to enhance the Codex agent loop by reducing API overhead and improving model latency.
+          - paragraph [ref=e564]: By implementing WebSockets and connection-scoped caching, engineers can achieve more efficient agentic workflows, leading to faster response times in AI applications.
+          - generic [ref=e565]:
+            - generic [ref=e566]: websockets
+            - generic [ref=e567]: api
+            - generic [ref=e568]: model-latency
+            - generic [ref=e569]: codex
+            - generic [ref=e570]: agent-workflows
+          - generic [ref=e572]: 2w ago
+        - article [ref=e573]:
+          - generic [ref=e574]:
+            - generic [ref=e575]: RSS
+            - 'generic "AI relevance: 8.0/10" [ref=e577]':
+              - generic [ref=e578]: "8.0"
+              - generic [ref=e579]: /10
+          - generic [ref=e580]:
+            - generic [ref=e581]: Open Source Models
+            - generic [ref=e582]: stable
+          - link "Open Introducing OpenAI Privacy Filter" [ref=e583] [cursor=pointer]:
+            - /url: https://openai.com/index/introducing-openai-privacy-filter
+            - heading "Introducing OpenAI Privacy Filter ↗" [level=3] [ref=e584]:
+              - text: Introducing OpenAI Privacy Filter
+              - generic [ref=e585]: ↗
+          - paragraph [ref=e586]: OpenAI Privacy Filter is an open-weight model designed for detecting and redacting personally identifiable information (PII) in text.
+          - paragraph [ref=e587]: This model provides a robust solution for safeguarding sensitive information in AI applications, essential for compliance with privacy regulations.
+          - generic [ref=e588]:
+            - generic [ref=e589]: pii-detection
+            - generic [ref=e590]: data-privacy
+            - generic [ref=e591]: open-weight
+            - generic [ref=e592]: text-redaction
+          - generic [ref=e594]: 2w ago
+        - article [ref=e595]:
+          - generic [ref=e596]:
+            - generic [ref=e597]: RSS
+            - 'generic "AI relevance: 9.0/10" [ref=e599]':
+              - generic [ref=e600]: "9.0"
+              - generic [ref=e601]: /10
+          - generic [ref=e602]:
+            - generic [ref=e603]: AI Agents
+            - generic [ref=e604]: stable
+          - link "Open Use GPT 5.4 Mini and Nano on AI Gateway" [ref=e605] [cursor=pointer]:
+            - /url: https://vercel.com/changelog/use-gpt-5-4-mini-and-nano-on-ai-gateway
+            - heading "Use GPT 5.4 Mini and Nano on AI Gateway ↗" [level=3] [ref=e606]:
+              - text: Use GPT 5.4 Mini and Nano on AI Gateway
+              - generic [ref=e607]: ↗
+          - paragraph [ref=e608]: OpenAI's GPT-5.4 Mini and Nano models, now available on Vercel AI Gateway, are optimized for sub-agent workflows and multi-step tasks in coding and computer use.
+          - paragraph [ref=e609]: These models allow engineers to execute complex agentic tasks with improved cost-effectiveness and performance, particularly useful for applications requiring multiple small models to work together.
+          - generic [ref=e610]:
+            - generic [ref=e611]: gpt-5
+            - generic [ref=e612]: openai
+            - generic [ref=e613]: sub-agent-workflows
+            - generic [ref=e614]: code-generation
+            - generic [ref=e615]: api-gateway
+          - generic [ref=e617]: Mar 17, 2026
+        - article [ref=e618]:
+          - generic [ref=e619]:
+            - generic [ref=e620]: RSS
+            - 'generic "AI relevance: 9.0/10" [ref=e622]':
+              - generic [ref=e623]: "9.0"
+              - generic [ref=e624]: /10
+          - generic [ref=e625]:
+            - generic [ref=e626]: Open Source Models
+            - generic [ref=e627]: stable
+          - link "Open Introducing GPT-5.4 mini and nano" [ref=e628] [cursor=pointer]:
+            - /url: https://openai.com/index/introducing-gpt-5-4-mini-and-nano
+            - heading "Introducing GPT-5.4 mini and nano ↗" [level=3] [ref=e629]:
+              - text: Introducing GPT-5.4 mini and nano
+              - generic [ref=e630]: ↗
+          - paragraph [ref=e631]: OpenAI has launched GPT-5.4 mini and nano, optimized versions of GPT-5.4 for improved performance in coding, tool use, and multimodal reasoning.
+          - paragraph [ref=e632]: These smaller models can significantly enhance AI engineers' efficiency in developing and integrating applications that require rapid responses in high-volume contexts.
+          - generic [ref=e633]:
+            - generic [ref=e634]: gpt-5.4
+            - generic [ref=e635]: model-optimization
+            - generic [ref=e636]: coding
+            - generic [ref=e637]: tool-use
+            - generic [ref=e638]: multimodal
+          - generic [ref=e640]: Mar 17, 2026
+        - article [ref=e641]:
+          - generic [ref=e642]:
+            - generic [ref=e643]: RSS
+            - 'generic "AI relevance: 7.0/10" [ref=e645]':
+              - generic [ref=e646]: "7.0"
+              - generic [ref=e647]: /10
+          - generic [ref=e648]:
+            - generic [ref=e649]: Product Updates
+            - generic [ref=e650]: stable
+          - link "Open OpenAI models, Codex, and Managed Agents come to AWS" [ref=e651] [cursor=pointer]:
+            - /url: https://openai.com/index/openai-on-aws
+            - heading "OpenAI models, Codex, and Managed Agents come to AWS ↗" [level=3] [ref=e652]:
+              - text: OpenAI models, Codex, and Managed Agents come to AWS
+              - generic [ref=e653]: ↗
+          - paragraph [ref=e654]: OpenAI's GPT models, Codex, and Managed Agents are now available on AWS, allowing enterprises to deploy secure AI solutions within their AWS infrastructure.
+          - paragraph [ref=e655]: This integration provides engineers with reliable access to cutting-edge models within the AWS ecosystem, facilitating faster development and deployment of AI applications in a secure environment.
+          - generic [ref=e656]:
+            - generic [ref=e657]: openai
+            - generic [ref=e658]: aws
+            - generic [ref=e659]: gpt
+            - generic [ref=e660]: codex
+            - generic [ref=e661]: managed-agents
+          - generic [ref=e663]: 2w ago
+        - article [ref=e664]:
+          - generic [ref=e665]:
+            - generic [ref=e666]: RSS
+            - 'generic "AI relevance: 9.0/10" [ref=e668]':
+              - generic [ref=e669]: "9.0"
+              - generic [ref=e670]: /10
+          - generic [ref=e671]:
+            - generic [ref=e672]: Open Source Models
+            - generic [ref=e673]: stable
+          - link "Open GPT-5.4 Thinking System Card" [ref=e674] [cursor=pointer]:
+            - /url: https://openai.com/index/gpt-5-4-thinking-system-card
+            - heading "GPT-5.4 Thinking System Card ↗" [level=3] [ref=e675]:
+              - text: GPT-5.4 Thinking System Card
+              - generic [ref=e676]: ↗
+          - paragraph [ref=e677]: OpenAI has released a system card for GPT-5.4, detailing its capabilities, limitations, and potential applications.
+          - paragraph [ref=e678]: Understanding the constraints and use-cases of GPT-5.4 can help engineers effectively integrate the model into their applications and mitigate risks.
+          - generic [ref=e679]:
+            - generic [ref=e680]: gpt-5.4
+            - generic [ref=e681]: system-card
+            - generic [ref=e682]: model-analysis
+            - generic [ref=e683]: openai
+          - generic [ref=e685]: Mar 5, 2026
+        - article [ref=e686]:
+          - generic [ref=e687]:
+            - generic [ref=e688]: RSS
+            - 'generic "AI relevance: 9.0/10" [ref=e690]':
+              - generic [ref=e691]: "9.0"
+              - generic [ref=e692]: /10
+          - generic [ref=e693]:
+            - generic [ref=e694]: Open Source Models
+            - generic [ref=e695]: stable
+          - link "Open GPT-5.3 Instant System Card" [ref=e696] [cursor=pointer]:
+            - /url: https://openai.com/index/gpt-5-3-instant-system-card
+            - heading "GPT-5.3 Instant System Card ↗" [level=3] [ref=e697]:
+              - text: GPT-5.3 Instant System Card
+              - generic [ref=e698]: ↗
+          - paragraph [ref=e699]: OpenAI has released the GPT-5.3 Instant System Card, providing detailed insights into the model's capabilities and limitations.
+          - paragraph [ref=e700]: This System Card is crucial for engineers as it helps them understand how to effectively integrate GPT-5.3 into their applications while navigating its potential pitfalls.
+          - generic [ref=e701]:
+            - generic [ref=e702]: gpt-5
+            - generic [ref=e703]: system-card
+            - generic [ref=e704]: model-integration
+            - generic [ref=e705]: ai-ethics
+          - generic [ref=e707]: Mar 3, 2026
+        - article [ref=e708]:
+          - generic [ref=e709]:
+            - generic [ref=e710]: RSS
+            - 'generic "AI relevance: 9.0/10" [ref=e712]':
+              - generic [ref=e713]: "9.0"
+              - generic [ref=e714]: /10
+          - generic [ref=e715]:
+            - generic [ref=e716]: Code Agents
+            - generic [ref=e717]: stable
+          - link "Open GPT-5.3-Codex System Card" [ref=e718] [cursor=pointer]:
+            - /url: https://openai.com/index/gpt-5-3-codex-system-card
+            - heading "GPT-5.3-Codex System Card ↗" [level=3] [ref=e719]:
+              - text: GPT-5.3-Codex System Card
+              - generic [ref=e720]: ↗
+          - paragraph [ref=e721]: GPT-5.3-Codex is the latest agentic coding model from OpenAI, enhancing coding performance with advanced reasoning capabilities.
+          - paragraph [ref=e722]: This model can significantly improve coding tasks by providing not only advanced coding suggestions but also reasoning and domain knowledge, streamlining developer workflows.
+          - generic [ref=e723]:
+            - generic [ref=e724]: gpt-5
+            - generic [ref=e725]: codex
+            - generic [ref=e726]: agentic-systems
+            - generic [ref=e727]: ai-coding
+            - generic [ref=e728]: reasoning
+          - generic [ref=e730]: Feb 4, 2026
+        - article [ref=e731]:
+          - generic [ref=e732]:
+            - generic [ref=e733]: RSS
+            - 'generic "AI relevance: 9.0/10" [ref=e735]':
+              - generic [ref=e736]: "9.0"
+              - generic [ref=e737]: /10
+          - generic [ref=e738]:
+            - generic [ref=e739]: AI Agents
+            - generic [ref=e740]: stable
+          - link "Open Inside OpenAI’s in-house data agent" [ref=e741] [cursor=pointer]:
+            - /url: https://openai.com/index/inside-our-in-house-data-agent
+            - heading "Inside OpenAI’s in-house data agent ↗" [level=3] [ref=e742]:
+              - text: Inside OpenAI’s in-house data agent
+              - generic [ref=e743]: ↗
+          - paragraph [ref=e744]: OpenAI has developed an in-house AI data agent that utilizes GPT-5, Codex, and memory for efficient reasoning over large datasets to provide insights.
+          - paragraph [ref=e745]: This data agent exemplifies the application of advanced models and memory capabilities, which can help engineers improve data processing and insight delivery in their own applications.
+          - generic [ref=e746]:
+            - generic [ref=e747]: data-agent
+            - generic [ref=e748]: gpt-5
+            - generic [ref=e749]: codex
+            - generic [ref=e750]: memory
+            - generic [ref=e751]: data-analysis
+          - generic [ref=e753]: Jan 29, 2026
+        - article [ref=e754]:
+          - generic [ref=e755]:
+            - generic [ref=e756]: RSS
+            - 'generic "AI relevance: 9.0/10" [ref=e758]':
+              - generic [ref=e759]: "9.0"
+              - generic [ref=e760]: /10
+          - generic [ref=e761]:
+            - generic [ref=e762]: Code Agents
+            - generic [ref=e763]: stable
+          - link "Open Introducing GPT-5.2-Codex" [ref=e764] [cursor=pointer]:
+            - /url: https://openai.com/index/introducing-gpt-5-2-codex
+            - heading "Introducing GPT-5.2-Codex ↗" [level=3] [ref=e765]:
+              - text: Introducing GPT-5.2-Codex
+              - generic [ref=e766]: ↗
+          - paragraph [ref=e767]: GPT-5.2-Codex is OpenAI's advanced coding model designed for long-horizon reasoning and large-scale code transformations.
+          - paragraph [ref=e768]: This model enhances coding workflows and cybersecurity, providing developers with powerful tools for tackling complex coding tasks and improving software security.
+          - generic [ref=e769]:
+            - generic [ref=e770]: gpt-5-2
+            - generic [ref=e771]: code-generation
+            - generic [ref=e772]: model-inference
+            - generic [ref=e773]: cybersecurity
+            - generic [ref=e774]: long-horizon-reasoning
+          - generic [ref=e776]: Dec 17, 2025
+        - article [ref=e777]:
+          - generic [ref=e778]:
+            - generic [ref=e779]: RSS
+            - 'generic "AI relevance: 9.0/10" [ref=e781]':
+              - generic [ref=e782]: "9.0"
+              - generic [ref=e783]: /10
+          - generic [ref=e784]:
+            - generic [ref=e785]: Open Source Models
+            - generic [ref=e786]: stable
+          - 'link "Open Addendum to GPT-5.2 System Card: GPT-5.2-Codex" [ref=e787] [cursor=pointer]':
+            - /url: https://openai.com/index/gpt-5-2-codex-system-card
+            - 'heading "Addendum to GPT-5.2 System Card: GPT-5.2-Codex ↗" [level=3] [ref=e788]':
+              - text: "Addendum to GPT-5.2 System Card: GPT-5.2-Codex"
+              - generic [ref=e789]: ↗
+          - paragraph [ref=e790]: The GPT-5.2 Codex system card provides detailed information about the Codex variant of OpenAI's GPT-5.2 model.
+          - paragraph [ref=e791]: Understanding the capabilities and limitations of GPT-5.2 Codex is crucial for engineers integrating this advanced model into coding-related tasks and applications.
+          - generic [ref=e792]:
+            - generic [ref=e793]: gpt-5-2
+            - generic [ref=e794]: codex
+            - generic [ref=e795]: openai
+            - generic [ref=e796]: model-card
+            - generic [ref=e797]: ml-engineering
+          - generic [ref=e799]: Dec 17, 2025
+        - article [ref=e800]:
+          - generic [ref=e801]:
+            - generic [ref=e802]: RSS
+            - 'generic "AI relevance: 9.0/10" [ref=e804]':
+              - generic [ref=e805]: "9.0"
+              - generic [ref=e806]: /10
+          - generic [ref=e807]:
+            - generic [ref=e808]: Open Source Models
+            - generic [ref=e809]: stable
+          - link "Open GPT 5.2 models now available on Vercel AI Gateway" [ref=e810] [cursor=pointer]:
+            - /url: https://vercel.com/changelog/gpt-5-2-models-now-available-on-vercel-ai-gateway
+            - heading "GPT 5.2 models now available on Vercel AI Gateway ↗" [level=3] [ref=e811]:
+              - text: GPT 5.2 models now available on Vercel AI Gateway
+              - generic [ref=e812]: ↗
+          - paragraph [ref=e813]: OpenAI's latest GPT-5.2 models are now available through Vercel AI Gateway, improving performance in professional knowledge work, coding, and long-context reasoning.
+          - paragraph [ref=e814]: These models enhance AI applications with fewer hallucinations and improved capabilities for handling complex tasks and long documents, making them highly useful for engineers building advanced AI solutions.
+          - generic [ref=e815]:
+            - generic [ref=e816]: gpt-5-2
+            - generic [ref=e817]: vercel
+            - generic [ref=e818]: ai-gateway
+            - generic [ref=e819]: model-integration
+            - generic [ref=e820]: long-context
+          - generic [ref=e822]: Dec 11, 2025
+        - article [ref=e823]:
+          - generic [ref=e824]:
+            - generic [ref=e825]: RSS
+            - 'generic "AI relevance: 9.0/10" [ref=e827]':
+              - generic [ref=e828]: "9.0"
+              - generic [ref=e829]: /10
+          - generic [ref=e830]:
+            - generic [ref=e831]: Open Source Models
+            - generic [ref=e832]: stable
+          - 'link "Open Update to GPT-5 System Card: GPT-5.2" [ref=e833] [cursor=pointer]':
+            - /url: https://openai.com/index/gpt-5-system-card-update-gpt-5-2
+            - 'heading "Update to GPT-5 System Card: GPT-5.2 ↗" [level=3] [ref=e834]':
+              - text: "Update to GPT-5 System Card: GPT-5.2"
+              - generic [ref=e835]: ↗
+          - paragraph [ref=e836]: GPT-5.2 is the latest release in the GPT-5 series, featuring an updated safety mitigation approach and training on diverse datasets.
+          - paragraph [ref=e837]: The advancements in GPT-5.2 enhance its applicability for developing complex AI applications, making it crucial for engineers working with advanced language models.
+          - generic [ref=e838]:
+            - generic [ref=e839]: gpt-5
+            - generic [ref=e840]: openai
+            - generic [ref=e841]: language-model
+            - generic [ref=e842]: safety-mitigation
+          - generic [ref=e844]: Dec 10, 2025
+        - article [ref=e845]:
+          - generic [ref=e846]:
+            - generic [ref=e847]: RSS
+            - 'generic "AI relevance: 9.0/10" [ref=e849]':
+              - generic [ref=e850]: "9.0"
+              - generic [ref=e851]: /10
+          - generic [ref=e852]:
+            - generic [ref=e853]: Open Source Models
+            - generic [ref=e854]: stable
+          - link "Open Advancing science and math with GPT-5.2" [ref=e855] [cursor=pointer]:
+            - /url: https://openai.com/index/gpt-5-2-for-science-and-math
+            - heading "Advancing science and math with GPT-5.2 ↗" [level=3] [ref=e856]:
+              - text: Advancing science and math with GPT-5.2
+              - generic [ref=e857]: ↗
+          - paragraph [ref=e858]: GPT-5.2 is OpenAI's advanced model achieving state-of-the-art benchmarks in math and science, including significant problem-solving capabilities.
+          - paragraph [ref=e859]: The enhanced capabilities of GPT-5.2 enable researchers and engineers to tackle complex mathematical problems and generate reliable proofs, improving productivity in scientific research.
+          - generic [ref=e860]:
+            - generic [ref=e861]: gpt-5-2
+            - generic [ref=e862]: math
+            - generic [ref=e863]: science
+            - generic [ref=e864]: research-advancements
+            - generic [ref=e865]: model-benchmarks
+          - generic [ref=e867]: Dec 11, 2025
+        - article [ref=e868]:
+          - generic [ref=e869]:
+            - generic [ref=e870]: RSS
+            - 'generic "AI relevance: 9.0/10" [ref=e872]':
+              - generic [ref=e873]: "9.0"
+              - generic [ref=e874]: /10
+          - generic [ref=e875]:
+            - generic [ref=e876]: Code Agents
+            - generic [ref=e877]: stable
+          - link "Open GPT 5.1 Codex Max now available on Vercel AI Gateway" [ref=e878] [cursor=pointer]:
+            - /url: https://vercel.com/changelog/gpt-5-1-codex-max-now-available-on-vercel-ai-gateway
+            - heading "GPT 5.1 Codex Max now available on Vercel AI Gateway ↗" [level=3] [ref=e879]:
+              - text: GPT 5.1 Codex Max now available on Vercel AI Gateway
+              - generic [ref=e880]: ↗
+          - paragraph [ref=e881]: OpenAI's GPT-5.1 Codex Max is now available through Vercel's AI Gateway, providing enhanced performance for coding tasks.
+          - paragraph [ref=e882]: The optimization for long-running tasks and improved context retention in GPT-5.1 Codex Max can significantly enhance productivity for developers engaged in coding and debugging.
+          - generic [ref=e883]:
+            - generic [ref=e884]: gpt-5-1
+            - generic [ref=e885]: codex
+            - generic [ref=e886]: vercel
+            - generic [ref=e887]: ai-gateway
+            - generic [ref=e888]: model-optimization
+          - generic [ref=e890]: Dec 5, 2025
+        - article [ref=e891]:
+          - generic [ref=e892]:
+            - generic [ref=e893]: RSS
+            - 'generic "AI relevance: 9.0/10" [ref=e895]':
+              - generic [ref=e896]: "9.0"
+              - generic [ref=e897]: /10
+          - generic [ref=e898]:
+            - generic [ref=e899]: LLM Frameworks
+            - generic [ref=e900]: stable
+          - 'link "Open GPT-5.1: A smarter, more conversational ChatGPT" [ref=e901] [cursor=pointer]':
+            - /url: https://openai.com/index/gpt-5-1
+            - 'heading "GPT-5.1: A smarter, more conversational ChatGPT ↗" [level=3] [ref=e902]':
+              - text: "GPT-5.1: A smarter, more conversational ChatGPT"
+              - generic [ref=e903]: ↗
+          - paragraph [ref=e904]: OpenAI has released GPT-5.1, an upgraded version of the GPT-5 series, featuring improvements in conversational abilities and customizable tone and style options for ChatGPT.
+          - paragraph [ref=e905]: The enhanced customization features allow AI developers to tailor the interactions of ChatGPT more closely to user needs, optimizing user experience and engagement.
+          - generic [ref=e906]:
+            - generic [ref=e907]: gpt-5
+            - generic [ref=e908]: chatgpt
+            - generic [ref=e909]: model-upgrade
+            - generic [ref=e910]: conversational-ai
+            - generic [ref=e911]: customization
+          - generic [ref=e913]: Nov 11, 2025
+        - article [ref=e914]:
+          - generic [ref=e915]:
+            - generic [ref=e916]: RSS
+            - 'generic "AI relevance: 9.0/10" [ref=e918]':
+              - generic [ref=e919]: "9.0"
+              - generic [ref=e920]: /10
+          - generic [ref=e921]:
+            - generic [ref=e922]: Open Source Models
+            - generic [ref=e923]: stable
+          - link "Open Introducing GPT-5.1 for developers" [ref=e924] [cursor=pointer]:
+            - /url: https://openai.com/index/gpt-5-1-for-developers
+            - heading "Introducing GPT-5.1 for developers ↗" [level=3] [ref=e925]:
+              - text: Introducing GPT-5.1 for developers
+              - generic [ref=e926]: ↗
+          - paragraph [ref=e927]: GPT-5.1 has been released in the OpenAI API, featuring faster adaptive reasoning, extended prompt caching, and improved coding performance.
+          - paragraph [ref=e928]: Enhanced coding performance and new tools like apply_patch and shell can significantly streamline developers' workflows when building applications that utilize the API.
+          - generic [ref=e929]:
+            - generic [ref=e930]: gpt-5-1
+            - generic [ref=e931]: api
+            - generic [ref=e932]: adaptive-reasoning
+            - generic [ref=e933]: prompt-caching
+            - generic [ref=e934]: coding-performance
+          - generic [ref=e936]: Nov 12, 2025
+        - article [ref=e937]:
+          - generic [ref=e938]:
+            - generic [ref=e939]: RSS
+            - 'generic "AI relevance: 9.0/10" [ref=e941]':
+              - generic [ref=e942]: "9.0"
+              - generic [ref=e943]: /10
+          - generic [ref=e944]:
+            - generic [ref=e945]: Code Agents
+            - generic [ref=e946]: stable
+          - link "Open GPT 5.1 Codex models now available in Vercel AI Gateway" [ref=e947] [cursor=pointer]:
+            - /url: https://vercel.com/changelog/gpt-5-1-codex-models-now-available-in-vercel-ai-gateway
+            - heading "GPT 5.1 Codex models now available in Vercel AI Gateway ↗" [level=3] [ref=e948]:
+              - text: GPT 5.1 Codex models now available in Vercel AI Gateway
+              - generic [ref=e949]: ↗
+          - paragraph [ref=e950]: OpenAI's GPT-5.1 Codex models are now accessible through Vercel AI Gateway, allowing for improved handling of long-running coding tasks.
+          - paragraph [ref=e951]: These models enhance the ability to maintain context and reasoning in complex coding environments, which can significantly boost developer productivity in AI coding tasks.
+          - generic [ref=e952]:
+            - generic [ref=e953]: gpt-5-1
+            - generic [ref=e954]: codex
+            - generic [ref=e955]: vercel
+            - generic [ref=e956]: ai-gateway
+            - generic [ref=e957]: coding-assistant
+          - generic [ref=e959]: Nov 13, 2025
+    - contentinfo [ref=e960]:
+      - generic [ref=e961]: AgentRadar — built with Next.js, Supabase, and Claude
+  - button "Open Next.js Dev Tools" [ref=e967] [cursor=pointer]:
+    - img [ref=e968]

@@ -1,0 +1,1179 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - link "AgentRadar" [ref=e6] [cursor=pointer]:
+            - /url: /
+          - generic [ref=e7]: beta
+        - navigation [ref=e8]:
+          - link "search" [ref=e9] [cursor=pointer]:
+            - /url: /search
+          - link "digest" [ref=e10] [cursor=pointer]:
+            - /url: /digest
+    - main [ref=e11]:
+      - generic [ref=e12]:
+        - heading "Search" [level=1] [ref=e13]
+        - paragraph [ref=e14]: AI-enriched tools, repos, and articles indexed from GitHub, HN, and blogs.
+      - generic [ref=e15]:
+        - generic [ref=e16]:
+          - generic [ref=e17]:
+            - generic:
+              - img
+            - textbox "Search AgentRadar… try 'claude', 'mcp', 'rag'" [ref=e18]
+          - button "Search" [ref=e19]
+        - generic [ref=e20]:
+          - generic [ref=e21]:
+            - button "all" [ref=e22]
+            - button "github" [ref=e23]
+            - button "HN" [ref=e24]
+            - button "rss" [ref=e25]
+          - combobox [ref=e26]:
+            - option "All categories" [selected]
+            - option "AI Agents"
+            - option "Code Agents"
+            - option "LLM Frameworks"
+            - option "MCP / Tool Use"
+            - option "Workflow Automation"
+            - option "RAG"
+            - option "Research"
+            - option "Product Updates"
+            - option "AI Infrastructure"
+            - option "Open Source Models"
+            - option "Prompt Engineering"
+            - option "Developer Tools"
+            - option "Other"
+          - generic [ref=e27]:
+            - button "any" [ref=e28]
+            - button "stable" [ref=e29]
+            - button "promising" [ref=e30]
+            - button "experimental" [ref=e31]
+          - combobox [ref=e32]:
+            - option "Any score" [selected]
+            - option "≥ 5 / 10"
+            - option "≥ 6 / 10"
+            - option "≥ 7 / 10"
+            - option "≥ 8 / 10"
+          - combobox [ref=e33]:
+            - option "Best match" [selected]
+            - option "Highest relevance"
+            - option "Newest"
+      - generic [ref=e34]:
+        - generic [ref=e35]: 40 high-signal items
+        - generic [ref=e36]: · sorted by radar score
+      - generic [ref=e37]:
+        - article [ref=e38]:
+          - generic [ref=e39]:
+            - generic [ref=e40]: GitHub
+            - 'generic "AI relevance: 10.0/10" [ref=e42]':
+              - generic [ref=e43]: "10.0"
+              - generic [ref=e44]: /10
+          - generic [ref=e45]:
+            - generic [ref=e46]: AI Agents
+            - generic [ref=e47]: stable
+          - link "Open langchain-ai/langchain" [ref=e48] [cursor=pointer]:
+            - /url: https://github.com/langchain-ai/langchain
+            - heading "langchain-ai/langchain ↗" [level=3] [ref=e49]:
+              - text: langchain-ai/langchain
+              - generic [ref=e50]: ↗
+          - paragraph [ref=e51]: LangChain is an agent engineering platform designed for building and deploying AI applications using Python.
+          - paragraph [ref=e52]: LangChain simplifies the development of AI systems by providing a robust framework for integrating language models with action integrators, making it easier for engineers to create complex agentic applications.
+          - generic [ref=e53]:
+            - generic [ref=e54]: agent-engineering
+            - generic [ref=e55]: python
+            - generic [ref=e56]: llm-tooling
+            - generic [ref=e57]: integration
+          - generic [ref=e58]:
+            - generic [ref=e59]:
+              - generic [ref=e60]: ⭐
+              - generic [ref=e61]: 136.4k
+              - generic [ref=e62]: · 22.6k forks
+            - generic [ref=e63]: today
+        - article [ref=e64]:
+          - generic [ref=e65]:
+            - generic [ref=e66]: GitHub
+            - 'generic "AI relevance: 9.0/10" [ref=e68]':
+              - generic [ref=e69]: "9.0"
+              - generic [ref=e70]: /10
+          - generic [ref=e71]:
+            - generic [ref=e72]: AI Agents
+            - generic [ref=e73]: stable
+          - link "Open affaan-m/everything-claude-code" [ref=e74] [cursor=pointer]:
+            - /url: https://github.com/affaan-m/everything-claude-code
+            - heading "affaan-m/everything-claude-code ↗" [level=3] [ref=e75]:
+              - text: affaan-m/everything-claude-code
+              - generic [ref=e76]: ↗
+          - paragraph [ref=e77]: The 'everything-claude-code' GitHub repository is an agent harness performance optimization system for integrating AI models like Claude Code and Codex.
+          - paragraph [ref=e78]: This framework provides essential performance optimization tools for developers leveraging AI models, enhancing the efficiency and effectiveness of AI agent interactions.
+          - generic [ref=e79]:
+            - generic [ref=e80]: performance-optimization
+            - generic [ref=e81]: agent-framework
+            - generic [ref=e82]: claude
+            - generic [ref=e83]: codex
+            - generic [ref=e84]: javascript
+          - generic [ref=e85]:
+            - generic [ref=e86]:
+              - generic [ref=e87]: ⭐
+              - generic [ref=e88]: 179.4k
+              - generic [ref=e89]: · 27.7k forks
+            - generic [ref=e90]: today
+        - article [ref=e91]:
+          - generic [ref=e92]:
+            - generic [ref=e93]: GitHub
+            - 'generic "AI relevance: 9.0/10" [ref=e95]':
+              - generic [ref=e96]: "9.0"
+              - generic [ref=e97]: /10
+          - generic [ref=e98]:
+            - generic [ref=e99]: AI Agents
+            - generic [ref=e100]: stable
+          - link "Open langgenius/dify" [ref=e101] [cursor=pointer]:
+            - /url: https://github.com/langgenius/dify
+            - heading "langgenius/dify ↗" [level=3] [ref=e102]:
+              - text: langgenius/dify
+              - generic [ref=e103]: ↗
+          - paragraph [ref=e104]: Dify is a production-ready platform for developing agentic workflows using TypeScript.
+          - paragraph [ref=e105]: It provides engineers with a robust framework to design and implement complex workflows for autonomous agents, enhancing productivity and reducing development time.
+          - generic [ref=e106]:
+            - generic [ref=e107]: agent-workflows
+            - generic [ref=e108]: typescript
+            - generic [ref=e109]: workflow-automation
+            - generic [ref=e110]: development-platform
+          - generic [ref=e111]:
+            - generic [ref=e112]:
+              - generic [ref=e113]: ⭐
+              - generic [ref=e114]: 141.0k
+              - generic [ref=e115]: · 22.1k forks
+            - generic [ref=e116]: today
+        - article [ref=e117]:
+          - generic [ref=e118]:
+            - generic [ref=e119]: GitHub
+            - 'generic "AI relevance: 9.0/10" [ref=e121]':
+              - generic [ref=e122]: "9.0"
+              - generic [ref=e123]: /10
+          - generic [ref=e124]:
+            - generic [ref=e125]: AI Agents
+            - generic [ref=e126]: stable
+          - link "Open run-llama/llama_index" [ref=e127] [cursor=pointer]:
+            - /url: https://github.com/run-llama/llama_index
+            - heading "run-llama/llama_index ↗" [level=3] [ref=e128]:
+              - text: run-llama/llama_index
+              - generic [ref=e129]: ↗
+          - paragraph [ref=e130]: LlamaIndex is a Python library designed for document agent capabilities and optical character recognition (OCR) integration.
+          - paragraph [ref=e131]: It enables engineers to streamline document processing and enhance AI systems with robust OCR functions, making it easier to work with textual data extracted from various sources.
+          - generic [ref=e132]:
+            - generic [ref=e133]: document-agent
+            - generic [ref=e134]: ocr
+            - generic [ref=e135]: python
+            - generic [ref=e136]: data-processing
+          - generic [ref=e137]:
+            - generic [ref=e138]:
+              - generic [ref=e139]: ⭐
+              - generic [ref=e140]: 49.3k
+              - generic [ref=e141]: · 7.4k forks
+            - generic [ref=e142]: today
+        - article [ref=e143]:
+          - generic [ref=e144]:
+            - generic [ref=e145]: GitHub
+            - 'generic "AI relevance: 9.0/10" [ref=e147]':
+              - generic [ref=e148]: "9.0"
+              - generic [ref=e149]: /10
+          - generic [ref=e150]:
+            - generic [ref=e151]: AI Agents
+            - generic [ref=e152]: stable
+          - link "Open langchain-ai/langgraph" [ref=e153] [cursor=pointer]:
+            - /url: https://github.com/langchain-ai/langgraph
+            - heading "langchain-ai/langgraph ↗" [level=3] [ref=e154]:
+              - text: langchain-ai/langgraph
+              - generic [ref=e155]: ↗
+          - paragraph [ref=e156]: LangGraph is an open-source Python library designed for building resilient AI agents.
+          - paragraph [ref=e157]: It provides developers with a robust framework for creating adaptive agents, enhancing their ability to handle complex tasks and environments.
+          - generic [ref=e158]:
+            - generic [ref=e159]: python
+            - generic [ref=e160]: agent-framework
+            - generic [ref=e161]: resilience
+            - generic [ref=e162]: tool-use
+          - generic [ref=e163]:
+            - generic [ref=e164]:
+              - generic [ref=e165]: ⭐
+              - generic [ref=e166]: 31.8k
+              - generic [ref=e167]: · 5.4k forks
+            - generic [ref=e168]: today
+        - article [ref=e169]:
+          - generic [ref=e170]:
+            - generic [ref=e171]: GitHub
+            - 'generic "AI relevance: 9.0/10" [ref=e173]':
+              - generic [ref=e174]: "9.0"
+              - generic [ref=e175]: /10
+          - generic [ref=e176]:
+            - generic [ref=e177]: AI Agents
+            - generic [ref=e178]: stable
+          - link "Open activepieces/activepieces" [ref=e179] [cursor=pointer]:
+            - /url: https://github.com/activepieces/activepieces
+            - heading "activepieces/activepieces ↗" [level=3] [ref=e180]:
+              - text: activepieces/activepieces
+              - generic [ref=e181]: ↗
+          - paragraph [ref=e182]: Activepieces is an open-source framework for building AI agents and automating workflows using Model Context Protocols (MCPs).
+          - paragraph [ref=e183]: The framework's high adoption signal with over 22k stars indicates its utility for engineers looking to implement AI-driven automation and agent-based systems efficiently.
+          - generic [ref=e184]:
+            - generic [ref=e185]: ai-workflows
+            - generic [ref=e186]: mcp
+            - generic [ref=e187]: automation
+            - generic [ref=e188]: typescript
+            - generic [ref=e189]: open-source
+          - generic [ref=e190]:
+            - generic [ref=e191]:
+              - generic [ref=e192]: ⭐
+              - generic [ref=e193]: 22.1k
+              - generic [ref=e194]: · 3.6k forks
+            - generic [ref=e195]: today
+        - article [ref=e196]:
+          - generic [ref=e197]:
+            - generic [ref=e198]: GitHub
+            - 'generic "AI relevance: 9.0/10" [ref=e200]':
+              - generic [ref=e201]: "9.0"
+              - generic [ref=e202]: /10
+          - generic [ref=e203]:
+            - generic [ref=e204]: AI Agents
+            - generic [ref=e205]: stable
+          - link "Open deepset-ai/haystack" [ref=e206] [cursor=pointer]:
+            - /url: https://github.com/deepset-ai/haystack
+            - heading "deepset-ai/haystack ↗" [level=3] [ref=e207]:
+              - text: deepset-ai/haystack
+              - generic [ref=e208]: ↗
+          - paragraph [ref=e209]: Haystack is an open-source AI orchestration framework designed for building context-engineered, production-ready LLM applications with modular pipelines and agent workflows.
+          - paragraph [ref=e210]: Its modularity and focus on retrieval and routing make it a valuable tool for engineers developing scalable AI applications that require multi-step interactions and data processing.
+          - generic [ref=e211]:
+            - generic [ref=e212]: open-source
+            - generic [ref=e213]: llm-applications
+            - generic [ref=e214]: retrieval
+            - generic [ref=e215]: modular-pipelines
+            - generic [ref=e216]: scalable-agents
+          - generic [ref=e217]:
+            - generic [ref=e218]:
+              - generic [ref=e219]: ⭐
+              - generic [ref=e220]: 25.2k
+              - generic [ref=e221]: · 2.8k forks
+            - generic [ref=e222]: today
+        - article [ref=e223]:
+          - generic [ref=e224]:
+            - generic [ref=e225]: GitHub
+            - 'generic "AI relevance: 9.0/10" [ref=e227]':
+              - generic [ref=e228]: "9.0"
+              - generic [ref=e229]: /10
+          - generic [ref=e230]:
+            - generic [ref=e231]: AI Agents
+            - generic [ref=e232]: stable
+          - link "Open elizaOS/eliza" [ref=e233] [cursor=pointer]:
+            - /url: https://github.com/elizaOS/eliza
+            - heading "elizaOS/eliza ↗" [level=3] [ref=e234]:
+              - text: elizaOS/eliza
+              - generic [ref=e235]: ↗
+          - paragraph [ref=e236]: elizaOS is an open-source framework for building autonomous agents using TypeScript, designed to simplify agent development for engineers.
+          - paragraph [ref=e237]: The framework provides an accessible way for developers to create and deploy autonomous agents, promoting innovation and experimentation in AI applications.
+          - generic [ref=e238]:
+            - generic [ref=e239]: autonomous-agents
+            - generic [ref=e240]: typescript
+            - generic [ref=e241]: agent-framework
+            - generic [ref=e242]: open-source
+            - generic [ref=e243]: developer-tools
+          - generic [ref=e244]:
+            - generic [ref=e245]:
+              - generic [ref=e246]: ⭐
+              - generic [ref=e247]: 18.3k
+              - generic [ref=e248]: · 5.5k forks
+            - generic [ref=e249]: today
+        - article [ref=e250]:
+          - generic [ref=e251]:
+            - generic [ref=e252]: GitHub
+            - 'generic "AI relevance: 9.0/10" [ref=e254]':
+              - generic [ref=e255]: "9.0"
+              - generic [ref=e256]: /10
+          - generic [ref=e257]:
+            - generic [ref=e258]: AI Agents
+            - generic [ref=e259]: stable
+          - link "Open promptfoo/promptfoo" [ref=e260] [cursor=pointer]:
+            - /url: https://github.com/promptfoo/promptfoo
+            - heading "promptfoo/promptfoo ↗" [level=3] [ref=e261]:
+              - text: promptfoo/promptfoo
+              - generic [ref=e262]: ↗
+          - paragraph [ref=e263]: Promptfoo is a TypeScript library designed for testing prompts and agents, offering red teaming and vulnerability scanning for AI models like GPT, Claude, and Llama.
+          - paragraph [ref=e264]: By enabling engineers to evaluate the performance and security of AI prompts and agents, Promptfoo helps ensure robust and reliable AI deployments.
+          - generic [ref=e265]:
+            - generic [ref=e266]: prompt-testing
+            - generic [ref=e267]: red-teaming
+            - generic [ref=e268]: typescript
+            - generic [ref=e269]: ci-cd
+            - generic [ref=e270]: vulnerability-scanning
+          - generic [ref=e271]:
+            - generic [ref=e272]:
+              - generic [ref=e273]: ⭐
+              - generic [ref=e274]: 21.1k
+              - generic [ref=e275]: · 1.8k forks
+            - generic [ref=e276]: today
+        - article [ref=e277]:
+          - generic [ref=e278]:
+            - generic [ref=e279]: GitHub
+            - 'generic "AI relevance: 9.0/10" [ref=e281]':
+              - generic [ref=e282]: "9.0"
+              - generic [ref=e283]: /10
+          - generic [ref=e284]:
+            - generic [ref=e285]: LLM Frameworks
+            - generic [ref=e286]: stable
+          - link "Open langchain4j/langchain4j" [ref=e287] [cursor=pointer]:
+            - /url: https://github.com/langchain4j/langchain4j
+            - heading "langchain4j/langchain4j ↗" [level=3] [ref=e288]:
+              - text: langchain4j/langchain4j
+              - generic [ref=e289]: ↗
+          - paragraph [ref=e290]: LangChain4j is an open-source Java library that simplifies building LLM-powered applications on the JVM with seamless tools integration and MCP support.
+          - paragraph [ref=e291]: Its unified API and compatibility with popular enterprise Java frameworks enable Java developers to rapidly implement LLM applications and integrate advanced features like agents and retrieval-augmented generation.
+          - generic [ref=e292]:
+            - generic [ref=e293]: java
+            - generic [ref=e294]: llm-tooling
+            - generic [ref=e295]: tool-calling
+            - generic [ref=e296]: mcp
+            - generic [ref=e297]: rag
+          - generic [ref=e298]:
+            - generic [ref=e299]:
+              - generic [ref=e300]: ⭐
+              - generic [ref=e301]: 11.9k
+              - generic [ref=e302]: · 2.2k forks
+            - generic [ref=e303]: today
+        - article [ref=e304]:
+          - generic [ref=e305]:
+            - generic [ref=e306]: GitHub
+            - 'generic "AI relevance: 8.0/10" [ref=e308]':
+              - generic [ref=e309]: "8.0"
+              - generic [ref=e310]: /10
+          - generic [ref=e311]:
+            - generic [ref=e312]: Workflow Automation
+            - generic [ref=e313]: stable
+          - link "Open n8n-io/n8n" [ref=e314] [cursor=pointer]:
+            - /url: https://github.com/n8n-io/n8n
+            - heading "n8n-io/n8n ↗" [level=3] [ref=e315]:
+              - text: n8n-io/n8n
+              - generic [ref=e316]: ↗
+          - paragraph [ref=e317]: n8n is a fair-code workflow automation platform that integrates native AI capabilities and over 400 services, enabling users to visually build workflows combined with custom code.
+          - paragraph [ref=e318]: The platform's combination of visual design and extensive integrations streamlines the development of complex workflows, offering substantial efficiency gains for AI-driven automation processes.
+          - generic [ref=e319]:
+            - generic [ref=e320]: workflow-automation
+            - generic [ref=e321]: automation
+            - generic [ref=e322]: typescript
+            - generic [ref=e323]: ai-integration
+            - generic [ref=e324]: self-hosted
+          - generic [ref=e325]:
+            - generic [ref=e326]:
+              - generic [ref=e327]: ⭐
+              - generic [ref=e328]: 187.4k
+              - generic [ref=e329]: · 57.5k forks
+            - generic [ref=e330]: today
+        - article [ref=e331]:
+          - generic [ref=e332]:
+            - generic [ref=e333]: GitHub
+            - 'generic "AI relevance: 8.0/10" [ref=e335]':
+              - generic [ref=e336]: "8.0"
+              - generic [ref=e337]: /10
+          - generic [ref=e338]:
+            - generic [ref=e339]: Code Agents
+            - generic [ref=e340]: promising
+          - link "Open anomalyco/opencode" [ref=e341] [cursor=pointer]:
+            - /url: https://github.com/anomalyco/opencode
+            - heading "anomalyco/opencode ↗" [level=3] [ref=e342]:
+              - text: anomalyco/opencode
+              - generic [ref=e343]: ↗
+          - paragraph [ref=e344]: OpenCode is an open-source coding agent that automates code writing and assists in software development workflows.
+          - paragraph [ref=e345]: This project could significantly enhance productivity for AI engineers by automating repetitive coding tasks and suggesting improvements.
+          - generic [ref=e346]:
+            - generic [ref=e347]: coding-agent
+            - generic [ref=e348]: typescript
+            - generic [ref=e349]: automation
+            - generic [ref=e350]: open-source
+          - generic [ref=e351]:
+            - generic [ref=e352]:
+              - generic [ref=e353]: ⭐
+              - generic [ref=e354]: 158.5k
+              - generic [ref=e355]: · 18.5k forks
+            - generic [ref=e356]: today
+        - article [ref=e357]:
+          - generic [ref=e358]:
+            - generic [ref=e359]: GitHub
+            - 'generic "AI relevance: 8.0/10" [ref=e361]':
+              - generic [ref=e362]: "8.0"
+              - generic [ref=e363]: /10
+          - generic [ref=e364]:
+            - generic [ref=e365]: AI Agents
+            - generic [ref=e366]: stable
+          - link "Open browserbase/stagehand" [ref=e367] [cursor=pointer]:
+            - /url: https://github.com/browserbase/stagehand
+            - heading "browserbase/stagehand ↗" [level=3] [ref=e368]:
+              - text: browserbase/stagehand
+              - generic [ref=e369]: ↗
+          - paragraph [ref=e370]: Stagehand is a TypeScript SDK designed for the development and deployment of browser-based agents.
+          - paragraph [ref=e371]: This SDK streamlines the creation of browser agents, enabling developers to focus on building intelligent web applications while handling the complexities of browser interactions.
+          - generic [ref=e372]:
+            - generic [ref=e373]: typescript
+            - generic [ref=e374]: sdk
+            - generic [ref=e375]: browser-agents
+            - generic [ref=e376]: automation
+          - generic [ref=e377]:
+            - generic [ref=e378]:
+              - generic [ref=e379]: ⭐
+              - generic [ref=e380]: 22.6k
+              - generic [ref=e381]: · 1.5k forks
+            - generic [ref=e382]: today
+        - article [ref=e383]:
+          - generic [ref=e384]:
+            - generic [ref=e385]: GitHub
+            - 'generic "AI relevance: 8.0/10" [ref=e387]':
+              - generic [ref=e388]: "8.0"
+              - generic [ref=e389]: /10
+          - generic [ref=e390]:
+            - generic [ref=e391]: AI Agents
+            - generic [ref=e392]: stable
+          - link "Open triggerdotdev/trigger.dev" [ref=e393] [cursor=pointer]:
+            - /url: https://github.com/triggerdotdev/trigger.dev
+            - heading "triggerdotdev/trigger.dev ↗" [level=3] [ref=e394]:
+              - text: triggerdotdev/trigger.dev
+              - generic [ref=e395]: ↗
+          - paragraph [ref=e396]: Trigger.dev is an open-source platform designed for building and deploying fully-managed AI agents and workflows using TypeScript.
+          - paragraph [ref=e397]: This platform streamlines the development process for engineers by providing a robust framework for creating and managing AI agents, significantly reducing the time and complexity involved in deploying agent-based systems.
+          - generic [ref=e398]:
+            - generic [ref=e399]: ai-agents
+            - generic [ref=e400]: workflow
+            - generic [ref=e401]: typescript
+            - generic [ref=e402]: automation
+            - generic [ref=e403]: deployment
+          - generic [ref=e404]:
+            - generic [ref=e405]:
+              - generic [ref=e406]: ⭐
+              - generic [ref=e407]: 14.9k
+              - generic [ref=e408]: · 1.2k forks
+            - generic [ref=e409]: today
+        - article [ref=e410]:
+          - generic [ref=e411]:
+            - generic [ref=e412]: GitHub
+            - 'generic "AI relevance: 8.0/10" [ref=e414]':
+              - generic [ref=e415]: "8.0"
+              - generic [ref=e416]: /10
+          - generic [ref=e417]:
+            - generic [ref=e418]: AI Agents
+            - generic [ref=e419]: stable
+          - link "Open browseros-ai/BrowserOS" [ref=e420] [cursor=pointer]:
+            - /url: https://github.com/browseros-ai/BrowserOS
+            - heading "browseros-ai/BrowserOS ↗" [level=3] [ref=e421]:
+              - text: browseros-ai/BrowserOS
+              - generic [ref=e422]: ↗
+          - paragraph [ref=e423]: BrowserOS is an open-source agentic browser that serves as an alternative to existing tools like ChatGPT Atlas and Perplexity Comet.
+          - paragraph [ref=e424]: It enables developers to leverage AI for enhanced browsing experiences, potentially improving user interaction and automating tasks within the browser.
+          - generic [ref=e425]:
+            - generic [ref=e426]: agentic-browsing
+            - generic [ref=e427]: typescript
+            - generic [ref=e428]: open-source
+            - generic [ref=e429]: web-tools
+          - generic [ref=e430]:
+            - generic [ref=e431]:
+              - generic [ref=e432]: ⭐
+              - generic [ref=e433]: 10.9k
+              - generic [ref=e434]: · 1.1k forks
+            - generic [ref=e435]: today
+        - article [ref=e436]:
+          - generic [ref=e437]:
+            - generic [ref=e438]: GitHub
+            - 'generic "AI relevance: 8.0/10" [ref=e440]':
+              - generic [ref=e441]: "8.0"
+              - generic [ref=e442]: /10
+          - generic [ref=e443]:
+            - generic [ref=e444]: AI Agents
+            - generic [ref=e445]: stable
+          - link "Open InsForge/InsForge" [ref=e446] [cursor=pointer]:
+            - /url: https://github.com/InsForge/InsForge
+            - heading "InsForge/InsForge ↗" [level=3] [ref=e447]:
+              - text: InsForge/InsForge
+              - generic [ref=e448]: ↗
+          - paragraph [ref=e449]: InsForge is an open-source backend platform for agentic coding that provides a comprehensive solution for developing full-stack applications with integrated database, auth, storage, compute, and AI capabilities.
+          - paragraph [ref=e450]: Its all-in-one design simplifies the development workflow for AI engineers by streamlining the backend infrastructure needed for building advanced agentic systems.
+          - generic [ref=e451]:
+            - generic [ref=e452]: backend-platform
+            - generic [ref=e453]: open-source
+            - generic [ref=e454]: typescript
+            - generic [ref=e455]: agentic-coding
+            - generic [ref=e456]: full-stack
+          - generic [ref=e457]:
+            - generic [ref=e458]:
+              - generic [ref=e459]: ⭐
+              - generic [ref=e460]: 9.4k
+              - generic [ref=e461]: · 781 forks
+            - generic [ref=e462]: today
+        - article [ref=e463]:
+          - generic [ref=e464]:
+            - generic [ref=e465]: GitHub
+            - 'generic "AI relevance: 8.0/10" [ref=e467]':
+              - generic [ref=e468]: "8.0"
+              - generic [ref=e469]: /10
+          - generic [ref=e470]:
+            - generic [ref=e471]: AI Infrastructure
+            - generic [ref=e472]: stable
+          - link "Open genkit-ai/genkit" [ref=e473] [cursor=pointer]:
+            - /url: https://github.com/genkit-ai/genkit
+            - heading "genkit-ai/genkit ↗" [level=3] [ref=e474]:
+              - text: genkit-ai/genkit
+              - generic [ref=e475]: ↗
+          - paragraph [ref=e476]: GenKit is an open-source framework designed for building AI-powered applications in JavaScript, Go, and Python, and has been built and used in production by Google.
+          - paragraph [ref=e477]: Its cross-language support and backing by Google enhance its credibility and practical utility for engineers developing AI applications.
+          - generic [ref=e478]:
+            - generic [ref=e479]: open-source
+            - generic [ref=e480]: javascript
+            - generic [ref=e481]: go
+            - generic [ref=e482]: python
+            - generic [ref=e483]: ai-framework
+          - generic [ref=e484]:
+            - generic [ref=e485]:
+              - generic [ref=e486]: ⭐
+              - generic [ref=e487]: 5.9k
+              - generic [ref=e488]: · 730 forks
+            - generic [ref=e489]: today
+        - article [ref=e490]:
+          - generic [ref=e491]:
+            - generic [ref=e492]: GitHub
+            - 'generic "AI relevance: 8.0/10" [ref=e494]':
+              - generic [ref=e495]: "8.0"
+              - generic [ref=e496]: /10
+          - generic [ref=e497]:
+            - generic [ref=e498]: AI Agents
+            - generic [ref=e499]: promising
+          - link "Open the-open-agent/openagent" [ref=e500] [cursor=pointer]:
+            - /url: https://github.com/the-open-agent/openagent
+            - heading "the-open-agent/openagent ↗" [level=3] [ref=e501]:
+              - text: the-open-agent/openagent
+              - generic [ref=e502]: ↗
+          - paragraph [ref=e503]: OpenAgent is a next-generation personal AI assistant that leverages LLM technology, retrieval-augmented generation (RAG), and agent loops for enhancing computer, browser, and coding tasks.
+          - paragraph [ref=e504]: This project enables engineers to integrate advanced AI capabilities into personal assistants, streamlining workflows and enhancing productivity through intelligent agent-based interactions.
+          - generic [ref=e505]:
+            - generic [ref=e506]: personal-assistant
+            - generic [ref=e507]: llm
+            - generic [ref=e508]: rag
+            - generic [ref=e509]: agent-loops
+            - generic [ref=e510]: go
+          - generic [ref=e511]:
+            - generic [ref=e512]:
+              - generic [ref=e513]: ⭐
+              - generic [ref=e514]: 4.7k
+              - generic [ref=e515]: · 545 forks
+            - generic [ref=e516]: today
+        - article [ref=e517]:
+          - generic [ref=e518]:
+            - generic [ref=e519]: GitHub
+            - 'generic "AI relevance: 8.0/10" [ref=e521]':
+              - generic [ref=e522]: "8.0"
+              - generic [ref=e523]: /10
+          - generic [ref=e524]:
+            - generic [ref=e525]: LLM Frameworks
+            - generic [ref=e526]: promising
+          - link "Open Agenta-AI/agenta" [ref=e527] [cursor=pointer]:
+            - /url: https://github.com/Agenta-AI/agenta
+            - heading "Agenta-AI/agenta ↗" [level=3] [ref=e528]:
+              - text: Agenta-AI/agenta
+              - generic [ref=e529]: ↗
+          - paragraph [ref=e530]: Agenta is an open-source LLMOps platform that combines prompt management, evaluation, and observability for LLMs in a single interface.
+          - paragraph [ref=e531]: By providing tools for prompt management and observability, Agenta helps AI engineers streamline the lifecycle of large language models, improving development efficiency and model performance insights.
+          - generic [ref=e532]:
+            - generic [ref=e533]: llmops
+            - generic [ref=e534]: prompt-management
+            - generic [ref=e535]: observability
+            - generic [ref=e536]: typescript
+            - generic [ref=e537]: model-evaluation
+          - generic [ref=e538]:
+            - generic [ref=e539]:
+              - generic [ref=e540]: ⭐
+              - generic [ref=e541]: 4.1k
+              - generic [ref=e542]: · 516 forks
+            - generic [ref=e543]: today
+        - article [ref=e544]:
+          - generic [ref=e545]:
+            - generic [ref=e546]: GitHub
+            - 'generic "AI relevance: 8.0/10" [ref=e548]':
+              - generic [ref=e549]: "8.0"
+              - generic [ref=e550]: /10
+          - generic [ref=e551]:
+            - generic [ref=e552]: AI Agents
+            - generic [ref=e553]: promising
+          - link "Open gptme/gptme" [ref=e554] [cursor=pointer]:
+            - /url: https://github.com/gptme/gptme
+            - heading "gptme/gptme ↗" [level=3] [ref=e555]:
+              - text: gptme/gptme
+              - generic [ref=e556]: ↗
+          - paragraph [ref=e557]: gptme is an open-source Python project that enables users to create persistent autonomous agents capable of writing code, using the terminal, and browsing the web directly from the terminal.
+          - paragraph [ref=e558]: This tool empowers AI engineers to build versatile agents that can automate tasks and improve productivity through local tool integration and autonomy.
+          - generic [ref=e559]:
+            - generic [ref=e560]: autonomous-agents
+            - generic [ref=e561]: python
+            - generic [ref=e562]: terminal-tools
+            - generic [ref=e563]: code-generation
+            - generic [ref=e564]: automation
+          - generic [ref=e565]:
+            - generic [ref=e566]:
+              - generic [ref=e567]: ⭐
+              - generic [ref=e568]: 4.3k
+              - generic [ref=e569]: · 388 forks
+            - generic [ref=e570]: today
+        - article [ref=e571]:
+          - generic [ref=e572]:
+            - generic [ref=e573]: GitHub
+            - 'generic "AI relevance: 8.0/10" [ref=e575]':
+              - generic [ref=e576]: "8.0"
+              - generic [ref=e577]: /10
+          - generic [ref=e578]:
+            - generic [ref=e579]: MCP / Tool Use
+            - generic [ref=e580]: promising
+          - link "Open exa-labs/exa-mcp-server" [ref=e581] [cursor=pointer]:
+            - /url: https://github.com/exa-labs/exa-mcp-server
+            - heading "exa-labs/exa-mcp-server ↗" [level=3] [ref=e582]:
+              - text: exa-labs/exa-mcp-server
+              - generic [ref=e583]: ↗
+          - paragraph [ref=e584]: Exa MCP Server is an open-source web search and web crawling framework developed using TypeScript.
+          - paragraph [ref=e585]: This framework facilitates the development of applications that require efficient web data retrieval, which is crucial for creating AI services reliant on up-to-date information.
+          - generic [ref=e586]:
+            - generic [ref=e587]: web-search
+            - generic [ref=e588]: web-crawling
+            - generic [ref=e589]: typescript
+            - generic [ref=e590]: mcp
+            - generic [ref=e591]: data-retrieval
+          - generic [ref=e592]:
+            - generic [ref=e593]:
+              - generic [ref=e594]: ⭐
+              - generic [ref=e595]: 4.4k
+              - generic [ref=e596]: · 331 forks
+            - generic [ref=e597]: today
+        - article [ref=e598]:
+          - generic [ref=e599]:
+            - generic [ref=e600]: GitHub
+            - 'generic "AI relevance: 8.0/10" [ref=e602]':
+              - generic [ref=e603]: "8.0"
+              - generic [ref=e604]: /10
+          - generic [ref=e605]:
+            - generic [ref=e606]: AI Agents
+            - generic [ref=e607]: stable
+          - link "Open entireio/cli" [ref=e608] [cursor=pointer]:
+            - /url: https://github.com/entireio/cli
+            - heading "entireio/cli ↗" [level=3] [ref=e609]:
+              - text: entireio/cli
+              - generic [ref=e610]: ↗
+          - paragraph [ref=e611]: Entire CLI is a tool that integrates into Git workflows to capture and index AI agent sessions alongside code commits.
+          - paragraph [ref=e612]: It enables developers to maintain a searchable history of AI-assisted coding sessions, enhancing traceability and collaboration in code development.
+          - generic [ref=e613]:
+            - generic [ref=e614]: git-integration
+            - generic [ref=e615]: ai-sessions
+            - generic [ref=e616]: go
+            - generic [ref=e617]: developer-tools
+            - generic [ref=e618]: session-indexing
+          - generic [ref=e619]:
+            - generic [ref=e620]:
+              - generic [ref=e621]: ⭐
+              - generic [ref=e622]: 4.3k
+              - generic [ref=e623]: · 332 forks
+            - generic [ref=e624]: today
+        - article [ref=e625]:
+          - generic [ref=e626]:
+            - generic [ref=e627]: GitHub
+            - 'generic "AI relevance: 8.0/10" [ref=e629]':
+              - generic [ref=e630]: "8.0"
+              - generic [ref=e631]: /10
+          - generic [ref=e632]:
+            - generic [ref=e633]: AI Agents
+            - generic [ref=e634]: stable
+          - link "Open JetBrains/koog" [ref=e635] [cursor=pointer]:
+            - /url: https://github.com/JetBrains/koog
+            - heading "JetBrains/koog ↗" [level=3] [ref=e636]:
+              - text: JetBrains/koog
+              - generic [ref=e637]: ↗
+          - paragraph [ref=e638]: Koog is a JVM framework for building predictable, fault-tolerant AI agents in Java and Kotlin across various platforms including backend services and mobile applications.
+          - paragraph [ref=e639]: Koog's capabilities streamline the development of enterprise-ready AI agents, allowing engineers to implement complex LLM solutions efficiently across different environments.
+          - generic [ref=e640]:
+            - generic [ref=e641]: kotlin
+            - generic [ref=e642]: jvm
+            - generic [ref=e643]: ai-agents
+            - generic [ref=e644]: enterprise
+            - generic [ref=e645]: llm
+          - generic [ref=e646]:
+            - generic [ref=e647]:
+              - generic [ref=e648]: ⭐
+              - generic [ref=e649]: 4.2k
+              - generic [ref=e650]: · 401 forks
+            - generic [ref=e651]: today
+        - article [ref=e652]:
+          - generic [ref=e653]:
+            - generic [ref=e654]: GitHub
+            - 'generic "AI relevance: 8.0/10" [ref=e656]':
+              - generic [ref=e657]: "8.0"
+              - generic [ref=e658]: /10
+          - generic [ref=e659]:
+            - generic [ref=e660]: AI Agents
+            - generic [ref=e661]: stable
+          - link "Open SolaceLabs/solace-agent-mesh" [ref=e662] [cursor=pointer]:
+            - /url: https://github.com/SolaceLabs/solace-agent-mesh
+            - heading "SolaceLabs/solace-agent-mesh ↗" [level=3] [ref=e663]:
+              - text: SolaceLabs/solace-agent-mesh
+              - generic [ref=e664]: ↗
+          - paragraph [ref=e665]: Solace Agent Mesh is an event-driven framework for building and orchestrating multi-agent AI systems, allowing for integration with real-world data sources.
+          - paragraph [ref=e666]: This framework supports complex workflows and agent interactions, enabling engineers to create more sophisticated AI systems that can respond to real-time data inputs.
+          - generic [ref=e667]:
+            - generic [ref=e668]: multi-agent
+            - generic [ref=e669]: event-driven
+            - generic [ref=e670]: orchestration
+            - generic [ref=e671]: workflow
+            - generic [ref=e672]: python
+          - generic [ref=e673]:
+            - generic [ref=e674]:
+              - generic [ref=e675]: ⭐
+              - generic [ref=e676]: 3.6k
+              - generic [ref=e677]: · 226 forks
+            - generic [ref=e678]: today
+        - article [ref=e679]:
+          - generic [ref=e680]:
+            - generic [ref=e681]: GitHub
+            - 'generic "AI relevance: 8.0/10" [ref=e683]':
+              - generic [ref=e684]: "8.0"
+              - generic [ref=e685]: /10
+          - generic [ref=e686]:
+            - generic [ref=e687]: MCP / Tool Use
+            - generic [ref=e688]: stable
+          - link "Open homeassistant-ai/ha-mcp" [ref=e689] [cursor=pointer]:
+            - /url: https://github.com/homeassistant-ai/ha-mcp
+            - heading "homeassistant-ai/ha-mcp ↗" [level=3] [ref=e690]:
+              - text: homeassistant-ai/ha-mcp
+              - generic [ref=e691]: ↗
+          - paragraph [ref=e692]: ha-mcp is an unofficial Home Assistant server that implements the Model Context Protocol (MCP) for improved integrations.
+          - paragraph [ref=e693]: By supporting the Model Context Protocol, ha-mcp enhances the interaction between AI models and Home Assistant, enabling more flexible and powerful automation solutions.
+          - generic [ref=e694]:
+            - generic [ref=e695]: home-assistant
+            - generic [ref=e696]: mcp
+            - generic [ref=e697]: python
+            - generic [ref=e698]: automation
+            - generic [ref=e699]: integrations
+          - generic [ref=e700]:
+            - generic [ref=e701]:
+              - generic [ref=e702]: ⭐
+              - generic [ref=e703]: 2.8k
+              - generic [ref=e704]: · 113 forks
+            - generic [ref=e705]: today
+        - article [ref=e706]:
+          - generic [ref=e707]:
+            - generic [ref=e708]: GitHub
+            - 'generic "AI relevance: 7.0/10" [ref=e710]':
+              - generic [ref=e711]: "7.0"
+              - generic [ref=e712]: /10
+          - generic [ref=e713]:
+            - generic [ref=e714]: Workflow Automation
+            - generic [ref=e715]: stable
+          - link "Open apache/airflow" [ref=e716] [cursor=pointer]:
+            - /url: https://github.com/apache/airflow
+            - heading "apache/airflow ↗" [level=3] [ref=e717]:
+              - text: apache/airflow
+              - generic [ref=e718]: ↗
+          - paragraph [ref=e719]: Apache Airflow is an open-source platform for programmatically authoring, scheduling, and monitoring workflows.
+          - paragraph [ref=e720]: Airflow provides essential tools for scheduling and orchestrating complex workflows, making it valuable for AI engineers managing data pipelines and ML workflows.
+          - generic [ref=e721]:
+            - generic [ref=e722]: workflow-scheduling
+            - generic [ref=e723]: data-pipelines
+            - generic [ref=e724]: python
+            - generic [ref=e725]: orchestration
+          - generic [ref=e726]:
+            - generic [ref=e727]:
+              - generic [ref=e728]: ⭐
+              - generic [ref=e729]: 45.4k
+              - generic [ref=e730]: · 17.0k forks
+            - generic [ref=e731]: today
+        - article [ref=e732]:
+          - generic [ref=e733]:
+            - generic [ref=e734]: GitHub
+            - 'generic "AI relevance: 8.0/10" [ref=e736]':
+              - generic [ref=e737]: "8.0"
+              - generic [ref=e738]: /10
+          - generic [ref=e739]:
+            - generic [ref=e740]: Code Agents
+            - generic [ref=e741]: stable
+          - link "Open njbrake/agent-of-empires" [ref=e742] [cursor=pointer]:
+            - /url: https://github.com/njbrake/agent-of-empires
+            - heading "njbrake/agent-of-empires ↗" [level=3] [ref=e743]:
+              - text: njbrake/agent-of-empires
+              - generic [ref=e744]: ↗
+          - paragraph [ref=e745]: Agent of Empires is a Rust-based application for managing multiple AI coding agents such as Claude Code and OpenCode, accessible via TUI or web interfaces.
+          - paragraph [ref=e746]: It streamlines workflows for developers by allowing easy management of various AI coding tools, enhancing productivity in coding tasks.
+          - generic [ref=e747]:
+            - generic [ref=e748]: ai-coding
+            - generic [ref=e749]: rust
+            - generic [ref=e750]: tmux
+            - generic [ref=e751]: git
+            - generic [ref=e752]: productivity
+          - generic [ref=e753]:
+            - generic [ref=e754]:
+              - generic [ref=e755]: ⭐
+              - generic [ref=e756]: 2.2k
+              - generic [ref=e757]: · 184 forks
+            - generic [ref=e758]: today
+        - article [ref=e759]:
+          - generic [ref=e760]:
+            - generic [ref=e761]: GitHub
+            - 'generic "AI relevance: 8.0/10" [ref=e763]':
+              - generic [ref=e764]: "8.0"
+              - generic [ref=e765]: /10
+          - generic [ref=e766]:
+            - generic [ref=e767]: AI Infrastructure
+            - generic [ref=e768]: stable
+          - link "Open containers/ramalama" [ref=e769] [cursor=pointer]:
+            - /url: https://github.com/containers/ramalama
+            - heading "containers/ramalama ↗" [level=3] [ref=e770]:
+              - text: containers/ramalama
+              - generic [ref=e771]: ↗
+          - paragraph [ref=e772]: RamaLama is an open-source Python tool for easily serving AI models locally using containerization.
+          - paragraph [ref=e773]: It streamlines the process of deploying AI models for inference, making it easier for developers to integrate models into production environments.
+          - generic [ref=e774]:
+            - generic [ref=e775]: model-serving
+            - generic [ref=e776]: containers
+            - generic [ref=e777]: inference
+            - generic [ref=e778]: python
+            - generic [ref=e779]: open-source
+          - generic [ref=e780]:
+            - generic [ref=e781]:
+              - generic [ref=e782]: ⭐
+              - generic [ref=e783]: 2.8k
+              - generic [ref=e784]: · 337 forks
+            - generic [ref=e785]: yesterday
+        - article [ref=e786]:
+          - generic [ref=e787]:
+            - generic [ref=e788]: GitHub
+            - 'generic "AI relevance: 8.0/10" [ref=e790]':
+              - generic [ref=e791]: "8.0"
+              - generic [ref=e792]: /10
+          - generic [ref=e793]:
+            - generic [ref=e794]: AI Agents
+            - generic [ref=e795]: promising
+          - link "Open hyperspaceai/agi" [ref=e796] [cursor=pointer]:
+            - /url: https://github.com/hyperspaceai/agi
+            - heading "hyperspaceai/agi ↗" [level=3] [ref=e797]:
+              - text: hyperspaceai/agi
+              - generic [ref=e798]: ↗
+          - paragraph [ref=e799]: HyperspaceAI's AGI is a distributed AGI system that enables thousands of autonomous AI agents to collaboratively train models and share experiments using a peer-to-peer architecture.
+          - paragraph [ref=e800]: This framework allows for streamlined collaboration and rapid experimentation in AI model training, providing engineers with a powerful tool for building more advanced AI systems.
+          - generic [ref=e801]:
+            - generic [ref=e802]: distributed-ai
+            - generic [ref=e803]: peer-to-peer
+            - generic [ref=e804]: collaborative-training
+            - generic [ref=e805]: autonomous-agents
+            - generic [ref=e806]: model-sharing
+          - generic [ref=e807]:
+            - generic [ref=e808]:
+              - generic [ref=e809]: ⭐
+              - generic [ref=e810]: 1.6k
+              - generic [ref=e811]: · 179 forks
+            - generic [ref=e812]: today
+        - article [ref=e813]:
+          - generic [ref=e814]:
+            - generic [ref=e815]: GitHub
+            - 'generic "AI relevance: 8.0/10" [ref=e817]':
+              - generic [ref=e818]: "8.0"
+              - generic [ref=e819]: /10
+          - generic [ref=e820]:
+            - generic [ref=e821]: MCP / Tool Use
+            - generic [ref=e822]: stable
+          - link "Open modelcontextprotocol/kotlin-sdk" [ref=e823] [cursor=pointer]:
+            - /url: https://github.com/modelcontextprotocol/kotlin-sdk
+            - heading "modelcontextprotocol/kotlin-sdk ↗" [level=3] [ref=e824]:
+              - text: modelcontextprotocol/kotlin-sdk
+              - generic [ref=e825]: ↗
+          - paragraph [ref=e826]: The Model Context Protocol Kotlin SDK facilitates developing servers and clients that leverage the Model Context Protocol.
+          - paragraph [ref=e827]: This SDK enables Kotlin developers to easily implement Model Context Protocol, which can enhance AI system interoperability and functionality.
+          - generic [ref=e828]:
+            - generic [ref=e829]: kotlin
+            - generic [ref=e830]: mcp
+            - generic [ref=e831]: sdk
+            - generic [ref=e832]: model-context-protocol
+            - generic [ref=e833]: jetbrains
+          - generic [ref=e834]:
+            - generic [ref=e835]:
+              - generic [ref=e836]: ⭐
+              - generic [ref=e837]: 1.4k
+              - generic [ref=e838]: · 211 forks
+            - generic [ref=e839]: today
+        - article [ref=e840]:
+          - generic [ref=e841]:
+            - generic [ref=e842]: GitHub
+            - 'generic "AI relevance: 8.0/10" [ref=e844]':
+              - generic [ref=e845]: "8.0"
+              - generic [ref=e846]: /10
+          - generic [ref=e847]:
+            - generic [ref=e848]: AI Agents
+            - generic [ref=e849]: promising
+          - link "Open modu-ai/moai-adk" [ref=e850] [cursor=pointer]:
+            - /url: https://github.com/modu-ai/moai-adk
+            - heading "modu-ai/moai-adk ↗" [level=3] [ref=e851]:
+              - text: modu-ai/moai-adk
+              - generic [ref=e852]: ↗
+          - paragraph [ref=e853]: Moai ADK is a SPEC-First Agentic Development Kit for building AI agents in Go, featuring 24 agents and 52 skills across multiple languages.
+          - paragraph [ref=e854]: Its comprehensive set of tools and methodologies for developing agentic systems can streamline the process for engineers tackling complex AI functionalities.
+          - generic [ref=e855]:
+            - generic [ref=e856]: agent-framework
+            - generic [ref=e857]: go
+            - generic [ref=e858]: tdd
+            - generic [ref=e859]: ddd
+            - generic [ref=e860]: multi-language
+          - generic [ref=e861]:
+            - generic [ref=e862]:
+              - generic [ref=e863]: ⭐
+              - generic [ref=e864]: "991"
+              - generic [ref=e865]: · 179 forks
+            - generic [ref=e866]: today
+        - article [ref=e867]:
+          - generic [ref=e868]:
+            - generic [ref=e869]: GitHub
+            - 'generic "AI relevance: 7.0/10" [ref=e871]':
+              - generic [ref=e872]: "7.0"
+              - generic [ref=e873]: /10
+          - generic [ref=e874]:
+            - generic [ref=e875]: Developer Tools
+            - generic [ref=e876]: stable
+          - link "Open cvat-ai/cvat" [ref=e877] [cursor=pointer]:
+            - /url: https://github.com/cvat-ai/cvat
+            - heading "cvat-ai/cvat ↗" [level=3] [ref=e878]:
+              - text: cvat-ai/cvat
+              - generic [ref=e879]: ↗
+          - paragraph [ref=e880]: CVAT is an open-source Computer Vision Annotation Tool for creating visual datasets with AI-assisted labeling and analytics.
+          - paragraph [ref=e881]: CVAT streamlines the dataset preparation process for vision AI projects, enabling faster and more accurate annotation workflows essential for model training.
+          - generic [ref=e882]:
+            - generic [ref=e883]: computer-vision
+            - generic [ref=e884]: annotation-tool
+            - generic [ref=e885]: dataset-preparation
+            - generic [ref=e886]: ai-assisted-labeling
+            - generic [ref=e887]: python
+          - generic [ref=e888]:
+            - generic [ref=e889]:
+              - generic [ref=e890]: ⭐
+              - generic [ref=e891]: 15.8k
+              - generic [ref=e892]: · 3.7k forks
+            - generic [ref=e893]: today
+        - article [ref=e894]:
+          - generic [ref=e895]:
+            - generic [ref=e896]: GitHub
+            - 'generic "AI relevance: 8.0/10" [ref=e898]':
+              - generic [ref=e899]: "8.0"
+              - generic [ref=e900]: /10
+          - generic [ref=e901]:
+            - generic [ref=e902]: AI Agents
+            - generic [ref=e903]: promising
+          - link "Open henrydaum/second-brain" [ref=e904] [cursor=pointer]:
+            - /url: https://github.com/henrydaum/second-brain
+            - heading "henrydaum/second-brain ↗" [level=3] [ref=e905]:
+              - text: henrydaum/second-brain
+              - generic [ref=e906]: ↗
+          - paragraph [ref=e907]: Second Brain is an agentic framework that utilizes local file intelligence, workflow automation, and LLMs to streamline task completion and communication across multiple platforms.
+          - paragraph [ref=e908]: This framework enables engineers to build more integrated AI systems that automate workflows and facilitate multi-modal communication, enhancing productivity.
+          - generic [ref=e909]:
+            - generic [ref=e910]: agentic-framework
+            - generic [ref=e911]: workflow-automation
+            - generic [ref=e912]: llm
+            - generic [ref=e913]: python
+            - generic [ref=e914]: multi-modal
+          - generic [ref=e915]:
+            - generic [ref=e916]:
+              - generic [ref=e917]: ⭐
+              - generic [ref=e918]: "514"
+              - generic [ref=e919]: · 54 forks
+            - generic [ref=e920]: today
+        - article [ref=e921]:
+          - generic [ref=e922]:
+            - generic [ref=e923]: GitHub
+            - 'generic "AI relevance: 8.0/10" [ref=e925]':
+              - generic [ref=e926]: "8.0"
+              - generic [ref=e927]: /10
+          - generic [ref=e928]:
+            - generic [ref=e929]: AI Agents
+            - generic [ref=e930]: promising
+          - link "Open mckinsey/agents-at-scale-ark" [ref=e931] [cursor=pointer]:
+            - /url: https://github.com/mckinsey/agents-at-scale-ark
+            - heading "mckinsey/agents-at-scale-ark ↗" [level=3] [ref=e932]:
+              - text: mckinsey/agents-at-scale-ark
+              - generic [ref=e933]: ↗
+          - paragraph [ref=e934]: ARK is a TypeScript library offering provider-agnostic operations for agentic resources, codifying best practices from various agentic application projects.
+          - paragraph [ref=e935]: By providing a framework to standardize operations for agentic systems, ARK helps engineers streamline development and deployment of complex agent-based applications.
+          - generic [ref=e936]:
+            - generic [ref=e937]: typescript
+            - generic [ref=e938]: agentic-systems
+            - generic [ref=e939]: provider-agnostic
+            - generic [ref=e940]: library
+            - generic [ref=e941]: best-practices
+          - generic [ref=e942]:
+            - generic [ref=e943]:
+              - generic [ref=e944]: ⭐
+              - generic [ref=e945]: "384"
+              - generic [ref=e946]: · 87 forks
+            - generic [ref=e947]: today
+        - article [ref=e948]:
+          - generic [ref=e949]:
+            - generic [ref=e950]: GitHub
+            - 'generic "AI relevance: 8.0/10" [ref=e952]':
+              - generic [ref=e953]: "8.0"
+              - generic [ref=e954]: /10
+          - generic [ref=e955]:
+            - generic [ref=e956]: Code Agents
+            - generic [ref=e957]: promising
+          - link "Open manuelschipper/nah" [ref=e958] [cursor=pointer]:
+            - /url: https://github.com/manuelschipper/nah
+            - heading "manuelschipper/nah ↗" [level=3] [ref=e959]:
+              - text: manuelschipper/nah
+              - generic [ref=e960]: ↗
+          - paragraph [ref=e961]: Nah is a Python library that implements action-aware permissions for coding agents, providing a deterministic safety guard for developers.
+          - paragraph [ref=e962]: This library helps ensure developers can use coding agents safely and effectively, reducing the risk of unintended actions during code generation.
+          - generic [ref=e963]:
+            - generic [ref=e964]: action-aware
+            - generic [ref=e965]: permissions
+            - generic [ref=e966]: safety-guard
+            - generic [ref=e967]: python
+            - generic [ref=e968]: coding-agents
+          - generic [ref=e969]:
+            - generic [ref=e970]:
+              - generic [ref=e971]: ⭐
+              - generic [ref=e972]: "432"
+              - generic [ref=e973]: · 22 forks
+            - generic [ref=e974]: today
+        - article [ref=e975]:
+          - generic [ref=e976]:
+            - generic [ref=e977]: GitHub
+            - 'generic "AI relevance: 8.0/10" [ref=e979]':
+              - generic [ref=e980]: "8.0"
+              - generic [ref=e981]: /10
+          - generic [ref=e982]:
+            - generic [ref=e983]: AI Agents
+            - generic [ref=e984]: stable
+          - link "Open xorbitsai/xagent" [ref=e985] [cursor=pointer]:
+            - /url: https://github.com/xorbitsai/xagent
+            - heading "xorbitsai/xagent ↗" [level=3] [ref=e986]:
+              - text: xorbitsai/xagent
+              - generic [ref=e987]: ↗
+          - paragraph [ref=e988]: XAgent is a production-ready platform that enables dynamic AI agents to plan, use tools, and accomplish real tasks without hardcoded workflows.
+          - paragraph [ref=e989]: This tool facilitates the development of flexible AI agents that can adaptively complete tasks, enhancing automation capabilities for AI engineers.
+          - generic [ref=e990]:
+            - generic [ref=e991]: dynamic-agents
+            - generic [ref=e992]: tool-use
+            - generic [ref=e993]: python
+            - generic [ref=e994]: workflow-automation
+          - generic [ref=e995]:
+            - generic [ref=e996]:
+              - generic [ref=e997]: ⭐
+              - generic [ref=e998]: "241"
+              - generic [ref=e999]: · 39 forks
+            - generic [ref=e1000]: today
+        - article [ref=e1001]:
+          - generic [ref=e1002]:
+            - generic [ref=e1003]: GitHub
+            - 'generic "AI relevance: 8.0/10" [ref=e1005]':
+              - generic [ref=e1006]: "8.0"
+              - generic [ref=e1007]: /10
+          - generic [ref=e1008]:
+            - generic [ref=e1009]: MCP / Tool Use
+            - generic [ref=e1010]: promising
+          - link "Open 0xSteph/pentest-ai" [ref=e1011] [cursor=pointer]:
+            - /url: https://github.com/0xSteph/pentest-ai
+            - heading "0xSteph/pentest-ai ↗" [level=3] [ref=e1012]:
+              - text: 0xSteph/pentest-ai
+              - generic [ref=e1013]: ↗
+          - paragraph [ref=e1014]: pentest-ai is an offensive-security Model Context Protocol (MCP) server that wraps 197 tools and includes 17 specialist agents for vulnerability detection.
+          - paragraph [ref=e1015]: This server aids security engineers by providing enhanced capabilities for penetration testing, allowing them to catch vulnerabilities that traditional scanners might miss.
+          - generic [ref=e1016]:
+            - generic [ref=e1017]: mcp
+            - generic [ref=e1018]: penetration-testing
+            - generic [ref=e1019]: python
+            - generic [ref=e1020]: security-tools
+            - generic [ref=e1021]: agent-framework
+          - generic [ref=e1022]:
+            - generic [ref=e1023]:
+              - generic [ref=e1024]: ⭐
+              - generic [ref=e1025]: "208"
+              - generic [ref=e1026]: · 43 forks
+            - generic [ref=e1027]: today
+        - article [ref=e1028]:
+          - generic [ref=e1029]:
+            - generic [ref=e1030]: GitHub
+            - 'generic "AI relevance: 8.0/10" [ref=e1032]':
+              - generic [ref=e1033]: "8.0"
+              - generic [ref=e1034]: /10
+          - generic [ref=e1035]:
+            - generic [ref=e1036]: AI Agents
+            - generic [ref=e1037]: promising
+          - link "Open speakeasy-api/gram" [ref=e1038] [cursor=pointer]:
+            - /url: https://github.com/speakeasy-api/gram
+            - heading "speakeasy-api/gram ↗" [level=3] [ref=e1039]:
+              - text: speakeasy-api/gram
+              - generic [ref=e1040]: ↗
+          - paragraph [ref=e1041]: Speakeasy API's Gram is a secure control plane for building, monitoring, and managing AI agents and their skills.
+          - paragraph [ref=e1042]: It provides organizations with essential tools to ensure secure and scalable deployment of AI agents, which is critical for maintaining control over AI applications in production environments.
+          - generic [ref=e1043]:
+            - generic [ref=e1044]: ai-agents
+            - generic [ref=e1045]: security
+            - generic [ref=e1046]: monitoring
+            - generic [ref=e1047]: typescript
+            - generic [ref=e1048]: mcp
+          - generic [ref=e1049]:
+            - generic [ref=e1050]:
+              - generic [ref=e1051]: ⭐
+              - generic [ref=e1052]: "233"
+              - generic [ref=e1053]: · 26 forks
+            - generic [ref=e1054]: today
+        - article [ref=e1055]:
+          - generic [ref=e1056]:
+            - generic [ref=e1057]: GitHub
+            - 'generic "AI relevance: 8.0/10" [ref=e1059]':
+              - generic [ref=e1060]: "8.0"
+              - generic [ref=e1061]: /10
+          - generic [ref=e1062]:
+            - generic [ref=e1063]: AI Agents
+            - generic [ref=e1064]: promising
+          - link "Open AxDSan/mnemosyne" [ref=e1065] [cursor=pointer]:
+            - /url: https://github.com/AxDSan/mnemosyne
+            - heading "AxDSan/mnemosyne ↗" [level=3] [ref=e1066]:
+              - text: AxDSan/mnemosyne
+              - generic [ref=e1067]: ↗
+          - paragraph [ref=e1068]: Mnemosyne is a zero-dependency, sub-millisecond AI memory system designed specifically for Hermes agents.
+          - paragraph [ref=e1069]: This memory system enhances Hermes agents' operational efficiency by enabling rapid data retrieval and storage, crucial for real-time decision-making in AI applications.
+          - generic [ref=e1070]:
+            - generic [ref=e1071]: ai-memory
+            - generic [ref=e1072]: hermes
+            - generic [ref=e1073]: python
+            - generic [ref=e1074]: agent-framework
+            - generic [ref=e1075]: zero-dependency
+          - generic [ref=e1076]:
+            - generic [ref=e1077]:
+              - generic [ref=e1078]: ⭐
+              - generic [ref=e1079]: "211"
+              - generic [ref=e1080]: · 24 forks
+            - generic [ref=e1081]: today
+        - article [ref=e1082]:
+          - generic [ref=e1083]:
+            - generic [ref=e1084]: GitHub
+            - 'generic "AI relevance: 8.0/10" [ref=e1086]':
+              - generic [ref=e1087]: "8.0"
+              - generic [ref=e1088]: /10
+          - generic [ref=e1089]:
+            - generic [ref=e1090]: AI Agents
+            - generic [ref=e1091]: promising
+          - link "Open mnemon-dev/mnemon" [ref=e1092] [cursor=pointer]:
+            - /url: https://github.com/mnemon-dev/mnemon
+            - heading "mnemon-dev/mnemon ↗" [level=3] [ref=e1093]:
+              - text: mnemon-dev/mnemon
+              - generic [ref=e1094]: ↗
+          - paragraph [ref=e1095]: Mnemon is a Go library for LLM-supervised persistent memory designed for AI agents, featuring graph-based recall and cross-session knowledge management.
+          - paragraph [ref=e1096]: This library enhances the capabilities of AI agents by enabling them to retain and recall information across sessions, improving their usefulness in complex workflows.
+          - generic [ref=e1097]:
+            - generic [ref=e1098]: llm-memory
+            - generic [ref=e1099]: persistent-storage
+            - generic [ref=e1100]: graph-database
+            - generic [ref=e1101]: go
+            - generic [ref=e1102]: ai-agents
+          - generic [ref=e1103]:
+            - generic [ref=e1104]:
+              - generic [ref=e1105]: ⭐
+              - generic [ref=e1106]: "135"
+              - generic [ref=e1107]: · 21 forks
+            - generic [ref=e1108]: today
+    - contentinfo [ref=e1109]:
+      - generic [ref=e1110]: AgentRadar — built with Next.js, Supabase, and Claude
+  - button "Open Next.js Dev Tools" [ref=e1116] [cursor=pointer]:
+    - img [ref=e1117]
