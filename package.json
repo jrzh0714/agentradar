@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "npx tsx --test lib/ranking/score.test.ts",
+    "cleanup:github": "npx tsx scripts/cleanup-github-artifacts.ts",
     "ingest:github": "npx tsx scripts/ingest-github.ts",
     "ingest:hn": "npx tsx scripts/ingest-hn.ts",
     "ingest:rss": "npx tsx scripts/ingest-rss.ts",

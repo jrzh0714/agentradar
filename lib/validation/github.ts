@@ -15,6 +15,13 @@ export const GithubRepoSchema = z.object({
   }),
   pushed_at: z.string().nullable(),
   created_at: z.string().nullable(),
+
+  // Quality / status flags — used for ingestion filtering.
+  // `fork:false` in the search query already excludes most forks, but the
+  // defensive check in lib/ingestion/github.ts is the last line of defence.
+  fork:     z.boolean().default(false),
+  archived: z.boolean().default(false),
+  disabled: z.boolean().default(false),
 })
 
 export const GithubSearchResponseSchema = z.object({
