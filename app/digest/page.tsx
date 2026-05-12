@@ -10,6 +10,7 @@ import { HnPrefixBadge } from '@/components/ui/HnPrefixBadge'
 import { formatRelativeDate } from '@/lib/utils'
 import { getDisplayTitle, getTitlePrefix } from '@/lib/ingestion/title'
 import { getDigestSections, ITEMS_PER_SECTION } from '@/lib/db/digest'
+import { getDigestSummariesForWeek, getCurrentMonday } from '@/lib/db/digest-summaries'
 import type { DigestSection } from '@/lib/db/digest'
 import type { HomepageItem } from '@/lib/db/homepage'
 
@@ -38,6 +39,7 @@ function weekLabel(): string {
 
 export default async function DigestPage() {
   const sections = await getDigestSections()
+  const summaries = await getDigestSummariesForWeek(getCurrentMonday())
   const visibleSections = sections.filter((s) => s.items.length > 0)
   const totalItems = visibleSections.reduce((n, s) => n + s.items.length, 0)
 
@@ -137,6 +139,7 @@ export default async function DigestPage() {
               key={section.slug}
               section={section}
               index={sectionIndex}
+              summary={summaries.get(section.title) ?? null}
             />
           ))}
         </div>
@@ -165,9 +168,11 @@ export default async function DigestPage() {
 function DigestSectionBlock({
   section,
   index,
+  summary,
 }: {
   section: DigestSection
   index: number
+  summary: string | null
 }) {
   return (
     <section id={section.slug} className="py-10 scroll-mt-20">
@@ -184,6 +189,16 @@ function DigestSectionBlock({
         </div>
         <p className="pl-8 text-sm text-zinc-500">{section.description}</p>
       </div>
+
+      {/* AI editorial summary — only rendered when present */}
+      {summary && (
+        <div className="mb-6 rounded-lg border-l-2 border-indigo-600 bg-zinc-900 px-5 py-4">
+          <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-zinc-600">
+            This week
+          </p>
+          <p className="text-sm leading-relaxed text-zinc-300">{summary}</p>
+        </div>
+      )}
 
       {/* Item rows */}
       <div className="space-y-0 divide-y divide-zinc-800/50">
