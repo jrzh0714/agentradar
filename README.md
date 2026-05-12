@@ -239,6 +239,10 @@ Optional:
 ```env
 OPENAI_MODEL=gpt-4o-mini            # default: gpt-4o-mini
 AI_MODEL=claude-3-5-haiku-20241022  # default for anthropic
+
+# Daily refresh (Vercel Cron)
+CRON_SECRET=                        # required — protects /api/refresh/daily
+DAILY_ENRICH_LIMIT=150              # optional — max items enriched per cron run
 ```
 
 ---
@@ -305,6 +309,51 @@ Ingestion is currently manual (or run locally via cron). A Vercel Cron job can b
 
 ---
 
+## Daily refresh (automated)
+
+AgentRadar includes a protected API route that runs the full pipeline on a schedule.
+
+### How it works
+
+Vercel Cron calls `GET /api/refresh/daily` at **08:00 UTC every day**. The route:
+1. Ingests from GitHub, HN, and RSS concurrently
+2. Enriches up to `DAILY_ENRICH_LIMIT` new items (default: 150)
+3. Recomputes ranking scores for the full enriched corpus
+4. Returns a JSON summary: `{ success, ingestionCounts, enrichedCount, failedCount, rankedCount, durationMs }`
+
+### Setup
+
+1. Generate a secret: `openssl rand -hex 32`
+2. Add `CRON_SECRET=<value>` to your Vercel project environment variables — Vercel automatically attaches it as `Authorization: Bearer <CRON_SECRET>` on cron requests
+3. `vercel.json` already declares the `0 8 * * *` schedule — no further config needed
+
+### Manual trigger
+
+```bash
+curl -X POST https://your-app.vercel.app/api/refresh/daily \
+  -H "Authorization: Bearer $CRON_SECRET"
+```
+
+Or locally (with `.env.local` containing `CRON_SECRET`):
+
+```bash
+curl -X POST http://localhost:3000/api/refresh/daily \
+  -H "Authorization: Bearer $(grep CRON_SECRET .env.local | cut -d= -f2)"
+```
+
+### Cost estimate
+
+At `claude-3-5-haiku` / `gpt-4o-mini` rates, enriching 150 items costs ≈ $0.15–$0.30/day. Reduce `DAILY_ENRICH_LIMIT` in Vercel env vars to lower this.
+
+### Environment variables
+
+| Variable | Required | Default | Purpose |
+|---|---|---|---|
+| `CRON_SECRET` | Yes | — | Bearer token for `/api/refresh/daily` |
+| `DAILY_ENRICH_LIMIT` | No | `150` | Max items enriched per cron run |
+
+---
+
 ## Known limitations
 
 - **HN corpus is thin** — HN ingestion pulls recent AI-relevant stories; the current corpus has ~6 enriched HN items. Requires regular re-runs to build up.
@@ -351,7 +400,8 @@ agentradar/
 │   ├── ingestion/          # Per-source fetch + normalize logic
 │   ├── ranking/            # computeRankingScore + unit tests
 │   ├── supabase/           # server.ts (service role) + client.ts (publishable key)
-│   └── validation/         # Zod schemas for external APIs
+│   ├── validation/         # Zod schemas for external APIs
+│   └── workflows/          # daily-refresh.ts — shared pipeline logic for the cron route
 ├── scripts/                # CLI pipeline scripts (ingest, enrich, rank, cleanup)
 ├── docs/                   # Architecture, case study, deployment guides
 └── supabase/               # DB migrations

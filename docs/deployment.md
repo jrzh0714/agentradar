@@ -61,6 +61,8 @@ AI_PROVIDER                (anthropic or openai)
 ANTHROPIC_API_KEY          (if AI_PROVIDER=anthropic)
 OPENAI_API_KEY             (if AI_PROVIDER=openai)
 GITHUB_TOKEN               (not needed for the web app — only for ingestion scripts)
+CRON_SECRET                (required — protects /api/refresh/daily)
+DAILY_ENRICH_LIMIT         (optional — max items enriched per cron run, default 150)
 ```
 
 > **Note:** `GITHUB_TOKEN` is only used by the ingestion scripts and is not needed for the deployed web application. You only need it when running `npm run ingest:github` locally or from a CI environment.
@@ -95,25 +97,105 @@ After this, the homepage should show enriched, ranked items.
 
 ---
 
-## 4. Ongoing pipeline
+## 4. Automated daily refresh (Vercel Cron)
 
-There is currently no automated scheduling. Run the pipeline manually as needed:
+AgentRadar ships with a production-ready daily refresh pipeline that runs automatically on Vercel.
+
+### How it works
+
+`vercel.json` schedules `GET /api/refresh/daily` at **08:00 UTC every day**. The route:
+
+1. Ingests from GitHub, HN, and RSS concurrently
+2. Enriches up to `DAILY_ENRICH_LIMIT` new items (default: 150) with the configured AI provider
+3. Recomputes `ranking_score` for the entire enriched corpus
+4. Returns a JSON summary — viewable in Vercel Function logs
+
+### Setup
+
+**Step 1 — Generate a secret:**
 
 ```bash
-# Daily or weekly refresh
+openssl rand -hex 32
+```
+
+**Step 2 — Add to Vercel:**
+
+In Vercel project settings → Environment Variables, add:
+
+| Variable | Value | Environment |
+|---|---|---|
+| `CRON_SECRET` | `<generated secret>` | Production, Preview |
+| `DAILY_ENRICH_LIMIT` | `150` (or lower) | Production |
+
+Vercel automatically attaches `Authorization: Bearer <CRON_SECRET>` to every cron request, so the route rejects any unauthorized calls.
+
+**Step 3 — Redeploy:**
+
+Push or trigger a new deployment. The cron job activates automatically once `vercel.json` is deployed.
+
+### Verify the cron is registered
+
+In the Vercel dashboard → Project → Settings → Cron Jobs, you should see:
+
+```
+0 8 * * *   GET /api/refresh/daily
+```
+
+### Manual trigger
+
+Useful for testing or forcing an immediate refresh:
+
+```bash
+# From any machine with curl
+curl -X POST https://your-app.vercel.app/api/refresh/daily \
+  -H "Authorization: Bearer $CRON_SECRET"
+
+# Locally (reads CRON_SECRET from .env.local)
+curl -X POST http://localhost:3000/api/refresh/daily \
+  -H "Authorization: Bearer $(grep ^CRON_SECRET .env.local | cut -d= -f2)"
+```
+
+A successful response looks like:
+
+```json
+{
+  "success": true,
+  "ingestionCounts": { "github": 24, "hn": 6, "rss": 12 },
+  "enrichedCount": 38,
+  "failedCount": 2,
+  "rankedCount": 1847,
+  "durationMs": 142300
+}
+```
+
+### Cost estimate
+
+| Items enriched | Model | Estimated cost |
+|---|---|---|
+| 50 | claude-3-5-haiku | ~$0.05 |
+| 150 | claude-3-5-haiku | ~$0.15–$0.30 |
+| 150 | gpt-4o-mini | ~$0.15–$0.25 |
+
+Adjust `DAILY_ENRICH_LIMIT` in Vercel env vars to control cost. Items that remain unenriched on one run will be picked up on the next.
+
+### Failure handling
+
+| Failure type | Behaviour |
+|---|---|
+| One item fails validation | Marked `status='failed'`, retried on next run |
+| Billing/quota error | Enrichment stops early; `success: false` in response; items not marked failed |
+| Ingestion source unreachable | That source returns 0 items; other sources continue |
+| Function timeout | Increase `DAILY_ENRICH_LIMIT` cautiously or reduce it; 150 items ≈ 3–4 min |
+
+### Manual pipeline (no cron)
+
+If you prefer to run the pipeline manually:
+
+```bash
 npm run ingest:all
 npm run enrich -- --limit 100
 npm run rank
 ```
-
-### Optional: Vercel Cron (automated)
-
-To automate ingestion, you can add a Vercel Cron job. This requires:
-
-1. Creating API route handlers that call the ingestion and enrichment logic
-2. Declaring cron schedules in `vercel.json` or `vercel.ts`
-
-This is not implemented in the current codebase but is a straightforward extension.
 
 ---
 
@@ -172,6 +254,9 @@ For Preview deployments, you can point to a separate staging Supabase project to
 - [ ] `/items/00000000-0000-0000-0000-000000000000` shows the not-found page
 - [ ] No `SUPABASE_SERVICE_ROLE_KEY` or `OPENAI_API_KEY` in browser DevTools network responses or page source
 - [ ] Vercel Function logs show no errors on page load
+- [ ] `GET /api/refresh/daily` without auth header returns `401 Unauthorized`
+- [ ] Vercel dashboard → Settings → Cron Jobs shows the daily schedule
+- [ ] Manual trigger returns `{ "success": true, ... }` with expected counts
 
 ---
 
