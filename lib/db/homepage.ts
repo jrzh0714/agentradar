@@ -16,6 +16,7 @@ export type HomepageItem = Pick<
   | 'title'
   | 'url'
   | 'source'
+  | 'description'
   | 'published_at'
   | 'github_stars'
   | 'github_forks'
@@ -32,7 +33,7 @@ export type HomepageItem = Pick<
 >
 
 const ITEM_SELECT = [
-  'id', 'title', 'url', 'source', 'published_at',
+  'id', 'title', 'url', 'source', 'description', 'published_at',
   'github_stars', 'github_forks', 'github_language',
   'hn_points', 'hn_comments',
   'ai_summary', 'ai_why_it_matters', 'ai_category', 'ai_tags', 'ai_maturity',
