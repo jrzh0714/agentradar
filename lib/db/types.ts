@@ -43,6 +43,11 @@ export interface Item {
 
   // Ranking / pipeline state
   ranking_score: number
+  // Trend detection
+  trending: boolean
+  ranking_score_7d_ago: number | null
+  score_snapshot_date: string | null   // 'YYYY-MM-DD'
+  needs_reclassification: boolean
   status: ItemStatus
   error_message: string | null
 

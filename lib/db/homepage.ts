@@ -30,6 +30,7 @@ export type HomepageItem = Pick<
   | 'ai_maturity'
   | 'ai_relevance_score'
   | 'ranking_score'
+  | 'trending'
 >
 
 const ITEM_SELECT = [
@@ -37,7 +38,7 @@ const ITEM_SELECT = [
   'github_stars', 'github_forks', 'github_language',
   'hn_points', 'hn_comments',
   'ai_summary', 'ai_why_it_matters', 'ai_category', 'ai_tags', 'ai_maturity',
-  'ai_relevance_score', 'ranking_score',
+  'ai_relevance_score', 'ranking_score', 'trending',
 ].join(', ')
 
 // ── Query helper ─────────────────────────────────────────────────────────────
