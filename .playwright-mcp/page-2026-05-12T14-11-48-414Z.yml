@@ -1,0 +1,259 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - link "AgentRadar" [ref=e6] [cursor=pointer]:
+            - /url: /
+          - generic [ref=e7]: beta
+        - navigation [ref=e8]:
+          - link "search" [ref=e9] [cursor=pointer]:
+            - /url: /search
+          - link "digest" [ref=e10] [cursor=pointer]:
+            - /url: /digest
+    - main [ref=e11]:
+      - navigation [ref=e12]:
+        - link "← home" [ref=e13] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e14]: ←
+          - generic [ref=e15]: home
+        - generic [ref=e16]: /
+        - generic [ref=e17]: AI Agents
+      - generic [ref=e18]:
+        - generic [ref=e19]:
+          - generic [ref=e20]: GitHub
+          - generic [ref=e22]: stable
+          - 'generic "AI relevance: 10.0/10" [ref=e23]':
+            - generic [ref=e24]: "10.0"
+            - generic [ref=e25]: /10
+        - heading "langchain-ai/langchain" [level=1] [ref=e26]
+        - generic [ref=e27]:
+          - generic [ref=e28]: by langchain-ai
+          - generic [ref=e29]: published today
+          - generic [ref=e30]:
+            - generic [ref=e31]: ⭐
+            - generic [ref=e32]: 136.4k
+            - generic [ref=e33]: stars
+            - generic [ref=e34]: · 22.6k forks
+            - generic [ref=e35]: · Python
+        - link "View source ↗" [ref=e36] [cursor=pointer]:
+          - /url: https://github.com/langchain-ai/langchain
+          - text: View source
+          - generic [ref=e37]: ↗
+      - separator [ref=e38]
+      - generic [ref=e39]:
+        - heading "AI Briefing" [level=2] [ref=e40]
+        - generic [ref=e41]:
+          - heading "Summary" [level=3] [ref=e42]
+          - paragraph [ref=e43]: LangChain is an agent engineering platform designed for building and deploying AI applications using Python.
+        - generic [ref=e44]:
+          - heading "Why it matters" [level=3] [ref=e45]
+          - paragraph [ref=e46]: LangChain simplifies the development of AI systems by providing a robust framework for integrating language models with action integrators, making it easier for engineers to create complex agentic applications.
+      - generic [ref=e47]:
+        - heading "Classification" [level=2] [ref=e48]
+        - generic [ref=e49]:
+          - generic [ref=e50]:
+            - generic [ref=e51]: Tags
+            - generic [ref=e53]:
+              - generic [ref=e54]: agent-engineering
+              - generic [ref=e55]: python
+              - generic [ref=e56]: llm-tooling
+              - generic [ref=e57]: integration
+          - generic [ref=e58]:
+            - generic [ref=e59]: Audience
+            - generic [ref=e60]: ai-engineer, ml-engineer, backend-dev
+          - generic [ref=e61]:
+            - generic [ref=e62]: AI Relevance
+            - generic [ref=e64]: 10.0 / 10
+          - generic [ref=e65]:
+            - generic [ref=e66]: Radar Score
+            - generic [ref=e67]: "86.79"
+          - generic [ref=e68]:
+            - generic [ref=e69]: Published
+            - generic [ref=e70]: today
+          - generic [ref=e71]:
+            - generic [ref=e72]: Indexed
+            - generic [ref=e73]: today
+          - generic [ref=e74]:
+            - generic [ref=e75]: Repository
+            - link "langchain-ai/langchain" [ref=e77] [cursor=pointer]:
+              - /url: https://github.com/langchain-ai/langchain
+      - generic [ref=e78]:
+        - heading "Related Items" [level=2] [ref=e79]
+        - generic [ref=e80]:
+          - article [ref=e81]:
+            - generic [ref=e82]:
+              - generic [ref=e83]: GitHub
+              - generic [ref=e85]:
+                - 'generic "AI relevance: 9.0/10" [ref=e86]':
+                  - generic [ref=e87]: "9.0"
+                  - generic [ref=e88]: /10
+                - link "Open source" [ref=e89] [cursor=pointer]:
+                  - /url: https://github.com/langgenius/dify
+                  - text: ↗
+            - generic [ref=e90]:
+              - generic [ref=e91]: AI Agents
+              - generic [ref=e92]: stable
+            - link "langgenius/dify" [ref=e93] [cursor=pointer]:
+              - /url: /items/b8230334-a03d-4c9d-861b-4f571901f766
+              - heading "langgenius/dify" [level=3] [ref=e94]
+            - paragraph [ref=e95]: Dify is a production-ready platform for developing agentic workflows using TypeScript.
+            - generic [ref=e96]:
+              - generic [ref=e97]: agent-workflows
+              - generic [ref=e98]: typescript
+              - generic [ref=e99]: workflow-automation
+              - generic [ref=e100]: "+1"
+            - generic [ref=e101]:
+              - generic [ref=e102]:
+                - generic [ref=e103]: ⭐
+                - generic [ref=e104]: 141.1k
+                - generic [ref=e105]: · 22.2k forks
+              - generic [ref=e106]: today
+          - article [ref=e107]:
+            - generic [ref=e108]:
+              - generic [ref=e109]: GitHub
+              - generic [ref=e111]:
+                - 'generic "AI relevance: 9.0/10" [ref=e112]':
+                  - generic [ref=e113]: "9.0"
+                  - generic [ref=e114]: /10
+                - link "Open source" [ref=e115] [cursor=pointer]:
+                  - /url: https://github.com/deepset-ai/haystack
+                  - text: ↗
+            - generic [ref=e116]:
+              - generic [ref=e117]: AI Agents
+              - generic [ref=e118]: stable
+            - link "deepset-ai/haystack" [ref=e119] [cursor=pointer]:
+              - /url: /items/480912f3-e8ad-45ed-a543-9fa260bde0a1
+              - heading "deepset-ai/haystack" [level=3] [ref=e120]
+            - paragraph [ref=e121]: Haystack is an open-source AI orchestration framework designed for building context-engineered, production-ready LLM applications with modular pipelines and agent workflows.
+            - generic [ref=e122]:
+              - generic [ref=e123]: open-source
+              - generic [ref=e124]: llm-applications
+              - generic [ref=e125]: retrieval
+              - generic [ref=e126]: "+2"
+            - generic [ref=e127]:
+              - generic [ref=e128]:
+                - generic [ref=e129]: ⭐
+                - generic [ref=e130]: 25.2k
+                - generic [ref=e131]: · 2.8k forks
+              - generic [ref=e132]: today
+          - article [ref=e133]:
+            - generic [ref=e134]:
+              - generic [ref=e135]: GitHub
+              - generic [ref=e137]:
+                - 'generic "AI relevance: 9.0/10" [ref=e138]':
+                  - generic [ref=e139]: "9.0"
+                  - generic [ref=e140]: /10
+                - link "Open source" [ref=e141] [cursor=pointer]:
+                  - /url: https://github.com/activepieces/activepieces
+                  - text: ↗
+            - generic [ref=e142]:
+              - generic [ref=e143]: AI Agents
+              - generic [ref=e144]: stable
+            - link "activepieces/activepieces" [ref=e145] [cursor=pointer]:
+              - /url: /items/20a80110-0120-4562-876a-c66249d7bf9a
+              - heading "activepieces/activepieces" [level=3] [ref=e146]
+            - paragraph [ref=e147]: Activepieces is an open-source framework for building AI agents and automating workflows using Model Context Protocols (MCPs).
+            - generic [ref=e148]:
+              - generic [ref=e149]: ai-workflows
+              - generic [ref=e150]: mcp
+              - generic [ref=e151]: automation
+              - generic [ref=e152]: "+2"
+            - generic [ref=e153]:
+              - generic [ref=e154]:
+                - generic [ref=e155]: ⭐
+                - generic [ref=e156]: 22.2k
+                - generic [ref=e157]: · 3.6k forks
+              - generic [ref=e158]: today
+          - article [ref=e159]:
+            - generic [ref=e160]:
+              - generic [ref=e161]: GitHub
+              - generic [ref=e163]:
+                - 'generic "AI relevance: 9.0/10" [ref=e164]':
+                  - generic [ref=e165]: "9.0"
+                  - generic [ref=e166]: /10
+                - link "Open source" [ref=e167] [cursor=pointer]:
+                  - /url: https://github.com/elizaOS/eliza
+                  - text: ↗
+            - generic [ref=e168]:
+              - generic [ref=e169]: AI Agents
+              - generic [ref=e170]: stable
+            - link "elizaOS/eliza" [ref=e171] [cursor=pointer]:
+              - /url: /items/7a29f24d-d3ef-496b-a4ff-6bfbe0c9f6a6
+              - heading "elizaOS/eliza" [level=3] [ref=e172]
+            - paragraph [ref=e173]: elizaOS is an open-source framework for building autonomous agents using TypeScript, designed to simplify agent development for engineers.
+            - generic [ref=e174]:
+              - generic [ref=e175]: autonomous-agents
+              - generic [ref=e176]: typescript
+              - generic [ref=e177]: agent-framework
+              - generic [ref=e178]: "+2"
+            - generic [ref=e179]:
+              - generic [ref=e180]:
+                - generic [ref=e181]: ⭐
+                - generic [ref=e182]: 18.4k
+                - generic [ref=e183]: · 5.5k forks
+              - generic [ref=e184]: today
+          - article [ref=e185]:
+            - generic [ref=e186]:
+              - generic [ref=e187]: GitHub
+              - generic [ref=e189]:
+                - 'generic "AI relevance: 9.0/10" [ref=e190]':
+                  - generic [ref=e191]: "9.0"
+                  - generic [ref=e192]: /10
+                - link "Open source" [ref=e193] [cursor=pointer]:
+                  - /url: https://github.com/langchain-ai/langgraph
+                  - text: ↗
+            - generic [ref=e194]:
+              - generic [ref=e195]: AI Agents
+              - generic [ref=e196]: stable
+            - link "langchain-ai/langgraph" [ref=e197] [cursor=pointer]:
+              - /url: /items/37683153-e80f-4f70-96b2-cf12418b8f21
+              - heading "langchain-ai/langgraph" [level=3] [ref=e198]
+            - paragraph [ref=e199]: LangGraph is an open-source Python library designed for building resilient AI agents.
+            - generic [ref=e200]:
+              - generic [ref=e201]: python
+              - generic [ref=e202]: agent-framework
+              - generic [ref=e203]: resilience
+              - generic [ref=e204]: "+1"
+            - generic [ref=e205]:
+              - generic [ref=e206]:
+                - generic [ref=e207]: ⭐
+                - generic [ref=e208]: 31.9k
+                - generic [ref=e209]: · 5.4k forks
+              - generic [ref=e210]: today
+          - article [ref=e211]:
+            - generic [ref=e212]:
+              - generic [ref=e213]: GitHub
+              - generic [ref=e215]:
+                - 'generic "AI relevance: 9.0/10" [ref=e216]':
+                  - generic [ref=e217]: "9.0"
+                  - generic [ref=e218]: /10
+                - link "Open source" [ref=e219] [cursor=pointer]:
+                  - /url: https://github.com/run-llama/llama_index
+                  - text: ↗
+            - generic [ref=e220]:
+              - generic [ref=e221]: AI Agents
+              - generic [ref=e222]: stable
+            - link "run-llama/llama_index" [ref=e223] [cursor=pointer]:
+              - /url: /items/6298058f-86fb-4605-8e6f-205145f9996c
+              - heading "run-llama/llama_index" [level=3] [ref=e224]
+            - paragraph [ref=e225]: LlamaIndex is a Python library designed for document agent capabilities and optical character recognition (OCR) integration.
+            - generic [ref=e226]:
+              - generic [ref=e227]: document-agent
+              - generic [ref=e228]: ocr
+              - generic [ref=e229]: python
+              - generic [ref=e230]: "+1"
+            - generic [ref=e231]:
+              - generic [ref=e232]:
+                - generic [ref=e233]: ⭐
+                - generic [ref=e234]: 49.3k
+                - generic [ref=e235]: · 7.4k forks
+              - generic [ref=e236]: today
+    - contentinfo [ref=e237]:
+      - generic [ref=e239]:
+        - generic [ref=e240]: AgentRadar — built with Next.js, Supabase, and Claude
+        - link "← back to feed" [ref=e241] [cursor=pointer]:
+          - /url: /
+  - button "Open Next.js Dev Tools" [ref=e247] [cursor=pointer]:
+    - img [ref=e248]
+  - alert [ref=e251]

@@ -1,0 +1,13 @@
+- generic [active] [ref=e1]:
+  - button "Open Next.js Dev Tools" [ref=e7] [cursor=pointer]:
+    - img [ref=e8]
+  - generic [ref=e12]:
+    - paragraph [ref=e13]: "404"
+    - heading "Item not found" [level=1] [ref=e14]
+    - paragraph [ref=e15]: This item may have been removed or the link is incorrect.
+    - generic [ref=e16]:
+      - link "← back to feed" [ref=e17] [cursor=pointer]:
+        - /url: /
+      - link "search items" [ref=e18] [cursor=pointer]:
+        - /url: /search
+  - alert [ref=e19]

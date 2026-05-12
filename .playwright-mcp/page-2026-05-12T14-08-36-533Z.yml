@@ -1,0 +1,1047 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - generic [ref=e6]: AgentRadar
+          - generic [ref=e7]: beta
+        - navigation [ref=e8]:
+          - link "search" [ref=e9] [cursor=pointer]:
+            - /url: /search
+          - link "digest" [ref=e10] [cursor=pointer]:
+            - /url: /digest
+    - main [ref=e11]:
+      - generic [ref=e12]:
+        - generic [ref=e15]: live feed
+        - heading "AgentRadar" [level=1] [ref=e16]
+        - paragraph [ref=e17]: Track emerging AI agents, developer tools, open-source projects, and model updates in one curated feed.
+        - paragraph [ref=e18]: Items are continuously ingested from GitHub, Hacker News, and technical blogs, enriched by AI to extract category, maturity, and relevance, then ranked by a composite score that weighs signal quality, recency, and community adoption.
+        - generic [ref=e19]:
+          - generic [ref=e20]:
+            - generic [ref=e21]: 2.4k
+            - generic [ref=e22]: enriched items
+          - generic [ref=e23]:
+            - generic [ref=e25]: "163"
+            - generic [ref=e26]: GitHub repos
+          - generic [ref=e27]:
+            - generic [ref=e29]: 2.3k
+            - generic [ref=e30]: RSS articles
+          - generic [ref=e31]:
+            - generic [ref=e33]: "6"
+            - generic [ref=e34]: HN stories
+      - separator [ref=e35]
+      - generic [ref=e36]:
+        - generic [ref=e37]:
+          - generic [ref=e38]:
+            - heading "Top Picks" [level=2] [ref=e39]
+            - paragraph [ref=e40]: Highest-signal tools and updates across all sources.
+          - generic [ref=e41]:
+            - article [ref=e42]:
+              - generic [ref=e43]:
+                - generic [ref=e44]: GitHub
+                - generic [ref=e46]:
+                  - 'generic "AI relevance: 10.0/10" [ref=e47]':
+                    - generic [ref=e48]: "10.0"
+                    - generic [ref=e49]: /10
+                  - link "Open source" [ref=e50] [cursor=pointer]:
+                    - /url: https://github.com/langchain-ai/langchain
+                    - text: ↗
+              - generic [ref=e51]:
+                - generic [ref=e52]: AI Agents
+                - generic [ref=e53]: stable
+              - link "langchain-ai/langchain" [ref=e54] [cursor=pointer]:
+                - /url: /items/ea4a64a8-dfbc-4ef1-8404-5fc294dd5437
+                - heading "langchain-ai/langchain" [level=3] [ref=e55]
+              - paragraph [ref=e56]: LangChain is an agent engineering platform designed for building and deploying AI applications using Python.
+              - generic [ref=e57]:
+                - generic [ref=e58]: agent-engineering
+                - generic [ref=e59]: python
+                - generic [ref=e60]: llm-tooling
+                - generic [ref=e61]: "+1"
+              - generic [ref=e62]:
+                - generic [ref=e63]:
+                  - generic [ref=e64]: ⭐
+                  - generic [ref=e65]: 136.4k
+                  - generic [ref=e66]: · 22.6k forks
+                - generic [ref=e67]: today
+            - article [ref=e68]:
+              - generic [ref=e69]:
+                - generic [ref=e70]: GitHub
+                - generic [ref=e72]:
+                  - 'generic "AI relevance: 9.0/10" [ref=e73]':
+                    - generic [ref=e74]: "9.0"
+                    - generic [ref=e75]: /10
+                  - link "Open source" [ref=e76] [cursor=pointer]:
+                    - /url: https://github.com/langgenius/dify
+                    - text: ↗
+              - generic [ref=e77]:
+                - generic [ref=e78]: AI Agents
+                - generic [ref=e79]: stable
+              - link "langgenius/dify" [ref=e80] [cursor=pointer]:
+                - /url: /items/b8230334-a03d-4c9d-861b-4f571901f766
+                - heading "langgenius/dify" [level=3] [ref=e81]
+              - paragraph [ref=e82]: Dify is a production-ready platform for developing agentic workflows using TypeScript.
+              - generic [ref=e83]:
+                - generic [ref=e84]: agent-workflows
+                - generic [ref=e85]: typescript
+                - generic [ref=e86]: workflow-automation
+                - generic [ref=e87]: "+1"
+              - generic [ref=e88]:
+                - generic [ref=e89]:
+                  - generic [ref=e90]: ⭐
+                  - generic [ref=e91]: 141.1k
+                  - generic [ref=e92]: · 22.2k forks
+                - generic [ref=e93]: today
+            - article [ref=e94]:
+              - generic [ref=e95]:
+                - generic [ref=e96]: GitHub
+                - generic [ref=e98]:
+                  - 'generic "AI relevance: 9.0/10" [ref=e99]':
+                    - generic [ref=e100]: "9.0"
+                    - generic [ref=e101]: /10
+                  - link "Open source" [ref=e102] [cursor=pointer]:
+                    - /url: https://github.com/deepset-ai/haystack
+                    - text: ↗
+              - generic [ref=e103]:
+                - generic [ref=e104]: AI Agents
+                - generic [ref=e105]: stable
+              - link "deepset-ai/haystack" [ref=e106] [cursor=pointer]:
+                - /url: /items/480912f3-e8ad-45ed-a543-9fa260bde0a1
+                - heading "deepset-ai/haystack" [level=3] [ref=e107]
+              - paragraph [ref=e108]: Haystack is an open-source AI orchestration framework designed for building context-engineered, production-ready LLM applications with modular pipelines and agent workflows.
+              - generic [ref=e109]:
+                - generic [ref=e110]: open-source
+                - generic [ref=e111]: llm-applications
+                - generic [ref=e112]: retrieval
+                - generic [ref=e113]: "+2"
+              - generic [ref=e114]:
+                - generic [ref=e115]:
+                  - generic [ref=e116]: ⭐
+                  - generic [ref=e117]: 25.2k
+                  - generic [ref=e118]: · 2.8k forks
+                - generic [ref=e119]: today
+            - article [ref=e120]:
+              - generic [ref=e121]:
+                - generic [ref=e122]: GitHub
+                - generic [ref=e124]:
+                  - 'generic "AI relevance: 9.0/10" [ref=e125]':
+                    - generic [ref=e126]: "9.0"
+                    - generic [ref=e127]: /10
+                  - link "Open source" [ref=e128] [cursor=pointer]:
+                    - /url: https://github.com/activepieces/activepieces
+                    - text: ↗
+              - generic [ref=e129]:
+                - generic [ref=e130]: AI Agents
+                - generic [ref=e131]: stable
+              - link "activepieces/activepieces" [ref=e132] [cursor=pointer]:
+                - /url: /items/20a80110-0120-4562-876a-c66249d7bf9a
+                - heading "activepieces/activepieces" [level=3] [ref=e133]
+              - paragraph [ref=e134]: Activepieces is an open-source framework for building AI agents and automating workflows using Model Context Protocols (MCPs).
+              - generic [ref=e135]:
+                - generic [ref=e136]: ai-workflows
+                - generic [ref=e137]: mcp
+                - generic [ref=e138]: automation
+                - generic [ref=e139]: "+2"
+              - generic [ref=e140]:
+                - generic [ref=e141]:
+                  - generic [ref=e142]: ⭐
+                  - generic [ref=e143]: 22.2k
+                  - generic [ref=e144]: · 3.6k forks
+                - generic [ref=e145]: today
+            - article [ref=e146]:
+              - generic [ref=e147]:
+                - generic [ref=e148]: GitHub
+                - generic [ref=e150]:
+                  - 'generic "AI relevance: 9.0/10" [ref=e151]':
+                    - generic [ref=e152]: "9.0"
+                    - generic [ref=e153]: /10
+                  - link "Open source" [ref=e154] [cursor=pointer]:
+                    - /url: https://github.com/elizaOS/eliza
+                    - text: ↗
+              - generic [ref=e155]:
+                - generic [ref=e156]: AI Agents
+                - generic [ref=e157]: stable
+              - link "elizaOS/eliza" [ref=e158] [cursor=pointer]:
+                - /url: /items/7a29f24d-d3ef-496b-a4ff-6bfbe0c9f6a6
+                - heading "elizaOS/eliza" [level=3] [ref=e159]
+              - paragraph [ref=e160]: elizaOS is an open-source framework for building autonomous agents using TypeScript, designed to simplify agent development for engineers.
+              - generic [ref=e161]:
+                - generic [ref=e162]: autonomous-agents
+                - generic [ref=e163]: typescript
+                - generic [ref=e164]: agent-framework
+                - generic [ref=e165]: "+2"
+              - generic [ref=e166]:
+                - generic [ref=e167]:
+                  - generic [ref=e168]: ⭐
+                  - generic [ref=e169]: 18.4k
+                  - generic [ref=e170]: · 5.5k forks
+                - generic [ref=e171]: today
+            - article [ref=e172]:
+              - generic [ref=e173]:
+                - generic [ref=e174]: GitHub
+                - generic [ref=e176]:
+                  - 'generic "AI relevance: 9.0/10" [ref=e177]':
+                    - generic [ref=e178]: "9.0"
+                    - generic [ref=e179]: /10
+                  - link "Open source" [ref=e180] [cursor=pointer]:
+                    - /url: https://github.com/langchain-ai/langgraph
+                    - text: ↗
+              - generic [ref=e181]:
+                - generic [ref=e182]: AI Agents
+                - generic [ref=e183]: stable
+              - link "langchain-ai/langgraph" [ref=e184] [cursor=pointer]:
+                - /url: /items/37683153-e80f-4f70-96b2-cf12418b8f21
+                - heading "langchain-ai/langgraph" [level=3] [ref=e185]
+              - paragraph [ref=e186]: LangGraph is an open-source Python library designed for building resilient AI agents.
+              - generic [ref=e187]:
+                - generic [ref=e188]: python
+                - generic [ref=e189]: agent-framework
+                - generic [ref=e190]: resilience
+                - generic [ref=e191]: "+1"
+              - generic [ref=e192]:
+                - generic [ref=e193]:
+                  - generic [ref=e194]: ⭐
+                  - generic [ref=e195]: 31.9k
+                  - generic [ref=e196]: · 5.4k forks
+                - generic [ref=e197]: today
+            - article [ref=e198]:
+              - generic [ref=e199]:
+                - generic [ref=e200]: GitHub
+                - generic [ref=e202]:
+                  - 'generic "AI relevance: 9.0/10" [ref=e203]':
+                    - generic [ref=e204]: "9.0"
+                    - generic [ref=e205]: /10
+                  - link "Open source" [ref=e206] [cursor=pointer]:
+                    - /url: https://github.com/run-llama/llama_index
+                    - text: ↗
+              - generic [ref=e207]:
+                - generic [ref=e208]: AI Agents
+                - generic [ref=e209]: stable
+              - link "run-llama/llama_index" [ref=e210] [cursor=pointer]:
+                - /url: /items/6298058f-86fb-4605-8e6f-205145f9996c
+                - heading "run-llama/llama_index" [level=3] [ref=e211]
+              - paragraph [ref=e212]: LlamaIndex is a Python library designed for document agent capabilities and optical character recognition (OCR) integration.
+              - generic [ref=e213]:
+                - generic [ref=e214]: document-agent
+                - generic [ref=e215]: ocr
+                - generic [ref=e216]: python
+                - generic [ref=e217]: "+1"
+              - generic [ref=e218]:
+                - generic [ref=e219]:
+                  - generic [ref=e220]: ⭐
+                  - generic [ref=e221]: 49.3k
+                  - generic [ref=e222]: · 7.4k forks
+                - generic [ref=e223]: today
+            - article [ref=e224]:
+              - generic [ref=e225]:
+                - generic [ref=e226]: GitHub
+                - generic [ref=e228]:
+                  - 'generic "AI relevance: 9.0/10" [ref=e229]':
+                    - generic [ref=e230]: "9.0"
+                    - generic [ref=e231]: /10
+                  - link "Open source" [ref=e232] [cursor=pointer]:
+                    - /url: https://github.com/langchain4j/langchain4j
+                    - text: ↗
+              - generic [ref=e233]:
+                - generic [ref=e234]: LLM Frameworks
+                - generic [ref=e235]: stable
+              - link "langchain4j/langchain4j" [ref=e236] [cursor=pointer]:
+                - /url: /items/53fb8ad8-aa45-4939-bf33-7d8dab54a90b
+                - heading "langchain4j/langchain4j" [level=3] [ref=e237]
+              - paragraph [ref=e238]: LangChain4j is an open-source Java library that simplifies building LLM-powered applications on the JVM with seamless tools integration and MCP support.
+              - generic [ref=e239]:
+                - generic [ref=e240]: java
+                - generic [ref=e241]: llm-tooling
+                - generic [ref=e242]: tool-calling
+                - generic [ref=e243]: "+2"
+              - generic [ref=e244]:
+                - generic [ref=e245]:
+                  - generic [ref=e246]: ⭐
+                  - generic [ref=e247]: 12.0k
+                  - generic [ref=e248]: · 2.2k forks
+                - generic [ref=e249]: today
+            - article [ref=e250]:
+              - generic [ref=e251]:
+                - generic [ref=e252]: GitHub
+                - generic [ref=e254]:
+                  - 'generic "AI relevance: 8.0/10" [ref=e255]':
+                    - generic [ref=e256]: "8.0"
+                    - generic [ref=e257]: /10
+                  - link "Open source" [ref=e258] [cursor=pointer]:
+                    - /url: https://github.com/n8n-io/n8n
+                    - text: ↗
+              - generic [ref=e259]:
+                - generic [ref=e260]: Workflow Automation
+                - generic [ref=e261]: stable
+              - link "n8n-io/n8n" [ref=e262] [cursor=pointer]:
+                - /url: /items/81857b22-5240-4ec5-beb1-a05aa498aea6
+                - heading "n8n-io/n8n" [level=3] [ref=e263]
+              - paragraph [ref=e264]: n8n is a fair-code workflow automation platform that integrates native AI capabilities and over 400 services, enabling users to visually build workflows combined with custom code.
+              - generic [ref=e265]:
+                - generic [ref=e266]: workflow-automation
+                - generic [ref=e267]: automation
+                - generic [ref=e268]: typescript
+                - generic [ref=e269]: "+2"
+              - generic [ref=e270]:
+                - generic [ref=e271]:
+                  - generic [ref=e272]: ⭐
+                  - generic [ref=e273]: 187.6k
+                  - generic [ref=e274]: · 57.6k forks
+                - generic [ref=e275]: today
+            - article [ref=e276]:
+              - generic [ref=e277]:
+                - generic [ref=e278]: GitHub
+                - generic [ref=e280]:
+                  - 'generic "AI relevance: 9.0/10" [ref=e281]':
+                    - generic [ref=e282]: "9.0"
+                    - generic [ref=e283]: /10
+                  - link "Open source" [ref=e284] [cursor=pointer]:
+                    - /url: https://github.com/promptfoo/promptfoo
+                    - text: ↗
+              - generic [ref=e285]:
+                - generic [ref=e286]: AI Agents
+                - generic [ref=e287]: stable
+              - link "promptfoo/promptfoo" [ref=e288] [cursor=pointer]:
+                - /url: /items/acbd945d-099d-4d7f-8e2b-60d0bfae8310
+                - heading "promptfoo/promptfoo" [level=3] [ref=e289]
+              - paragraph [ref=e290]: Promptfoo is a TypeScript library designed for testing prompts and agents, offering red teaming and vulnerability scanning for AI models like GPT, Claude, and Llama.
+              - generic [ref=e291]:
+                - generic [ref=e292]: prompt-testing
+                - generic [ref=e293]: red-teaming
+                - generic [ref=e294]: typescript
+                - generic [ref=e295]: "+2"
+              - generic [ref=e296]:
+                - generic [ref=e297]:
+                  - generic [ref=e298]: ⭐
+                  - generic [ref=e299]: 21.1k
+                  - generic [ref=e300]: · 1.8k forks
+                - generic [ref=e301]: today
+            - article [ref=e302]:
+              - generic [ref=e303]:
+                - generic [ref=e304]: GitHub
+                - generic [ref=e306]:
+                  - 'generic "AI relevance: 8.0/10" [ref=e307]':
+                    - generic [ref=e308]: "8.0"
+                    - generic [ref=e309]: /10
+                  - link "Open source" [ref=e310] [cursor=pointer]:
+                    - /url: https://github.com/triggerdotdev/trigger.dev
+                    - text: ↗
+              - generic [ref=e311]:
+                - generic [ref=e312]: AI Agents
+                - generic [ref=e313]: stable
+              - link "triggerdotdev/trigger.dev" [ref=e314] [cursor=pointer]:
+                - /url: /items/43b8d878-63b5-4eb3-a7fd-543af13c3a96
+                - heading "triggerdotdev/trigger.dev" [level=3] [ref=e315]
+              - paragraph [ref=e316]: Trigger.dev is an open-source platform designed for building and deploying fully-managed AI agents and workflows using TypeScript.
+              - generic [ref=e317]:
+                - generic [ref=e318]: ai-agents
+                - generic [ref=e319]: workflow
+                - generic [ref=e320]: typescript
+                - generic [ref=e321]: "+2"
+              - generic [ref=e322]:
+                - generic [ref=e323]:
+                  - generic [ref=e324]: ⭐
+                  - generic [ref=e325]: 14.9k
+                  - generic [ref=e326]: · 1.2k forks
+                - generic [ref=e327]: today
+            - article [ref=e328]:
+              - generic [ref=e329]:
+                - generic [ref=e330]: GitHub
+                - generic [ref=e332]:
+                  - 'generic "AI relevance: 8.0/10" [ref=e333]':
+                    - generic [ref=e334]: "8.0"
+                    - generic [ref=e335]: /10
+                  - link "Open source" [ref=e336] [cursor=pointer]:
+                    - /url: https://github.com/browserbase/stagehand
+                    - text: ↗
+              - generic [ref=e337]:
+                - generic [ref=e338]: AI Agents
+                - generic [ref=e339]: stable
+              - link "browserbase/stagehand" [ref=e340] [cursor=pointer]:
+                - /url: /items/26fdd483-e8fa-44d9-abd3-bb7131612a07
+                - heading "browserbase/stagehand" [level=3] [ref=e341]
+              - paragraph [ref=e342]: Stagehand is a TypeScript SDK designed for the development and deployment of browser-based agents.
+              - generic [ref=e343]:
+                - generic [ref=e344]: typescript
+                - generic [ref=e345]: sdk
+                - generic [ref=e346]: browser-agents
+                - generic [ref=e347]: "+1"
+              - generic [ref=e348]:
+                - generic [ref=e349]:
+                  - generic [ref=e350]: ⭐
+                  - generic [ref=e351]: 22.6k
+                  - generic [ref=e352]: · 1.5k forks
+                - generic [ref=e353]: today
+        - generic [ref=e354]:
+          - generic [ref=e355]:
+            - heading "AI News & Research" [level=2] [ref=e356]
+            - paragraph [ref=e357]: Model launches, research papers, and platform updates from blogs and HN.
+          - generic [ref=e358]:
+            - article [ref=e359]:
+              - generic [ref=e360]:
+                - generic [ref=e361]: RSS
+                - generic [ref=e363]:
+                  - 'generic "AI relevance: 9.0/10" [ref=e364]':
+                    - generic [ref=e365]: "9.0"
+                    - generic [ref=e366]: /10
+                  - link "Open source" [ref=e367] [cursor=pointer]:
+                    - /url: https://openai.com/index/gpt-5-5-instant-system-card
+                    - text: ↗
+              - generic [ref=e368]:
+                - generic [ref=e369]: Open Source Models
+                - generic [ref=e370]: stable
+              - link "GPT-5.5 Instant System Card" [ref=e371] [cursor=pointer]:
+                - /url: /items/6697534a-350b-46bd-b405-800b24b00f58
+                - heading "GPT-5.5 Instant System Card" [level=3] [ref=e372]
+              - paragraph [ref=e373]: OpenAI has released the GPT-5.5 Instant System Card, detailing the capabilities and limitations of the latest model in the GPT series.
+              - paragraph [ref=e374]: This system card provides essential insights for AI engineers on how to leverage GPT-5.5 effectively, including its performance metrics and usage guidelines.
+              - generic [ref=e375]:
+                - generic [ref=e376]: gpt-5.5
+                - generic [ref=e377]: system-card
+                - generic [ref=e378]: model-capabilities
+                - generic [ref=e379]: openai
+                - generic [ref=e380]: ai-development
+              - generic [ref=e382]: 1w ago
+            - article [ref=e383]:
+              - generic [ref=e384]:
+                - generic [ref=e385]: RSS
+                - generic [ref=e387]:
+                  - 'generic "AI relevance: 9.0/10" [ref=e388]':
+                    - generic [ref=e389]: "9.0"
+                    - generic [ref=e390]: /10
+                  - link "Open source" [ref=e391] [cursor=pointer]:
+                    - /url: https://openai.com/index/gpt-5-5-instant
+                    - text: ↗
+              - generic [ref=e392]:
+                - generic [ref=e393]: Open Source Models
+                - generic [ref=e394]: stable
+              - 'link "GPT-5.5 Instant: smarter, clearer, and more personalized" [ref=e395] [cursor=pointer]':
+                - /url: /items/5abecacd-7d9e-4da5-9e40-6f4f871b736e
+                - 'heading "GPT-5.5 Instant: smarter, clearer, and more personalized" [level=3] [ref=e396]'
+              - paragraph [ref=e397]: GPT-5.5 Instant introduces enhancements to ChatGPT's default model with smarter, more accurate answers and improved personalization controls.
+              - paragraph [ref=e398]: The model's reduction of hallucinations and emphasis on personalization can significantly improve user experience and productivity for developers integrating AI feedback into applications.
+              - generic [ref=e399]:
+                - generic [ref=e400]: gpt-5-5
+                - generic [ref=e401]: chatgpt
+                - generic [ref=e402]: model-improvements
+                - generic [ref=e403]: personalization
+                - generic [ref=e404]: ai-models
+              - generic [ref=e406]: 1w ago
+            - article [ref=e407]:
+              - generic [ref=e408]:
+                - generic [ref=e409]: RSS
+                - generic [ref=e411]:
+                  - 'generic "AI relevance: 8.0/10" [ref=e412]':
+                    - generic [ref=e413]: "8.0"
+                    - generic [ref=e414]: /10
+                  - link "Open source" [ref=e415] [cursor=pointer]:
+                    - /url: https://openai.com/index/advancing-voice-intelligence-with-new-models-in-the-api
+                    - text: ↗
+              - generic [ref=e416]:
+                - generic [ref=e417]: AI Infrastructure
+                - generic [ref=e418]: stable
+              - link "Advancing voice intelligence with new models in the API" [ref=e419] [cursor=pointer]:
+                - /url: /items/261dece5-f91c-498b-a28e-df1066cdcd6b
+                - heading "Advancing voice intelligence with new models in the API" [level=3] [ref=e420]
+              - paragraph [ref=e421]: OpenAI has introduced new realtime voice models in their API that enhance speech reasoning, translation, and transcription capabilities.
+              - paragraph [ref=e422]: These advancements can significantly improve the development of voice-driven applications by providing more natural and intelligent interaction through accurate speech understanding.
+              - generic [ref=e423]:
+                - generic [ref=e424]: voice-intelligence
+                - generic [ref=e425]: speech-processing
+                - generic [ref=e426]: api
+                - generic [ref=e427]: real-time
+                - generic [ref=e428]: translation
+              - generic [ref=e430]: 5d ago
+            - article [ref=e431]:
+              - generic [ref=e432]:
+                - generic [ref=e433]: RSS
+                - generic [ref=e435]:
+                  - 'generic "AI relevance: 10.0/10" [ref=e436]':
+                    - generic [ref=e437]: "10.0"
+                    - generic [ref=e438]: /10
+                  - link "Open source" [ref=e439] [cursor=pointer]:
+                    - /url: https://openai.com/index/introducing-gpt-5-5
+                    - text: ↗
+              - generic [ref=e440]:
+                - generic [ref=e441]: Open Source Models
+                - generic [ref=e442]: stable
+              - link "Introducing GPT-5.5" [ref=e443] [cursor=pointer]:
+                - /url: /items/48748ec2-bec8-4820-8bf7-f95493f5fe2c
+                - heading "Introducing GPT-5.5" [level=3] [ref=e444]
+              - paragraph [ref=e445]: OpenAI has released GPT-5.5, an advanced model designed for coding, research, and complex data analysis tasks.
+              - paragraph [ref=e446]: The improvements in speed and capability of GPT-5.5 enhance developer workflows and productivity, making it a critical upgrade for engineers working in AI and software development.
+              - generic [ref=e447]:
+                - generic [ref=e448]: gpt-5-5
+                - generic [ref=e449]: openai
+                - generic [ref=e450]: llm
+                - generic [ref=e451]: model-release
+                - generic [ref=e452]: ai-engineering
+              - generic [ref=e454]: 2w ago
+            - article [ref=e455]:
+              - generic [ref=e456]:
+                - generic [ref=e457]: RSS
+                - generic [ref=e459]:
+                  - 'generic "AI relevance: 7.0/10" [ref=e460]':
+                    - generic [ref=e461]: "7.0"
+                    - generic [ref=e462]: /10
+                  - link "Open source" [ref=e463] [cursor=pointer]:
+                    - /url: https://huggingface.co/blog/allenai/emo
+                    - text: ↗
+              - generic [ref=e465]: Research
+              - 'link "EMO: Pretraining mixture of experts for emergent modularity" [ref=e466] [cursor=pointer]':
+                - /url: /items/9a30d7c3-5026-4f45-8205-309617d12260
+                - 'heading "EMO: Pretraining mixture of experts for emergent modularity" [level=3] [ref=e467]'
+              - paragraph [ref=e468]: EMO is a framework that utilizes pretraining of a mixture of experts to achieve emergent modularity in neural networks.
+              - paragraph [ref=e469]: This research offers insights into modularity in AI models, which can enhance efficiency and capabilities of LLMs by optimizing their training processes.
+              - generic [ref=e470]:
+                - generic [ref=e471]: mixture-of-experts
+                - generic [ref=e472]: modularity
+                - generic [ref=e473]: neural-networks
+                - generic [ref=e474]: pretraining
+                - generic [ref=e475]: llm-research
+              - generic [ref=e477]: 3d ago
+            - article [ref=e478]:
+              - generic [ref=e479]:
+                - generic [ref=e480]: RSS
+                - generic [ref=e482]:
+                  - 'generic "AI relevance: 7.0/10" [ref=e483]':
+                    - generic [ref=e484]: "7.0"
+                    - generic [ref=e485]: /10
+                  - link "Open source" [ref=e486] [cursor=pointer]:
+                    - /url: https://simonwillison.net/2026/May/7/llm-gemini/#atom-everything
+                    - text: ↗
+              - generic [ref=e487]:
+                - generic [ref=e488]: LLM Frameworks
+                - generic [ref=e489]: stable
+              - link "llm-gemini 0.31" [ref=e490] [cursor=pointer]:
+                - /url: /items/4921d7b1-a82a-40e0-bd9c-43869241659b
+                - heading "llm-gemini 0.31" [level=3] [ref=e491]
+              - paragraph [ref=e492]: llm-gemini 0.31 is an update for a Gemini-based LLM that enhances its capabilities for integrating with various tools.
+              - paragraph [ref=e493]: This update provides valuable enhancements for engineers looking to deploy Gemini models with improved tool integration, making it easier to build more capable AI applications.
+              - generic [ref=e494]:
+                - generic [ref=e495]: gemini
+                - generic [ref=e496]: llm
+                - generic [ref=e497]: tool-integration
+                - generic [ref=e498]: model-update
+              - generic [ref=e500]: 4d ago
+            - article [ref=e501]:
+              - generic [ref=e502]:
+                - generic [ref=e503]: RSS
+                - generic [ref=e505]:
+                  - 'generic "AI relevance: 7.0/10" [ref=e506]':
+                    - generic [ref=e507]: "7.0"
+                    - generic [ref=e508]: /10
+                  - link "Open source" [ref=e509] [cursor=pointer]:
+                    - /url: https://huggingface.co/blog/ServiceNow-AI/correctness-before-corrections
+                    - text: ↗
+              - generic [ref=e510]:
+                - generic [ref=e511]: Research
+                - generic [ref=e512]: promising
+              - 'link "vLLM V0 to V1: Correctness Before Corrections in RL" [ref=e513] [cursor=pointer]':
+                - /url: /items/c66be2ef-23f9-4bba-b36e-c41c238c5fd3
+                - 'heading "vLLM V0 to V1: Correctness Before Corrections in RL" [level=3] [ref=e514]'
+              - paragraph [ref=e515]: vLLM's transition from version 0 to version 1 focuses on enhancing correctness in reinforcement learning models prior to making corrections.
+              - paragraph [ref=e516]: Improving the correctness of RL models can lead to more reliable AI systems and better performance in production applications.
+              - generic [ref=e517]:
+                - generic [ref=e518]: vllm
+                - generic [ref=e519]: reinforcement-learning
+                - generic [ref=e520]: model-correction
+                - generic [ref=e521]: huggingface
+              - generic [ref=e523]: 5d ago
+            - article [ref=e524]:
+              - generic [ref=e525]:
+                - generic [ref=e526]: RSS
+                - generic [ref=e528]:
+                  - 'generic "AI relevance: 9.0/10" [ref=e529]':
+                    - generic [ref=e530]: "9.0"
+                    - generic [ref=e531]: /10
+                  - link "Open source" [ref=e532] [cursor=pointer]:
+                    - /url: https://openai.com/index/gpt-5-5-system-card
+                    - text: ↗
+              - generic [ref=e533]:
+                - generic [ref=e534]: Open Source Models
+                - generic [ref=e535]: stable
+              - link "GPT-5.5 System Card" [ref=e536] [cursor=pointer]:
+                - /url: /items/e26e2743-2e73-4bc3-b038-578b9215c52d
+                - heading "GPT-5.5 System Card" [level=3] [ref=e537]
+              - paragraph [ref=e538]: OpenAI has released the system card for GPT-5.5, detailing its capabilities, limitations, and considerations for deployment.
+              - paragraph [ref=e539]: Understanding the system card is crucial for engineers to assess the model's application scope, ethical considerations, and performance benchmarks for developing AI applications.
+              - generic [ref=e540]:
+                - generic [ref=e541]: gpt-5.5
+                - generic [ref=e542]: model-card
+                - generic [ref=e543]: openai
+                - generic [ref=e544]: ai-safety
+                - generic [ref=e545]: ethical-ai
+              - generic [ref=e547]: 2w ago
+        - generic [ref=e548]:
+          - generic [ref=e549]:
+            - heading "Latest High-Signal Updates" [level=2] [ref=e550]
+            - paragraph [ref=e551]: Recently published items with strong AI/engineering relevance.
+          - generic [ref=e552]:
+            - article [ref=e553]:
+              - generic [ref=e554]:
+                - generic [ref=e555]: HN
+                - generic [ref=e557]:
+                  - 'generic "AI relevance: 8.0/10" [ref=e558]':
+                    - generic [ref=e559]: "8.0"
+                    - generic [ref=e560]: /10
+                  - link "Open source" [ref=e561] [cursor=pointer]:
+                    - /url: https://github.com/MotleyAI/slayer
+                    - text: ↗
+              - generic [ref=e562]:
+                - generic [ref=e563]: AI Agents
+                - generic [ref=e564]: promising
+              - 'link "Show HN: SLayer, a semantic layer maintained by your agent" [ref=e565] [cursor=pointer]':
+                - /url: /items/f9aeff61-51b1-49a7-bcb4-dbbe3de99a12
+                - 'heading "Show HN: SLayer, a semantic layer maintained by your agent" [level=3] [ref=e566]'
+              - paragraph [ref=e567]: SLayer is a semantic layer designed to allow agents to interact with databases for building agentic applications like chatbots.
+              - paragraph [ref=e568]: By providing a structured way to connect agents to databases, SLayer simplifies the complexity of SQL generation, making it easier for engineers to develop and maintain data-driven applications.
+              - generic [ref=e569]:
+                - generic [ref=e570]: semantic-layer
+                - generic [ref=e571]: database-integration
+                - generic [ref=e572]: agentic-apps
+                - generic [ref=e573]: data-analytics
+              - generic [ref=e574]:
+                - generic [ref=e575]:
+                  - generic [ref=e576]: ▲
+                  - generic [ref=e577]: "10"
+                  - generic [ref=e578]: · 3 comments
+                - generic [ref=e579]: today
+            - article [ref=e580]:
+              - generic [ref=e581]:
+                - generic [ref=e582]: HN
+                - generic [ref=e584]:
+                  - 'generic "AI relevance: 7.0/10" [ref=e585]':
+                    - generic [ref=e586]: "7.0"
+                    - generic [ref=e587]: /10
+                  - link "Open source" [ref=e588] [cursor=pointer]:
+                    - /url: https://github.com/leaningtech/browsercode
+                    - text: ↗
+              - generic [ref=e589]:
+                - generic [ref=e590]: AI Agents
+                - generic [ref=e591]: promising
+              - 'link "Show HN: BrowserCode – Run Claude Code in the Browser via WebAssembly" [ref=e592] [cursor=pointer]':
+                - /url: /items/ccdb1ee0-eb6f-4a28-9d70-1c9fbd460080
+                - 'heading "Show HN: BrowserCode – Run Claude Code in the Browser via WebAssembly" [level=3] [ref=e593]'
+              - paragraph [ref=e594]: BrowserCode is a FOSS web app that allows users to run TUI agents like Claude Code and Gemini CLI directly in the browser using WebAssembly.
+              - paragraph [ref=e595]: Running CLI tools in the browser enhances accessibility and usability for engineers, enabling local execution without complex setup or server dependencies.
+              - generic [ref=e596]:
+                - generic [ref=e597]: browser
+                - generic [ref=e598]: webassembly
+                - generic [ref=e599]: tui-agents
+                - generic [ref=e600]: open-source
+                - generic [ref=e601]: local-execution
+              - generic [ref=e602]:
+                - generic [ref=e603]:
+                  - generic [ref=e604]: ▲
+                  - generic [ref=e605]: "3"
+                - generic [ref=e606]: today
+            - article [ref=e607]:
+              - generic [ref=e608]:
+                - generic [ref=e609]: HN
+                - generic [ref=e611]:
+                  - 'generic "AI relevance: 8.0/10" [ref=e612]':
+                    - generic [ref=e613]: "8.0"
+                    - generic [ref=e614]: /10
+                  - link "Open source" [ref=e615] [cursor=pointer]:
+                    - /url: https://wuphf.team
+                    - text: ↗
+              - generic [ref=e616]:
+                - generic [ref=e617]: AI Agents
+                - generic [ref=e618]: promising
+              - 'link "Show HN: AI agents who prevent context drift through gossip" [ref=e619] [cursor=pointer]':
+                - /url: /items/c542e9b2-dd90-4f26-b899-7609d533e1e3
+                - 'heading "Show HN: AI agents who prevent context drift through gossip" [level=3] [ref=e620]'
+              - paragraph [ref=e621]: WUPHF is an open-source multi-agent system designed to prevent context drift by utilizing a shared markdown and Git-based LLM wiki as collective memory.
+              - paragraph [ref=e622]: This framework addresses a common issue in multi-agent systems, ensuring that agents maintain a consistent understanding of context, which is crucial for effective collaboration and task execution.
+              - generic [ref=e623]:
+                - generic [ref=e624]: multi-agent
+                - generic [ref=e625]: context-management
+                - generic [ref=e626]: open-source
+                - generic [ref=e627]: llm-wiki
+                - generic [ref=e628]: collaboration
+              - generic [ref=e629]:
+                - generic [ref=e630]:
+                  - generic [ref=e631]: ▲
+                  - generic [ref=e632]: "1"
+                - generic [ref=e633]: yesterday
+            - article [ref=e634]:
+              - generic [ref=e635]:
+                - generic [ref=e636]: HN
+                - generic [ref=e638]:
+                  - 'generic "AI relevance: 5.0/10" [ref=e639]':
+                    - generic [ref=e640]: "5.0"
+                    - generic [ref=e641]: /10
+                  - link "Open source" [ref=e642] [cursor=pointer]:
+                    - /url: https://forray.io/
+                    - text: ↗
+              - generic [ref=e643]:
+                - generic [ref=e644]: AI Agents
+                - generic [ref=e645]: experimental
+              - 'link "Show HN: Visual Learning with LLMs" [ref=e646] [cursor=pointer]':
+                - /url: /items/a172f104-9088-4e61-b69f-1480880b701b
+                - 'heading "Show HN: Visual Learning with LLMs" [level=3] [ref=e647]'
+              - paragraph [ref=e648]: Forray is a learning tool that integrates LLM-generated content with interactive visuals and small games to enhance the educational experience.
+              - paragraph [ref=e649]: This tool could be useful for engineers interested in developing educational applications that leverage interactive content and LLMs, but significant work is still needed on the visual generation aspect.
+              - generic [ref=e650]:
+                - generic [ref=e651]: learning-tool
+                - generic [ref=e652]: llm-integration
+                - generic [ref=e653]: interactive-visuals
+                - generic [ref=e654]: educational-tech
+              - generic [ref=e655]:
+                - generic [ref=e656]:
+                  - generic [ref=e657]: ▲
+                  - generic [ref=e658]: "1"
+                - generic [ref=e659]: yesterday
+            - article [ref=e660]:
+              - generic [ref=e661]:
+                - generic [ref=e662]: RSS
+                - generic [ref=e664]:
+                  - 'generic "AI relevance: 8.0/10" [ref=e665]':
+                    - generic [ref=e666]: "8.0"
+                    - generic [ref=e667]: /10
+                  - link "Open source" [ref=e668] [cursor=pointer]:
+                    - /url: https://vercel.com/blog/how-superset-built-the-ide-for-ai-agents-on-vercel
+                    - text: ↗
+              - generic [ref=e669]:
+                - generic [ref=e670]: AI Agents
+                - generic [ref=e671]: stable
+              - link "How Superset built the IDE for AI agents on Vercel" [ref=e672] [cursor=pointer]:
+                - /url: /items/9d0aba35-a444-43c0-ae00-7d9686d0f7ba
+                - heading "How Superset built the IDE for AI agents on Vercel" [level=3] [ref=e673]
+              - paragraph [ref=e674]: Superset is an IDE designed for multi-agent development on Vercel, allowing up to 10 coding agents to work in parallel across isolated workspaces.
+              - paragraph [ref=e675]: This tool enhances developer productivity by enabling simultaneous code generation and deployment across multiple branches, effectively eliminating bottlenecks in workflows.
+              - generic [ref=e676]:
+                - generic [ref=e677]: multi-agent
+                - generic [ref=e678]: ide
+                - generic [ref=e679]: parallel-computing
+                - generic [ref=e680]: devops
+                - generic [ref=e681]: vercel
+              - generic [ref=e683]: 2d ago
+            - article [ref=e684]:
+              - generic [ref=e685]:
+                - generic [ref=e686]: RSS
+                - generic [ref=e688]:
+                  - 'generic "AI relevance: 7.0/10" [ref=e689]':
+                    - generic [ref=e690]: "7.0"
+                    - generic [ref=e691]: /10
+                  - link "Open source" [ref=e692] [cursor=pointer]:
+                    - /url: https://www.langchain.com/blog/the-agent-development-lifecycle
+                    - text: ↗
+              - generic [ref=e693]:
+                - generic [ref=e694]: AI Agents
+                - generic [ref=e695]: promising
+              - link "Untitled article" [ref=e696] [cursor=pointer]:
+                - /url: /items/fb0c6286-12ff-4f63-8fdd-3c0a2cb0f63a
+                - heading "Untitled article" [level=3] [ref=e697]
+              - paragraph [ref=e698]: The article outlines the agent development lifecycle, detailing key stages from ideation to deployment in building AI agents using LangChain.
+              - paragraph [ref=e699]: Understanding the agent development lifecycle helps AI engineers streamline their workflows and improve the development process for AI agents.
+              - generic [ref=e700]:
+                - generic [ref=e701]: agent-development
+                - generic [ref=e702]: langchain
+                - generic [ref=e703]: ai-workflows
+                - generic [ref=e704]: deployment
+                - generic [ref=e705]: software-engineering
+              - generic [ref=e707]: 2d ago
+            - article [ref=e708]:
+              - generic [ref=e709]:
+                - generic [ref=e710]: RSS
+                - generic [ref=e712]:
+                  - 'generic "AI relevance: 7.0/10" [ref=e713]':
+                    - generic [ref=e714]: "7.0"
+                    - generic [ref=e715]: /10
+                  - link "Open source" [ref=e716] [cursor=pointer]:
+                    - /url: https://www.langchain.com/blog/building-a-company-due-diligence-agent-with-deep-agents-langsmith-and-parallel
+                    - text: ↗
+              - generic [ref=e717]:
+                - generic [ref=e718]: AI Agents
+                - generic [ref=e719]: promising
+              - link "Untitled article" [ref=e720] [cursor=pointer]:
+                - /url: /items/ebffd955-17b6-4081-ab43-61035f2164b0
+                - heading "Untitled article" [level=3] [ref=e721]
+              - paragraph [ref=e722]: This article outlines the process of building a company due diligence agent utilizing Deep Agents, Langsmith, and Parallel technologies.
+              - paragraph [ref=e723]: It provides actionable insights and a practical example for AI engineers interested in developing autonomous agents to streamline due diligence processes in corporate environments.
+              - generic [ref=e724]:
+                - generic [ref=e725]: due-diligence
+                - generic [ref=e726]: langchain
+                - generic [ref=e727]: autonomous-agents
+                - generic [ref=e728]: deep-agents
+                - generic [ref=e729]: parallel-computing
+              - generic [ref=e731]: 3d ago
+            - article [ref=e732]:
+              - generic [ref=e733]:
+                - generic [ref=e734]: RSS
+                - generic [ref=e736]:
+                  - 'generic "AI relevance: 7.0/10" [ref=e737]':
+                    - generic [ref=e738]: "7.0"
+                    - generic [ref=e739]: /10
+                  - link "Open source" [ref=e740] [cursor=pointer]:
+                    - /url: https://openai.com/index/running-codex-safely
+                    - text: ↗
+              - generic [ref=e741]:
+                - generic [ref=e742]: Code Agents
+                - generic [ref=e743]: stable
+              - link "Running Codex safely at OpenAI" [ref=e744] [cursor=pointer]:
+                - /url: /items/b0f6ac3c-b664-4eaa-840d-9ea08e8721a2
+                - heading "Running Codex safely at OpenAI" [level=3] [ref=e745]
+              - paragraph [ref=e746]: OpenAI outlines its strategies for securely running Codex using techniques such as sandboxing, network policies, and agent-native telemetry.
+              - paragraph [ref=e747]: Understanding these security measures is vital for engineers deploying coding agents to ensure safe and compliant integration within their workflows.
+              - generic [ref=e748]:
+                - generic [ref=e749]: security
+                - generic [ref=e750]: sandboxing
+                - generic [ref=e751]: codex
+                - generic [ref=e752]: compliance
+                - generic [ref=e753]: telemetry
+              - generic [ref=e755]: 4d ago
+        - generic [ref=e756]:
+          - generic [ref=e757]:
+            - heading "Agent & MCP Tools" [level=2] [ref=e758]
+            - paragraph [ref=e759]: Frameworks, tool-use libraries, and automation platforms for AI builders.
+          - generic [ref=e760]:
+            - article [ref=e761]:
+              - generic [ref=e762]:
+                - generic [ref=e763]: GitHub
+                - generic [ref=e765]:
+                  - 'generic "AI relevance: 8.0/10" [ref=e766]':
+                    - generic [ref=e767]: "8.0"
+                    - generic [ref=e768]: /10
+                  - link "Open source" [ref=e769] [cursor=pointer]:
+                    - /url: https://github.com/the-open-agent/openagent
+                    - text: ↗
+              - generic [ref=e770]:
+                - generic [ref=e771]: AI Agents
+                - generic [ref=e772]: promising
+              - link "the-open-agent/openagent" [ref=e773] [cursor=pointer]:
+                - /url: /items/30137900-bf5f-40c3-bfcd-e5431a566c1c
+                - heading "the-open-agent/openagent" [level=3] [ref=e774]
+              - paragraph [ref=e775]: OpenAgent is a next-generation personal AI assistant that leverages LLM technology, retrieval-augmented generation (RAG), and agent loops for enhancing computer, browser, and coding tasks.
+              - paragraph [ref=e776]: This project enables engineers to integrate advanced AI capabilities into personal assistants, streamlining workflows and enhancing productivity through intelligent agent-based interactions.
+              - generic [ref=e777]:
+                - generic [ref=e778]: personal-assistant
+                - generic [ref=e779]: llm
+                - generic [ref=e780]: rag
+                - generic [ref=e781]: agent-loops
+                - generic [ref=e782]: go
+              - generic [ref=e783]:
+                - generic [ref=e784]:
+                  - generic [ref=e785]: ⭐
+                  - generic [ref=e786]: 4.7k
+                  - generic [ref=e787]: · 549 forks
+                - generic [ref=e788]: today
+            - article [ref=e789]:
+              - generic [ref=e790]:
+                - generic [ref=e791]: GitHub
+                - generic [ref=e793]:
+                  - 'generic "AI relevance: 8.0/10" [ref=e794]':
+                    - generic [ref=e795]: "8.0"
+                    - generic [ref=e796]: /10
+                  - link "Open source" [ref=e797] [cursor=pointer]:
+                    - /url: https://github.com/browseros-ai/BrowserOS
+                    - text: ↗
+              - generic [ref=e798]:
+                - generic [ref=e799]: AI Agents
+                - generic [ref=e800]: stable
+              - link "browseros-ai/BrowserOS" [ref=e801] [cursor=pointer]:
+                - /url: /items/173da871-830b-4cac-b949-26f7a0a1a1a5
+                - heading "browseros-ai/BrowserOS" [level=3] [ref=e802]
+              - paragraph [ref=e803]: BrowserOS is an open-source agentic browser that serves as an alternative to existing tools like ChatGPT Atlas and Perplexity Comet.
+              - paragraph [ref=e804]: It enables developers to leverage AI for enhanced browsing experiences, potentially improving user interaction and automating tasks within the browser.
+              - generic [ref=e805]:
+                - generic [ref=e806]: agentic-browsing
+                - generic [ref=e807]: typescript
+                - generic [ref=e808]: open-source
+                - generic [ref=e809]: web-tools
+              - generic [ref=e810]:
+                - generic [ref=e811]:
+                  - generic [ref=e812]: ⭐
+                  - generic [ref=e813]: 10.9k
+                  - generic [ref=e814]: · 1.1k forks
+                - generic [ref=e815]: today
+            - article [ref=e816]:
+              - generic [ref=e817]:
+                - generic [ref=e818]: GitHub
+                - generic [ref=e820]:
+                  - 'generic "AI relevance: 8.0/10" [ref=e821]':
+                    - generic [ref=e822]: "8.0"
+                    - generic [ref=e823]: /10
+                  - link "Open source" [ref=e824] [cursor=pointer]:
+                    - /url: https://github.com/InsForge/InsForge
+                    - text: ↗
+              - generic [ref=e825]:
+                - generic [ref=e826]: AI Agents
+                - generic [ref=e827]: stable
+              - link "InsForge/InsForge" [ref=e828] [cursor=pointer]:
+                - /url: /items/3805646d-4c79-4643-abdd-5826993add96
+                - heading "InsForge/InsForge" [level=3] [ref=e829]
+              - paragraph [ref=e830]: InsForge is an open-source backend platform for agentic coding that provides a comprehensive solution for developing full-stack applications with integrated database, auth, storage, compute, and AI capabilities.
+              - paragraph [ref=e831]: Its all-in-one design simplifies the development workflow for AI engineers by streamlining the backend infrastructure needed for building advanced agentic systems.
+              - generic [ref=e832]:
+                - generic [ref=e833]: backend-platform
+                - generic [ref=e834]: open-source
+                - generic [ref=e835]: typescript
+                - generic [ref=e836]: agentic-coding
+                - generic [ref=e837]: full-stack
+              - generic [ref=e838]:
+                - generic [ref=e839]:
+                  - generic [ref=e840]: ⭐
+                  - generic [ref=e841]: 9.4k
+                  - generic [ref=e842]: · 781 forks
+                - generic [ref=e843]: today
+            - article [ref=e844]:
+              - generic [ref=e845]:
+                - generic [ref=e846]: GitHub
+                - generic [ref=e848]:
+                  - 'generic "AI relevance: 7.0/10" [ref=e849]':
+                    - generic [ref=e850]: "7.0"
+                    - generic [ref=e851]: /10
+                  - link "Open source" [ref=e852] [cursor=pointer]:
+                    - /url: https://github.com/apache/airflow
+                    - text: ↗
+              - generic [ref=e853]:
+                - generic [ref=e854]: Workflow Automation
+                - generic [ref=e855]: stable
+              - link "apache/airflow" [ref=e856] [cursor=pointer]:
+                - /url: /items/e4cc8df1-af9f-475f-a18d-86e8ef51a0a4
+                - heading "apache/airflow" [level=3] [ref=e857]
+              - paragraph [ref=e858]: Apache Airflow is an open-source platform for programmatically authoring, scheduling, and monitoring workflows.
+              - paragraph [ref=e859]: Airflow provides essential tools for scheduling and orchestrating complex workflows, making it valuable for AI engineers managing data pipelines and ML workflows.
+              - generic [ref=e860]:
+                - generic [ref=e861]: workflow-scheduling
+                - generic [ref=e862]: data-pipelines
+                - generic [ref=e863]: python
+                - generic [ref=e864]: orchestration
+              - generic [ref=e865]:
+                - generic [ref=e866]:
+                  - generic [ref=e867]: ⭐
+                  - generic [ref=e868]: 45.4k
+                  - generic [ref=e869]: · 17.0k forks
+                - generic [ref=e870]: today
+            - article [ref=e871]:
+              - generic [ref=e872]:
+                - generic [ref=e873]: GitHub
+                - generic [ref=e875]:
+                  - 'generic "AI relevance: 8.0/10" [ref=e876]':
+                    - generic [ref=e877]: "8.0"
+                    - generic [ref=e878]: /10
+                  - link "Open source" [ref=e879] [cursor=pointer]:
+                    - /url: https://github.com/hyperspaceai/agi
+                    - text: ↗
+              - generic [ref=e880]:
+                - generic [ref=e881]: AI Agents
+                - generic [ref=e882]: promising
+              - link "hyperspaceai/agi" [ref=e883] [cursor=pointer]:
+                - /url: /items/f4022d7b-f076-46d5-9315-5880a49d3b4c
+                - heading "hyperspaceai/agi" [level=3] [ref=e884]
+              - paragraph [ref=e885]: HyperspaceAI's AGI is a distributed AGI system that enables thousands of autonomous AI agents to collaboratively train models and share experiments using a peer-to-peer architecture.
+              - paragraph [ref=e886]: This framework allows for streamlined collaboration and rapid experimentation in AI model training, providing engineers with a powerful tool for building more advanced AI systems.
+              - generic [ref=e887]:
+                - generic [ref=e888]: distributed-ai
+                - generic [ref=e889]: peer-to-peer
+                - generic [ref=e890]: collaborative-training
+                - generic [ref=e891]: autonomous-agents
+                - generic [ref=e892]: model-sharing
+              - generic [ref=e893]:
+                - generic [ref=e894]:
+                  - generic [ref=e895]: ⭐
+                  - generic [ref=e896]: 1.7k
+                  - generic [ref=e897]: · 180 forks
+                - generic [ref=e898]: today
+            - article [ref=e899]:
+              - generic [ref=e900]:
+                - generic [ref=e901]: GitHub
+                - generic [ref=e903]:
+                  - 'generic "AI relevance: 8.0/10" [ref=e904]':
+                    - generic [ref=e905]: "8.0"
+                    - generic [ref=e906]: /10
+                  - link "Open source" [ref=e907] [cursor=pointer]:
+                    - /url: https://github.com/gptme/gptme
+                    - text: ↗
+              - generic [ref=e908]:
+                - generic [ref=e909]: AI Agents
+                - generic [ref=e910]: promising
+              - link "gptme/gptme" [ref=e911] [cursor=pointer]:
+                - /url: /items/ca9629eb-1896-4d95-a669-6c9f69c53c5f
+                - heading "gptme/gptme" [level=3] [ref=e912]
+              - paragraph [ref=e913]: gptme is an open-source Python project that enables users to create persistent autonomous agents capable of writing code, using the terminal, and browsing the web directly from the terminal.
+              - paragraph [ref=e914]: This tool empowers AI engineers to build versatile agents that can automate tasks and improve productivity through local tool integration and autonomy.
+              - generic [ref=e915]:
+                - generic [ref=e916]: autonomous-agents
+                - generic [ref=e917]: python
+                - generic [ref=e918]: terminal-tools
+                - generic [ref=e919]: code-generation
+                - generic [ref=e920]: automation
+              - generic [ref=e921]:
+                - generic [ref=e922]:
+                  - generic [ref=e923]: ⭐
+                  - generic [ref=e924]: 4.3k
+                  - generic [ref=e925]: · 388 forks
+                - generic [ref=e926]: today
+            - article [ref=e927]:
+              - generic [ref=e928]:
+                - generic [ref=e929]: GitHub
+                - generic [ref=e931]:
+                  - 'generic "AI relevance: 8.0/10" [ref=e932]':
+                    - generic [ref=e933]: "8.0"
+                    - generic [ref=e934]: /10
+                  - link "Open source" [ref=e935] [cursor=pointer]:
+                    - /url: https://github.com/exa-labs/exa-mcp-server
+                    - text: ↗
+              - generic [ref=e936]:
+                - generic [ref=e937]: MCP / Tool Use
+                - generic [ref=e938]: promising
+              - link "exa-labs/exa-mcp-server" [ref=e939] [cursor=pointer]:
+                - /url: /items/1572f388-d8ff-4080-811f-9af87513cd49
+                - heading "exa-labs/exa-mcp-server" [level=3] [ref=e940]
+              - paragraph [ref=e941]: Exa MCP Server is an open-source web search and web crawling framework developed using TypeScript.
+              - paragraph [ref=e942]: This framework facilitates the development of applications that require efficient web data retrieval, which is crucial for creating AI services reliant on up-to-date information.
+              - generic [ref=e943]:
+                - generic [ref=e944]: web-search
+                - generic [ref=e945]: web-crawling
+                - generic [ref=e946]: typescript
+                - generic [ref=e947]: mcp
+                - generic [ref=e948]: data-retrieval
+              - generic [ref=e949]:
+                - generic [ref=e950]:
+                  - generic [ref=e951]: ⭐
+                  - generic [ref=e952]: 4.4k
+                  - generic [ref=e953]: · 331 forks
+                - generic [ref=e954]: today
+            - article [ref=e955]:
+              - generic [ref=e956]:
+                - generic [ref=e957]: GitHub
+                - generic [ref=e959]:
+                  - 'generic "AI relevance: 8.0/10" [ref=e960]':
+                    - generic [ref=e961]: "8.0"
+                    - generic [ref=e962]: /10
+                  - link "Open source" [ref=e963] [cursor=pointer]:
+                    - /url: https://github.com/entireio/cli
+                    - text: ↗
+              - generic [ref=e964]:
+                - generic [ref=e965]: AI Agents
+                - generic [ref=e966]: stable
+              - link "entireio/cli" [ref=e967] [cursor=pointer]:
+                - /url: /items/34e662b1-e888-49a6-87dd-641e1a39ea64
+                - heading "entireio/cli" [level=3] [ref=e968]
+              - paragraph [ref=e969]: Entire CLI is a tool that integrates into Git workflows to capture and index AI agent sessions alongside code commits.
+              - paragraph [ref=e970]: It enables developers to maintain a searchable history of AI-assisted coding sessions, enhancing traceability and collaboration in code development.
+              - generic [ref=e971]:
+                - generic [ref=e972]: git-integration
+                - generic [ref=e973]: ai-sessions
+                - generic [ref=e974]: go
+                - generic [ref=e975]: developer-tools
+                - generic [ref=e976]: session-indexing
+              - generic [ref=e977]:
+                - generic [ref=e978]:
+                  - generic [ref=e979]: ⭐
+                  - generic [ref=e980]: 4.3k
+                  - generic [ref=e981]: · 332 forks
+                - generic [ref=e982]: today
+    - contentinfo [ref=e983]:
+      - generic [ref=e985]:
+        - generic [ref=e986]: AgentRadar — built with Next.js, Supabase, and Claude
+        - generic [ref=e987]:
+          - generic [ref=e988]: 2.4k items indexed
+          - generic [ref=e989]: ·
+          - generic [ref=e990]: AI-enriched & ranked
+  - button "Open Next.js Dev Tools" [ref=e996] [cursor=pointer]:
+    - img [ref=e997]
