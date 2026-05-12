@@ -1,4 +1,4 @@
-// Force dynamic — results depend on live DB data and query params.
+// Force dynamic — results depend on live DB data and URL search params.
 export const dynamic = 'force-dynamic'
 
 import type { Metadata } from 'next'
@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { ItemCard } from '@/components/ItemCard'
 import { SearchControls } from './SearchControls'
 import { searchItems } from '@/lib/db/search'
-import type { SearchSort } from '@/lib/db/search'
+import type { DateRange, SearchSort } from '@/lib/db/search'
 
 // ── Metadata ──────────────────────────────────────────────────────────────────
 
@@ -15,15 +15,23 @@ export const metadata: Metadata = {
   description: 'Search the AgentRadar corpus of AI-enriched tools, repos, and articles.',
 }
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
+// ── Param parsers ─────────────────────────────────────────────────────────────
 
-const VALID_SORTS: SearchSort[] = ['ranking', 'newest', 'relevance']
+const VALID_SORTS: SearchSort[] = ['ranking', 'newest', 'relevance', 'stars', 'discussed']
+const VALID_DATE_RANGES: DateRange[] = ['all', '1d', '7d', '30d', '90d']
 
 function parseSort(raw: string | string[] | undefined): SearchSort {
   if (typeof raw === 'string' && VALID_SORTS.includes(raw as SearchSort)) {
     return raw as SearchSort
   }
   return 'ranking'
+}
+
+function parseDateRange(raw: string | string[] | undefined): DateRange {
+  if (typeof raw === 'string' && VALID_DATE_RANGES.includes(raw as DateRange)) {
+    return raw as DateRange
+  }
+  return 'all'
 }
 
 function parseString(raw: string | string[] | undefined): string {
@@ -35,6 +43,16 @@ function parseFloat_(raw: string | string[] | undefined): number {
   return isFinite(n) ? n : 0
 }
 
+// ── Sort label ────────────────────────────────────────────────────────────────
+
+const SORT_LABELS: Record<SearchSort, string> = {
+  ranking: 'radar score',
+  newest: 'publish date',
+  relevance: 'AI relevance',
+  stars: 'GitHub stars',
+  discussed: 'HN discussion',
+}
+
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default async function SearchPage({
@@ -44,14 +62,15 @@ export default async function SearchPage({
 }) {
   const params = await searchParams
 
-  const q        = parseString(params.q)
-  const source   = parseString(params.source) || 'all'
-  const category = parseString(params.category)
-  const maturity = parseString(params.maturity)
-  const minScore = parseFloat_(params.min_score)
-  const sort     = parseSort(params.sort)
+  const q         = parseString(params.q)
+  const source    = parseString(params.source) || 'all'
+  const category  = parseString(params.category)
+  const maturity  = parseString(params.maturity)
+  const minScore  = parseFloat_(params.min_score)
+  const dateRange = parseDateRange(params.date_range)
+  const sort      = parseSort(params.sort)
 
-  const results = await searchItems({ q, source, category, maturity, minScore, sort })
+  const results = await searchItems({ q, source, category, maturity, minScore, dateRange, sort })
 
   const resultLabel = q
     ? `${results.length} result${results.length !== 1 ? 's' : ''} for "${q}"`
@@ -90,37 +109,38 @@ export default async function SearchPage({
           </p>
         </div>
 
-        {/* ── Search controls (client component) ─────────────────────────── */}
+        {/* ── Search controls ─────────────────────────────────────────────── */}
+        {/*
+          key={q} remounts the component when the search term changes via URL,
+          so the uncontrolled text input reflects the new value correctly.
+        */}
         <SearchControls
+          key={q}
           q={q}
           source={source}
           category={category}
           maturity={maturity}
           minScore={minScore}
+          dateRange={dateRange}
           sort={sort}
         />
 
-        {/* ── Result count ───────────────────────────────────────────────── */}
+        {/* ── Result count ────────────────────────────────────────────────── */}
         <div className="mt-6 mb-4 flex items-center gap-2 border-b border-zinc-800 pb-4">
           <span className="font-mono text-xs text-zinc-500">{resultLabel}</span>
           {results.length > 0 && (
             <span className="font-mono text-xs text-zinc-700">
-              · sorted by{' '}
-              {sort === 'newest'
-                ? 'publish date'
-                : sort === 'relevance'
-                  ? 'AI relevance'
-                  : 'radar score'}
+              · sorted by {SORT_LABELS[sort]}
             </span>
           )}
         </div>
 
-        {/* ── Results ────────────────────────────────────────────────────── */}
+        {/* ── Results ─────────────────────────────────────────────────────── */}
         {results.length === 0 ? (
           <div className="flex min-h-[240px] flex-col items-center justify-center rounded-xl border border-dashed border-zinc-800 bg-zinc-900/50">
             <p className="mb-1 font-mono text-sm text-zinc-400">No results found</p>
             <p className="font-mono text-xs text-zinc-600">
-              {q ? `Try a broader query or remove some filters.` : 'Try adjusting your filters.'}
+              {q ? 'Try a broader query or remove some filters.' : 'Try adjusting your filters.'}
             </p>
           </div>
         ) : (
