@@ -6,6 +6,7 @@ import { MaturityBadge } from '@/components/ui/MaturityBadge'
 import { ScorePill } from '@/components/ui/ScorePill'
 import { TagList } from '@/components/ui/TagList'
 import { HnPrefixBadge } from '@/components/ui/HnPrefixBadge'
+import { TrendingBadge } from '@/components/ui/TrendingBadge'
 import { getDisplayTitle, getTitlePrefix } from '@/lib/ingestion/title'
 import type { HomepageItem } from '@/lib/db/homepage'
 
@@ -46,6 +47,7 @@ export function ItemCard({ item, compact = false, className }: ItemCardProps) {
       className={cn(
         'group flex flex-col rounded-xl border border-zinc-800 bg-zinc-900 p-5',
         'transition-colors duration-150 hover:border-zinc-700',
+        item.trending && 'border-l-2 border-orange-500',
         className,
       )}
     >
@@ -69,11 +71,12 @@ export function ItemCard({ item, compact = false, className }: ItemCardProps) {
       </div>
 
       {/* ── Row 2: category + maturity + HN prefix badge ────────────────── */}
-      {(item.ai_category || item.ai_maturity || prefix) && (
+      {(item.ai_category || item.ai_maturity || prefix || item.trending) && (
         <div className="mb-3 flex flex-wrap items-center gap-1.5">
           {item.ai_category && <CategoryBadge category={item.ai_category} />}
           {item.ai_maturity && <MaturityBadge maturity={item.ai_maturity} />}
           {prefix && <HnPrefixBadge prefix={prefix} />}
+          {item.trending && <TrendingBadge />}
         </div>
       )}
 
