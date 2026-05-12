@@ -106,9 +106,10 @@ AgentRadar ships with a production-ready daily refresh pipeline that runs automa
 `vercel.json` schedules `GET /api/refresh/daily` at **08:00 UTC every day**. The route:
 
 1. Ingests from GitHub, HN, and RSS concurrently
-2. Enriches up to `DAILY_ENRICH_LIMIT` new items (default: 150) with the configured AI provider
-3. Recomputes `ranking_score` for the entire enriched corpus
-4. Returns a JSON summary — viewable in Vercel Function logs
+2. Fixes blank / placeholder titles on newly ingested items (before enrichment)
+3. Enriches up to `DAILY_ENRICH_LIMIT` new items (default: 150) with the configured AI provider
+4. Recomputes `ranking_score` for the entire enriched corpus
+5. Returns a JSON summary — viewable in Vercel Function logs
 
 ### Setup
 
@@ -160,13 +161,16 @@ A successful response looks like:
 ```json
 {
   "success": true,
-  "ingestionCounts": { "github": 24, "hn": 6, "rss": 12 },
-  "enrichedCount": 38,
-  "failedCount": 2,
-  "rankedCount": 1847,
-  "durationMs": 142300
+  "ingestionCounts": { "github": 12, "hn": 4, "rss": 8 },
+  "titleFixedCount": 3,
+  "enrichedCount": 20,
+  "failedCount": 1,
+  "rankedCount": 842,
+  "durationMs": 94200
 }
 ```
+
+> **Note:** The numbers above are illustrative. Actual counts depend on your corpus size, how many new items each source returns, and the value of `DAILY_ENRICH_LIMIT`.
 
 ### Cost estimate
 
@@ -208,6 +212,18 @@ npm run ingest:github
 npm run enrich -- --limit 50
 npm run rank
 ```
+
+### If titles appear blank or as "Untitled article"
+
+```bash
+# Preview what the script would fix
+npm run cleanup:titles -- --dry-run
+
+# Apply fixes
+npm run cleanup:titles
+```
+
+The script resolves blank, null, or placeholder titles using URL slug derivation and description extraction — the same logic used at render time by `getDisplayTitle()`. HN items are skipped (their titles are handled display-only).
 
 ### If fork artifacts appear in rankings
 
@@ -252,7 +268,7 @@ For Preview deployments, you can point to a separate staging Supabase project to
 - [ ] An item detail page loads (`/items/[any-valid-id]`)
 - [ ] Digest page shows 6 sections
 - [ ] `/items/00000000-0000-0000-0000-000000000000` shows the not-found page
-- [ ] No `SUPABASE_SERVICE_ROLE_KEY` or `OPENAI_API_KEY` in browser DevTools network responses or page source
+- [ ] No `SUPABASE_SERVICE_ROLE_KEY`, `OPENAI_API_KEY`, or `CRON_SECRET` in browser DevTools network responses or page source
 - [ ] Vercel Function logs show no errors on page load
 - [ ] `GET /api/refresh/daily` without auth header returns `401 Unauthorized`
 - [ ] Vercel dashboard → Settings → Cron Jobs shows the daily schedule

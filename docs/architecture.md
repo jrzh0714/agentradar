@@ -9,9 +9,13 @@ This document describes the system architecture, data model, module boundaries, 
 ```
 External sources
   GitHub Search API  ──┐
-  HN Algolia API     ──┤──→ Ingestion scripts ──→ Supabase (items, status='new')
-  RSS feeds          ──┘                               │
-                                                       ▼
+  HN Algolia API     ──┤──→ Ingestion ──→ Supabase (items, status='new')
+  RSS feeds          ──┘       ▲                    │
+                               │                    ▼
+                    Vercel Cron 08:00 UTC    Title cleanup
+                  /api/refresh/daily         (lib/ingestion/title.ts)
+                  [CRON_SECRET protected]             │
+                                                      ▼
                                              Enrichment script
                                           (OpenAI / Anthropic)
                                                │
@@ -138,6 +142,26 @@ Per-source fetch + normalize logic. Returns `ItemInsert[]` — the shape needed 
 | `github.ts` | GitHub Search API | `rejectReason()` filter chain, `toItemInsert()` mapper |
 | `hn.ts` | HN Algolia API | Keyword queries, minimum points filter |
 | `rss.ts` | RSS (rss-parser) | Feed fetch, per-item normalize |
+| `title.ts` | — (utility) | Title quality: `normalizeTitle`, `getDisplayTitle`, `getTitlePrefix`, `cleanHnTitle`, `deriveTitleFromUrl`, `deriveTitleFromDescription` |
+
+**Title resolution order in `getDisplayTitle()`:**
+1. For HN items: strip "Show HN / Ask HN / Tell HN" prefix from stored title, return the rest
+2. `normalizeTitle(item.title)` — rejects null, empty, whitespace-only, and known placeholders
+3. `deriveTitleFromUrl(item.url)` — title-cases the last meaningful URL path segment
+4. `deriveTitleFromDescription(item.description)` — first sentence, capped at 100 characters
+5. `"Untitled article"` — final fallback
+
+HN prefix handling is non-destructive: `getTitlePrefix()` extracts the prefix for use as an `HnPrefixBadge` UI component; the DB title is never mutated.
+
+### `lib/workflows/`
+
+Shared pipeline logic consumed by the API route.
+
+| File | Contents |
+|---|---|
+| `daily-refresh.ts` | `runDailyRefresh(enrichLimit)` — orchestrates `runIngestion` → `runTitleCleanup` → `runEnrichment` → `runRanking`. Always resolves; never throws. Returns `RefreshResult` with per-phase counts. |
+
+`runDailyRefresh` contains no CLI side-effects (no dotenv, no ws polyfill) — safe to import directly in a Next.js API route.
 
 ### `lib/ranking/`
 
@@ -146,7 +170,9 @@ Pure functions, no I/O.
 | File | Contents |
 |---|---|
 | `score.ts` | `computeRankingScore`, component functions, `WEIGHTS`, `SOURCE_QUALITY` |
-| `score.test.ts` | 10 unit tests, run with `npm run test` |
+| `score.test.ts` | 10 unit tests |
+
+**Test suite:** `npm run test` runs 54 tests total — 10 ranking tests and 44 title quality tests (`lib/ingestion/title.test.ts`). Both use Node.js built-in `node:test` with no external test framework.
 
 ### `lib/ai/`
 
@@ -171,14 +197,17 @@ Zod schemas for external API responses:
 ### Routing
 
 ```
-/           app/page.tsx              (force-dynamic Server Component)
-/search     app/search/page.tsx       (force-dynamic Server Component)
-/digest     app/digest/page.tsx       (force-dynamic Server Component)
-/items/[id] app/items/[id]/page.tsx   (force-dynamic Server Component)
-            app/items/[id]/not-found.tsx
+/                  app/page.tsx              (force-dynamic Server Component)
+/search            app/search/page.tsx       (force-dynamic Server Component)
+/digest            app/digest/page.tsx       (force-dynamic Server Component)
+/items/[id]        app/items/[id]/page.tsx   (force-dynamic Server Component)
+                   app/items/[id]/not-found.tsx
+/api/refresh/daily app/api/refresh/daily/route.ts  (GET + POST, maxDuration=300)
 ```
 
-All data pages are `force-dynamic` — they read from live DB data and must not be statically cached.
+All data pages are `force-dynamic` — they read from live DB data and must not be statically cached. When the daily cron is active, switching to `revalidate = 3600` (hourly ISR) is a straightforward future optimisation.
+
+`/api/refresh/daily` requires `Authorization: Bearer <CRON_SECRET>`. Vercel Cron attaches this header automatically. Manual `GET` or `POST` requests with the correct header are also accepted (useful for local testing and forced refreshes).
 
 ### Client component surface
 
@@ -186,11 +215,25 @@ Only one client component exists in the application: `app/search/SearchControls.
 
 It handles URL-param driven filter state. The approach uses `useRouter().push()` wrapped in `useTransition()` — this avoids the Next.js `useSearchParams()` requirement to wrap the component in a `<Suspense>` boundary.
 
+**Supported filters (all URL-persisted):**
+
+| Param | Values | Default |
+|---|---|---|
+| `q` | keyword string | `""` |
+| `source` | `all` \| `github` \| `hackernews` \| `rss` | `all` |
+| `category` | any of 13 categories \| `all` | `all` |
+| `maturity` | `all` \| `production-ready` \| `promising` \| `experimental` \| `unknown` | `all` |
+| `min_score` | `0` \| `5` \| `6` \| `7` \| `8` \| `9` (relevance ×10) | `0` |
+| `date_range` | `all` \| `1d` \| `7d` \| `30d` \| `90d` | `all` |
+| `sort` | `ranking` \| `newest` \| `relevance` \| `stars` \| `discussed` | `ranking` |
+
+Active filter chips are rendered for any non-default filter value. Each chip has an individual remove button; a "clear all" link resets everything. `key={q}` on `<SearchControls>` remounts the component when the URL's `q` param changes, resetting the uncontrolled keyword input.
+
 `SearchControls` does not import any server-side code. It imports only:
 - `react` (hooks)
 - `next/navigation` (useRouter)
 - `@/lib/utils` (cn)
-- `type { SearchSort }` from `@/lib/db/search` — a **type-only import**, no runtime code
+- `type { SearchSort, DateRange }` from `@/lib/db/search` — **type-only imports**, no runtime code
 
 ### Component hierarchy
 
@@ -222,37 +265,49 @@ app/items/[id]/page.tsx (Server)
 ## Data flow: search request
 
 ```
-Browser ──GET /search?q=agent&source=github──→ Next.js Edge
+Browser ──GET /search?q=agent&source=github&date_range=7d&sort=stars──→ Next.js
 
 Next.js:
   1. await searchParams (async, Next.js 15+)
-  2. parse + sanitize query params
-  3. call searchItems({ q, source, ... })
+  2. parse + sanitize all params (q, source, category, maturity,
+     min_score, date_range, sort) — unknown values replaced with defaults
+  3. call searchItems({ q, source, category, maturity, minRelevance,
+                        dateRange, sort, limit: 60 })
      └── createServerClient() [SUPABASE_SERVICE_ROLE_KEY]
      └── .from('items').select(...)
          .eq('status', 'enriched')
-         .or('title.ilike.%agent%,ai_summary.ilike.%agent%,...')
-         .in('source', [...])
-         ...
-         .order('ranking_score', { ascending: false })
-         .limit(40)
-  4. render SearchPage server component
+         .or('title.ilike.%agent%,...,ai_tags.cs.{agent},...')  ← keyword
+         .eq('source', 'github')                                 ← source filter
+         .gte('published_at', cutoffDate)                        ← date range
+         .gte('ai_relevance_score', 0.5)                        ← min score
+         .order('github_stars', { ascending: false })            ← sort=stars
+         .limit(60)
+  4. render SearchPage server component (with active filter chips)
   5. stream HTML to browser
 
 SearchControls (client):
-  - renders filter UI from props (initial values from URL)
+  - renders filter dropdowns + keyword input from URL-derived props
+  - active filter chips shown for any non-default filter value
   - on filter change: router.push('/search?...') in a transition
   - Next.js fetches new server render, streams update
 ```
 
 No client-side Supabase calls. No API routes. No loading spinners needed (streaming handles it).
 
+**Array-column keyword search:** `ai_tags` and `ai_audience` are `text[]` columns; PostgREST `ilike` does not apply to arrays. For single-word search terms, the query additionally uses `.cs.{term}` (array containment) to match tag/audience values exactly.
+
 ---
 
 ## Data flow: enrichment pipeline
 
+The pipeline can be run two ways:
+- **Manually:** `scripts/enrich-items.ts` (CLI, supports `--limit`, `--dry-run`, `--mock`)
+- **Automatically:** `lib/workflows/daily-refresh.ts` invoked by `/api/refresh/daily` (Vercel Cron)
+
+Both share the same `enrichItem()` function from `lib/ai/enrich.ts`.
+
 ```
-scripts/enrich-items.ts
+runEnrichment() / scripts/enrich-items.ts
 
 1. Query DB for up to N items where status = 'new' OR status = 'failed'
 2. For each item:
@@ -293,6 +348,7 @@ The `maxStars` value is corpus-global, not batch-local. This ensures the GitHub 
 | `SUPABASE_SERVICE_ROLE_KEY` | `lib/supabase/server.ts` only | Never imported in `app/` or `components/` |
 | `OPENAI_API_KEY` / `ANTHROPIC_API_KEY` | `lib/ai/provider.ts` only | Never imported in `app/` |
 | `GITHUB_TOKEN` | `lib/ingestion/github.ts` only | Script-only, never in web app |
+| `CRON_SECRET` | `app/api/refresh/daily/route.ts` only | Compared against `Authorization: Bearer` header; route returns 401 if missing or mismatched; never sent to client |
 | `NEXT_PUBLIC_SUPABASE_URL` | Both client and server | Safe to expose — just the project URL |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | `lib/supabase/client.ts` only | Publishable key, subject to RLS |
 
@@ -308,4 +364,4 @@ The `maxStars` value is corpus-global, not batch-local. This ensures the GitHub 
 
 **In-memory deduplication** — Cross-section dedup on the homepage and digest is done in-memory in the Server Component, not in SQL. This is correct: SQL-side dedup across sections would require complex CTEs or multiple roundtrips. The in-memory approach is simple, readable, and fast for the quantities involved (< 100 candidates fetched total).
 
-**`force-dynamic` on all pages** — All four data pages could theoretically use `revalidate = 3600` (hourly ISR) since the data only changes when scripts run. `force-dynamic` was chosen because ingestion timing is unpredictable. If automated cron jobs are added, switching to ISR would improve performance.
+**`force-dynamic` on all pages** — All four data pages could use `revalidate = 3600` (hourly ISR) since data only changes when the cron runs (08:00 UTC) or when scripts are run manually. `force-dynamic` was chosen to guarantee freshness and simplify reasoning during development. Switching to ISR is a straightforward future optimisation now that the cron schedule is predictable.

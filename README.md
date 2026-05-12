@@ -22,9 +22,10 @@ AgentRadar continuously ingests items from GitHub, Hacker News, and technical bl
 - **AI enrichment** — each item is summarized, categorized, tagged, scored for relevance, and assessed for maturity by an LLM (OpenAI or Anthropic, configurable)
 - **Composite ranking** — a five-signal weighted formula ranks all enriched items, with an aggressive low-relevance penalty
 - **Homepage** — four curated sections (Top Picks, AI News, Latest High-Signal, Agent & MCP Tools) with cross-section deduplication
-- **Search** — keyword search with source, category, maturity, relevance score, and sort filters
+- **Search** — keyword search with URL-persisted filters: source, category, maturity, minimum relevance threshold (≥5–9/10), date range (1d / 7d / 30d / 90d), and five sort modes (ranking, newest, relevance, stars, most discussed). Active filter chips show what's applied and support one-click removal.
 - **Item detail pages** — full AI briefing, classification panel, and contextually related items
 - **Weekly digest** — six editorial sections surfacing the best items per category, with a table of contents
+- **Title quality pipeline** — `normalizeTitle`, `deriveTitleFromUrl`, `deriveTitleFromDescription`, and `getDisplayTitle` resolve blank, null, or placeholder titles at render time; HN "Show HN / Ask HN / Tell HN" prefixes are surfaced as badges without mutating stored titles; a `cleanup-titles` script fixes DB rows retroactively
 - **Data quality controls** — fork artifact cleanup, ingestion blocklist, Zod validation on all AI output, defensive UI fallbacks
 
 ---
@@ -39,15 +40,17 @@ graph TD
         RSS[RSS Feeds]
     end
 
-    subgraph Ingestion ["Ingestion Scripts (Node/tsx)"]
+    subgraph Ingestion ["Ingestion (scripts or Vercel Cron)"]
         IG[ingest-github.ts]
         IH[ingest-hn.ts]
         IR[ingest-rss.ts]
+        CR["/api/refresh/daily<br/>Vercel Cron 08:00 UTC"]
     end
 
     subgraph Pipeline ["Enrichment & Ranking"]
-        EN["enrich-items.ts<br/>OpenAI / Anthropic"]
-        RK[rank-items.ts]
+        TC[title-cleanup]
+        EN["enrich-items<br/>OpenAI / Anthropic"]
+        RK[rank-items]
     end
 
     subgraph DB [Supabase Postgres]
@@ -64,6 +67,8 @@ graph TD
     GH --> IG --> IT
     HN --> IH --> IT
     RSS --> IR --> IT
+    CR --> IT
+    IT --> TC --> IT
     IT --> EN --> IT
     IT --> RK --> IT
     IT --> HP
@@ -178,10 +183,23 @@ The GitHub Search API can return fork repos whose `stargazers_count` reflects th
 
 Items with `ai_relevance_score < 0.4` receive a `×0.35` ranking multiplier, ensuring they cannot surface via star count or recency alone. Items with `ai_relevance_score < 0.5` receive `×0.65`.
 
+### Title quality pipeline
+
+Raw ingested data often has null, empty, or placeholder titles (especially from RSS feeds and short-lived HN posts). A multi-step resolution chain recovers usable titles without DB mutation:
+
+1. `normalizeTitle()` — trims whitespace, collapses newlines/tabs, rejects known placeholders (`"unknown"`, `"untitled"`, `"n/a"`, etc.)
+2. `deriveTitleFromUrl()` — extracts and title-cases the last meaningful URL path segment (skips UUIDs and pure-numeric slugs)
+3. `deriveTitleFromDescription()` — extracts the first sentence of the description (capped at 100 characters)
+4. `getDisplayTitle()` — applies the chain at render time; returns `"Untitled article"` only when all sources are exhausted
+
+HN prefix handling is display-only: "Show HN / Ask HN / Tell HN" prefixes are stripped from the displayed title and surfaced as an `HnPrefixBadge` component, while the stored title in the DB remains unchanged.
+
+`scripts/cleanup-titles.ts` (`npm run cleanup:titles`) applies the same resolution chain retroactively to all rows with bad titles, with a `--dry-run` mode for safe previewing.
+
 ### Defensive UI fallbacks
 
-- `safeTitle()` — returns "Untitled article" for null/empty titles
-- `safeSummary()` — falls back to raw `description`, then to "No summary available yet."
+- `getDisplayTitle()` — resolves null/empty/placeholder titles at render time; fallback is `"Untitled article"`
+- Summary: falls back to raw `description`, then to a static message
 - All optional fields guarded with `?.` and conditional rendering — no "undefined" text reaches the UI
 
 ### Zod validation
@@ -256,7 +274,7 @@ npm run dev         # start dev server at localhost:3000
 npm run build       # production build
 npm run lint        # ESLint
 npm run typecheck   # tsc --noEmit
-npm run test        # ranking unit tests (10 cases)
+npm run test        # 54 unit tests: ranking (10) + title quality (44)
 ```
 
 ### Data pipeline
@@ -281,6 +299,8 @@ npm run rank -- --dry-run    # preview top 20, no writes
 # Data quality
 npm run cleanup:github               # remove fork artifacts from DB
 npm run cleanup:github -- --dry-run  # preview deletions
+npm run cleanup:titles               # fix blank/placeholder titles in DB
+npm run cleanup:titles -- --dry-run  # preview title fixes without writing
 ```
 
 ### Recommended pipeline order
@@ -319,7 +339,8 @@ Vercel Cron calls `GET /api/refresh/daily` at **08:00 UTC every day**. The route
 1. Ingests from GitHub, HN, and RSS concurrently
 2. Enriches up to `DAILY_ENRICH_LIMIT` new items (default: 150)
 3. Recomputes ranking scores for the full enriched corpus
-4. Returns a JSON summary: `{ success, ingestionCounts, enrichedCount, failedCount, rankedCount, durationMs }`
+4. Fixes blank / placeholder titles on newly ingested items before enrichment
+5. Returns a JSON summary: `{ success, ingestionCounts, titleFixedCount, enrichedCount, failedCount, rankedCount, durationMs }`
 
 ### Setup
 
@@ -356,9 +377,8 @@ At `claude-3-5-haiku` / `gpt-4o-mini` rates, enriching 150 items costs ≈ $0.15
 
 ## Known limitations
 
-- **HN corpus is thin** — HN ingestion pulls recent AI-relevant stories; the current corpus has ~6 enriched HN items. Requires regular re-runs to build up.
-- **Enrichment cost** — each item costs ~1–2 API calls. At `gpt-4o-mini` rates this is roughly $0.001 per item. A corpus of 2,000 items costs ~$2 to enrich from scratch.
-- **No real-time updates** — ingestion and enrichment are manual scripts. Items do not update automatically in production without scheduled jobs.
+- **HN corpus depth** — HN ingestion pulls recent AI-relevant stories filtered by minimum points. Corpus depth grows over time as the daily cron accumulates runs.
+- **Enrichment cost** — each item costs ~1–2 API calls. At `gpt-4o-mini` / `claude-3-5-haiku` rates this is roughly $0.001 per item. A corpus of 2,000 items costs ~$2 to enrich from scratch.
 - **Star count lag** — GitHub `github_stars` is captured at ingestion time and not refreshed unless the item is re-ingested.
 - **Category quality** — the AI categorizes items from a fixed 13-value enum. Some items are miscategorized (e.g., a repo with an MCP server but primarily an AR framework landing in `AI Infrastructure`).
 - **No authentication** — all data is public read-only. No user accounts, saved searches, or personalization.
@@ -367,7 +387,6 @@ At `claude-3-5-haiku` / `gpt-4o-mini` rates, enriching 150 items costs ≈ $0.15
 
 ## Future improvements
 
-- [ ] Vercel Cron for automated daily ingestion + enrichment
 - [ ] Re-enrichment job for items where `github_stars` has changed significantly
 - [ ] Embedding-based semantic search (pgvector) as an alternative to keyword `ilike`
 - [ ] RSS feed management UI — add/remove feeds without code changes
@@ -397,12 +416,12 @@ agentradar/
 ├── lib/
 │   ├── ai/                 # LLM provider abstraction + Zod schemas
 │   ├── db/                 # Data-fetching helpers (homepage, search, digest, detail)
-│   ├── ingestion/          # Per-source fetch + normalize logic
+│   ├── ingestion/          # Per-source fetch + normalize logic; title.ts quality utilities
 │   ├── ranking/            # computeRankingScore + unit tests
 │   ├── supabase/           # server.ts (service role) + client.ts (publishable key)
 │   ├── validation/         # Zod schemas for external APIs
-│   └── workflows/          # daily-refresh.ts — shared pipeline logic for the cron route
-├── scripts/                # CLI pipeline scripts (ingest, enrich, rank, cleanup)
+│   └── workflows/          # daily-refresh.ts — orchestrates ingestion → title cleanup → enrichment → ranking
+├── scripts/                # CLI pipeline scripts (ingest, enrich, rank, cleanup-github, cleanup-titles)
 ├── docs/                   # Architecture, case study, deployment guides
 └── supabase/               # DB migrations
 ```

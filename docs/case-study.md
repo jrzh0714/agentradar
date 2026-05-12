@@ -56,7 +56,7 @@ GitHub's Search API is useful but has a well-known distortion: fork repos inheri
 
 ### Hacker News
 
-The HN Algolia API is queried with AI-relevant keywords filtered by minimum points. The HN corpus is currently thin (~6 enriched items) because ingestion is run manually. This is a limitation of the manual pipeline rather than a design flaw.
+The HN Algolia API is queried with AI-relevant keywords filtered by minimum points. HN corpus depth grows incrementally as the daily cron accumulates runs — early in a deployment the HN section will be smaller than the GitHub and RSS sections.
 
 ### RSS
 
@@ -154,6 +154,18 @@ The ranking script paginates in batches of 500. Supabase PostgREST has an implic
 
 **Fix:** Added `safeTitle()` and `safeSummary()` helpers to `ItemCard.tsx`. `safeTitle` returns "Untitled article" for null/empty titles. `safeSummary` tries `ai_summary`, then `description`, then a static fallback.
 
+### Problem 5: RSS items ingested with empty titles
+
+**Discovery:** During a title audit, three RSS items from a blog feed were found with `title = ""` and `raw_data.title = ""` — the parser had returned an empty string rather than null. These items rendered as "Untitled article" permanently because the original fix only handled `null`.
+
+**Root cause:** The RSS parser (rss-parser) stores an empty string when the feed item's `<title>` tag is present but empty, while some feeds omit the tag entirely (which produces `null`). Both forms needed to be treated as "bad title."
+
+**Fix:** Built a dedicated title quality module (`lib/ingestion/title.ts`) with a `normalizeTitle()` function that rejects both null and empty strings, plus a configurable set of known placeholder strings (`"unknown"`, `"untitled"`, `"n/a"`, `"undefined"`, etc.). The `getDisplayTitle()` function applies a resolution chain — stored title → URL slug derivation → description extraction → `"Untitled article"` fallback — at render time across all UI surfaces (homepage, search, digest, detail page).
+
+HN prefix handling (discovered as a related issue): "Show HN: / Ask HN: / Tell HN:" prefixes stored in titles are a HN convention that doesn't belong in the display title. Stripping them at write time would lose information; instead, `getTitlePrefix()` extracts the prefix for display as a badge, and `cleanHnTitle()` removes it from the display string — both non-destructively.
+
+A `scripts/cleanup-titles.ts` script applies the same resolution chain retroactively to all existing DB rows, with `--dry-run` support. It is also wired into the daily refresh pipeline (`runTitleCleanup()` runs after ingestion, before enrichment) so that newly ingested items are cleaned before the LLM sees them as context.
+
 ---
 
 ## UI and product decisions
@@ -180,8 +192,6 @@ The detail page's related items use a two-pass query: first, items from the same
 
 ## What I would improve next
 
-**Automated ingestion pipeline** — The biggest gap. Running scripts manually is not sustainable. The correct solution is a Vercel Cron job (or similar) that runs ingestion + enrichment daily. This does not require any code changes to the pipeline scripts, only scheduling.
-
 **Embedding-based semantic search** — Keyword `ilike` search misses synonyms and related concepts. Adding `pgvector` embeddings to the items table and switching to cosine similarity search would significantly improve search quality. The enrichment step is the right place to generate and store the embedding.
 
 **Category quality** — Some items are miscategorized. The current fix is the fixed enum, but the prompt could include few-shot examples per category to improve accuracy. Alternatively, a post-enrichment validation pass could flag low-confidence categorizations for review.
@@ -194,13 +204,15 @@ The detail page's related items use a two-pass query: first, items from the same
 
 ## What this demonstrates technically
 
-**Full-stack TypeScript** — Strict TypeScript throughout: Next.js App Router pages, server-only data-fetching helpers, CLI scripts, ranking library with unit tests, Zod schemas for all external data. Zero `any` types in the application code.
+**Full-stack TypeScript** — Strict TypeScript throughout: Next.js App Router pages, server-only data-fetching helpers, CLI scripts, title quality utilities with 44 unit tests, ranking library with 10 unit tests, Zod schemas for all external data. Zero `any` types in the application code.
+
+**Production-grade automation** — `lib/workflows/daily-refresh.ts` orchestrates the full pipeline (ingestion → title cleanup → enrichment → ranking) as a single reusable module, exercised by a CRON_SECRET-protected `/api/refresh/daily` API route that Vercel Cron calls at 08:00 UTC. The module always resolves (never throws), captures billing errors without marking items failed, and returns a structured result object with per-phase counts for observability.
 
 **AI-in-the-loop data pipeline** — The enrichment layer is not a demo: it handles API errors, validates output with Zod, marks failures for retry, and is provider-agnostic (Anthropic or OpenAI). The pipeline runs against a live Supabase instance and processes real items.
 
-**Compound ranking formula** — The ranking is not "just sort by stars." It combines five signals with weights, normalises the GitHub component against corpus-level statistics, and applies a non-linear penalty for low-relevance items. The formula is unit-tested with 10 test cases covering edge conditions.
+**Compound ranking formula** — The ranking is not "just sort by stars." It combines five signals with weights, normalises the GitHub component against corpus-level statistics, and applies a non-linear penalty for low-relevance items. The formula is unit-tested (10 cases covering edge conditions).
 
-**Data quality under real conditions** — The fork artifact problem, the 1,000-row pagination bug, and the null title rendering failures were all discovered during real QA passes — not anticipated in advance. Each was diagnosed, root-caused, and fixed with a durable solution (not a one-time patch).
+**Data quality under real conditions** — The fork artifact problem, the 1,000-row pagination bug, the null/empty title rendering failures, and the HN prefix display issue were all discovered during real QA passes — not anticipated in advance. Each was diagnosed, root-caused, and fixed with a durable solution (not a one-time patch). The title quality work in particular grew into a standalone module with its own test suite after the initial fix proved insufficient for the empty-string case.
 
 **Next.js Server Components architecture** — All data fetching is server-side. The client boundary is a single component (`SearchControls`). The `SUPABASE_SERVICE_ROLE_KEY` never touches the browser.
 
