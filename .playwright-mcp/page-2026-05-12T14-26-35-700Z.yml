@@ -1,0 +1,727 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - link "AgentRadar" [ref=e6] [cursor=pointer]:
+            - /url: /
+          - generic [ref=e7]: beta
+        - navigation [ref=e8]:
+          - link "home" [ref=e9] [cursor=pointer]:
+            - /url: /
+          - link "search" [ref=e10] [cursor=pointer]:
+            - /url: /search
+    - main [ref=e11]:
+      - generic [ref=e12]:
+        - paragraph [ref=e13]: Week of May 11, 2026
+        - heading "This Week in AI Agents & Developer Tools" [level=1] [ref=e14]:
+          - text: This Week in AI Agents
+          - text: "& Developer Tools"
+        - paragraph [ref=e15]: A ranked briefing of emerging agent frameworks, model updates, research, MCP tools, and developer workflows.
+        - generic [ref=e16]:
+          - generic [ref=e17]: 30 items curated
+          - generic [ref=e18]: ·
+          - generic [ref=e19]: 6 sections
+          - generic [ref=e20]: ·
+          - generic [ref=e21]: ranked by AI relevance & community signal
+      - generic [ref=e23]:
+        - paragraph [ref=e24]: Editor's note
+        - paragraph [ref=e25]: AgentRadar is tracking high-signal activity across AI agents, model APIs, MCP tooling, code agents, research, and developer infrastructure.
+      - generic [ref=e26]:
+        - paragraph [ref=e27]: In this digest
+        - list [ref=e28]:
+          - listitem [ref=e29]:
+            - generic [ref=e30]: "01"
+            - link "Top Agent Frameworks" [ref=e31] [cursor=pointer]:
+              - /url: "#agent-frameworks"
+            - generic [ref=e32]: 5 items
+          - listitem [ref=e33]:
+            - generic [ref=e34]: "02"
+            - link "Model & API Updates" [ref=e35] [cursor=pointer]:
+              - /url: "#model-api-updates"
+            - generic [ref=e36]: 5 items
+          - listitem [ref=e37]:
+            - generic [ref=e38]: "03"
+            - link "AI Research" [ref=e39] [cursor=pointer]:
+              - /url: "#ai-research"
+            - generic [ref=e40]: 5 items
+          - listitem [ref=e41]:
+            - generic [ref=e42]: "04"
+            - link "MCP / Tool Use" [ref=e43] [cursor=pointer]:
+              - /url: "#mcp-tool-use"
+            - generic [ref=e44]: 5 items
+          - listitem [ref=e45]:
+            - generic [ref=e46]: "05"
+            - link "Code Agents" [ref=e47] [cursor=pointer]:
+              - /url: "#code-agents"
+            - generic [ref=e48]: 5 items
+          - listitem [ref=e49]:
+            - generic [ref=e50]: "06"
+            - link "Developer Tools" [ref=e51] [cursor=pointer]:
+              - /url: "#developer-tools"
+            - generic [ref=e52]: 5 items
+      - generic [ref=e53]:
+        - generic [ref=e54]:
+          - generic [ref=e55]:
+            - generic [ref=e56]:
+              - generic [ref=e57]: "01"
+              - heading "Top Agent Frameworks" [level=2] [ref=e58]
+              - generic [ref=e59]: top 5
+            - paragraph [ref=e60]: The highest-signal agent platforms, orchestration libraries, and workflow engines.
+          - generic [ref=e61]:
+            - generic [ref=e62]:
+              - generic [ref=e63]:
+                - generic [ref=e64]: "1."
+                - generic [ref=e65]: GitHub
+                - generic [ref=e67]: AI Agents
+                - 'generic "AI relevance: 10.0/10" [ref=e68]':
+                  - generic [ref=e69]: "10.0"
+                  - generic [ref=e70]: /10
+                - generic [ref=e71]: today
+                - link "Open source" [ref=e72] [cursor=pointer]:
+                  - /url: https://github.com/langchain-ai/langchain
+                  - text: ↗
+              - generic [ref=e73]:
+                - link "langchain-ai/langchain" [ref=e74] [cursor=pointer]:
+                  - /url: /items/ea4a64a8-dfbc-4ef1-8404-5fc294dd5437
+                  - heading "langchain-ai/langchain" [level=3] [ref=e75]
+                - paragraph [ref=e76]: LangChain is an agent engineering platform designed for building and deploying AI applications using Python.
+                - paragraph [ref=e77]:
+                  - text: ⭐ 136,432 stars
+                  - generic [ref=e78]: · 22,554 forks
+                  - generic [ref=e79]: · Python
+            - generic [ref=e80]:
+              - generic [ref=e81]:
+                - generic [ref=e82]: "2."
+                - generic [ref=e83]: GitHub
+                - generic [ref=e85]: AI Agents
+                - 'generic "AI relevance: 9.0/10" [ref=e86]':
+                  - generic [ref=e87]: "9.0"
+                  - generic [ref=e88]: /10
+                - generic [ref=e89]: today
+                - link "Open source" [ref=e90] [cursor=pointer]:
+                  - /url: https://github.com/langgenius/dify
+                  - text: ↗
+              - generic [ref=e91]:
+                - link "langgenius/dify" [ref=e92] [cursor=pointer]:
+                  - /url: /items/b8230334-a03d-4c9d-861b-4f571901f766
+                  - heading "langgenius/dify" [level=3] [ref=e93]
+                - paragraph [ref=e94]: Dify is a production-ready platform for developing agentic workflows using TypeScript.
+                - paragraph [ref=e95]:
+                  - text: ⭐ 141,081 stars
+                  - generic [ref=e96]: · 22,162 forks
+                  - generic [ref=e97]: · TypeScript
+            - generic [ref=e98]:
+              - generic [ref=e99]:
+                - generic [ref=e100]: "3."
+                - generic [ref=e101]: GitHub
+                - generic [ref=e103]: AI Agents
+                - 'generic "AI relevance: 9.0/10" [ref=e104]':
+                  - generic [ref=e105]: "9.0"
+                  - generic [ref=e106]: /10
+                - generic [ref=e107]: today
+                - link "Open source" [ref=e108] [cursor=pointer]:
+                  - /url: https://github.com/deepset-ai/haystack
+                  - text: ↗
+              - generic [ref=e109]:
+                - link "deepset-ai/haystack" [ref=e110] [cursor=pointer]:
+                  - /url: /items/480912f3-e8ad-45ed-a543-9fa260bde0a1
+                  - heading "deepset-ai/haystack" [level=3] [ref=e111]
+                - paragraph [ref=e112]: Haystack is an open-source AI orchestration framework designed for building context-engineered, production-ready LLM applications with modular pipelines and agent workflows.
+                - paragraph [ref=e113]:
+                  - text: ⭐ 25,192 stars
+                  - generic [ref=e114]: · 2,782 forks
+                  - generic [ref=e115]: · MDX
+            - generic [ref=e116]:
+              - generic [ref=e117]:
+                - generic [ref=e118]: "4."
+                - generic [ref=e119]: GitHub
+                - generic [ref=e121]: AI Agents
+                - 'generic "AI relevance: 9.0/10" [ref=e122]':
+                  - generic [ref=e123]: "9.0"
+                  - generic [ref=e124]: /10
+                - generic [ref=e125]: today
+                - link "Open source" [ref=e126] [cursor=pointer]:
+                  - /url: https://github.com/activepieces/activepieces
+                  - text: ↗
+              - generic [ref=e127]:
+                - link "activepieces/activepieces" [ref=e128] [cursor=pointer]:
+                  - /url: /items/20a80110-0120-4562-876a-c66249d7bf9a
+                  - heading "activepieces/activepieces" [level=3] [ref=e129]
+                - paragraph [ref=e130]: Activepieces is an open-source framework for building AI agents and automating workflows using Model Context Protocols (MCPs).
+                - paragraph [ref=e131]:
+                  - text: ⭐ 22,154 stars
+                  - generic [ref=e132]: · 3,643 forks
+                  - generic [ref=e133]: · TypeScript
+            - generic [ref=e134]:
+              - generic [ref=e135]:
+                - generic [ref=e136]: "5."
+                - generic [ref=e137]: GitHub
+                - generic [ref=e139]: AI Agents
+                - 'generic "AI relevance: 9.0/10" [ref=e140]':
+                  - generic [ref=e141]: "9.0"
+                  - generic [ref=e142]: /10
+                - generic [ref=e143]: today
+                - link "Open source" [ref=e144] [cursor=pointer]:
+                  - /url: https://github.com/elizaOS/eliza
+                  - text: ↗
+              - generic [ref=e145]:
+                - link "elizaOS/eliza" [ref=e146] [cursor=pointer]:
+                  - /url: /items/7a29f24d-d3ef-496b-a4ff-6bfbe0c9f6a6
+                  - heading "elizaOS/eliza" [level=3] [ref=e147]
+                - paragraph [ref=e148]: elizaOS is an open-source framework for building autonomous agents using TypeScript, designed to simplify agent development for engineers.
+                - paragraph [ref=e149]:
+                  - text: ⭐ 18,351 stars
+                  - generic [ref=e150]: · 5,531 forks
+                  - generic [ref=e151]: · JavaScript
+        - generic [ref=e152]:
+          - generic [ref=e153]:
+            - generic [ref=e154]:
+              - generic [ref=e155]: "02"
+              - heading "Model & API Updates" [level=2] [ref=e156]
+              - generic [ref=e157]: top 5
+            - paragraph [ref=e158]: New model releases, API changes, and inference infrastructure worth tracking.
+          - generic [ref=e159]:
+            - generic [ref=e160]:
+              - generic [ref=e161]:
+                - generic [ref=e162]: "1."
+                - generic [ref=e163]: GitHub
+                - generic [ref=e165]: LLM Frameworks
+                - 'generic "AI relevance: 9.0/10" [ref=e166]':
+                  - generic [ref=e167]: "9.0"
+                  - generic [ref=e168]: /10
+                - generic [ref=e169]: today
+                - link "Open source" [ref=e170] [cursor=pointer]:
+                  - /url: https://github.com/langchain4j/langchain4j
+                  - text: ↗
+              - generic [ref=e171]:
+                - link "langchain4j/langchain4j" [ref=e172] [cursor=pointer]:
+                  - /url: /items/53fb8ad8-aa45-4939-bf33-7d8dab54a90b
+                  - heading "langchain4j/langchain4j" [level=3] [ref=e173]
+                - paragraph [ref=e174]: LangChain4j is an open-source Java library that simplifies building LLM-powered applications on the JVM with seamless tools integration and MCP support.
+                - paragraph [ref=e175]:
+                  - text: ⭐ 11,962 stars
+                  - generic [ref=e176]: · 2,213 forks
+                  - generic [ref=e177]: · Java
+            - generic [ref=e178]:
+              - generic [ref=e179]:
+                - generic [ref=e180]: "2."
+                - generic [ref=e181]: GitHub
+                - generic [ref=e183]: AI Infrastructure
+                - 'generic "AI relevance: 8.0/10" [ref=e184]':
+                  - generic [ref=e185]: "8.0"
+                  - generic [ref=e186]: /10
+                - generic [ref=e187]: today
+                - link "Open source" [ref=e188] [cursor=pointer]:
+                  - /url: https://github.com/genkit-ai/genkit
+                  - text: ↗
+              - generic [ref=e189]:
+                - link "genkit-ai/genkit" [ref=e190] [cursor=pointer]:
+                  - /url: /items/01766378-cbfd-486c-9a0f-c74555114729
+                  - heading "genkit-ai/genkit" [level=3] [ref=e191]
+                - paragraph [ref=e192]: GenKit is an open-source framework designed for building AI-powered applications in JavaScript, Go, and Python, and has been built and used in production by Google.
+                - paragraph [ref=e193]:
+                  - text: ⭐ 5,904 stars
+                  - generic [ref=e194]: · 731 forks
+                  - generic [ref=e195]: · TypeScript
+            - generic [ref=e196]:
+              - generic [ref=e197]:
+                - generic [ref=e198]: "3."
+                - generic [ref=e199]: GitHub
+                - generic [ref=e201]: AI Infrastructure
+                - 'generic "AI relevance: 8.0/10" [ref=e202]':
+                  - generic [ref=e203]: "8.0"
+                  - generic [ref=e204]: /10
+                - generic [ref=e205]: today
+                - link "Open source" [ref=e206] [cursor=pointer]:
+                  - /url: https://github.com/containers/ramalama
+                  - text: ↗
+              - generic [ref=e207]:
+                - link "containers/ramalama" [ref=e208] [cursor=pointer]:
+                  - /url: /items/c28810b4-d145-4f9d-8838-26dafbeb367c
+                  - heading "containers/ramalama" [level=3] [ref=e209]
+                - paragraph [ref=e210]: RamaLama is an open-source Python tool for easily serving AI models locally using containerization.
+                - paragraph [ref=e211]:
+                  - text: ⭐ 2,830 stars
+                  - generic [ref=e212]: · 337 forks
+                  - generic [ref=e213]: · Python
+            - generic [ref=e214]:
+              - generic [ref=e215]:
+                - generic [ref=e216]: "4."
+                - generic [ref=e217]: GitHub
+                - generic [ref=e219]: LLM Frameworks
+                - 'generic "AI relevance: 8.0/10" [ref=e220]':
+                  - generic [ref=e221]: "8.0"
+                  - generic [ref=e222]: /10
+                - generic [ref=e223]: today
+                - link "Open source" [ref=e224] [cursor=pointer]:
+                  - /url: https://github.com/Agenta-AI/agenta
+                  - text: ↗
+              - generic [ref=e225]:
+                - link "Agenta-AI/agenta" [ref=e226] [cursor=pointer]:
+                  - /url: /items/17047453-694e-4fee-9254-0d393ad23d49
+                  - heading "Agenta-AI/agenta" [level=3] [ref=e227]
+                - paragraph [ref=e228]: Agenta is an open-source LLMOps platform that combines prompt management, evaluation, and observability for LLMs in a single interface.
+                - paragraph [ref=e229]:
+                  - text: ⭐ 4,114 stars
+                  - generic [ref=e230]: · 516 forks
+                  - generic [ref=e231]: · TypeScript
+            - generic [ref=e232]:
+              - generic [ref=e233]:
+                - generic [ref=e234]: "5."
+                - generic [ref=e235]: GitHub
+                - generic [ref=e237]: AI Infrastructure
+                - 'generic "AI relevance: 7.0/10" [ref=e238]':
+                  - generic [ref=e239]: "7.0"
+                  - generic [ref=e240]: /10
+                - generic [ref=e241]: today
+                - link "Open source" [ref=e242] [cursor=pointer]:
+                  - /url: https://github.com/sceneview/sceneview
+                  - text: ↗
+              - generic [ref=e243]:
+                - link "sceneview/sceneview" [ref=e244] [cursor=pointer]:
+                  - /url: /items/5ed3c4f1-dd4c-4886-a415-83ce805544a7
+                  - heading "sceneview/sceneview" [level=3] [ref=e245]
+                - paragraph [ref=e246]: SceneView is a 3D and augmented reality SDK for Android, iOS, and the web, designed for AI integration with features like LLM support and a Model Context Protocol server.
+                - paragraph [ref=e247]:
+                  - text: ⭐ 1,195 stars
+                  - generic [ref=e248]: · 217 forks
+                  - generic [ref=e249]: · Kotlin
+        - generic [ref=e250]:
+          - generic [ref=e251]:
+            - generic [ref=e252]:
+              - generic [ref=e253]: "03"
+              - heading "AI Research" [level=2] [ref=e254]
+              - generic [ref=e255]: top 5
+            - paragraph [ref=e256]: Papers, benchmarks, and findings that will shape the next generation of AI systems.
+          - generic [ref=e257]:
+            - generic [ref=e258]:
+              - generic [ref=e259]:
+                - generic [ref=e260]: "1."
+                - generic [ref=e261]: RSS
+                - generic [ref=e263]: Research
+                - 'generic "AI relevance: 7.0/10" [ref=e264]':
+                  - generic [ref=e265]: "7.0"
+                  - generic [ref=e266]: /10
+                - generic [ref=e267]: 3d ago
+                - link "Open source" [ref=e268] [cursor=pointer]:
+                  - /url: https://huggingface.co/blog/allenai/emo
+                  - text: ↗
+              - generic [ref=e269]:
+                - 'link "EMO: Pretraining mixture of experts for emergent modularity" [ref=e270] [cursor=pointer]':
+                  - /url: /items/9a30d7c3-5026-4f45-8205-309617d12260
+                  - 'heading "EMO: Pretraining mixture of experts for emergent modularity" [level=3] [ref=e271]'
+                - paragraph [ref=e272]: EMO is a framework that utilizes pretraining of a mixture of experts to achieve emergent modularity in neural networks.
+            - generic [ref=e273]:
+              - generic [ref=e274]:
+                - generic [ref=e275]: "2."
+                - generic [ref=e276]: RSS
+                - generic [ref=e278]: Research
+                - 'generic "AI relevance: 7.0/10" [ref=e279]':
+                  - generic [ref=e280]: "7.0"
+                  - generic [ref=e281]: /10
+                - generic [ref=e282]: 5d ago
+                - link "Open source" [ref=e283] [cursor=pointer]:
+                  - /url: https://huggingface.co/blog/ServiceNow-AI/correctness-before-corrections
+                  - text: ↗
+              - generic [ref=e284]:
+                - 'link "vLLM V0 to V1: Correctness Before Corrections in RL" [ref=e285] [cursor=pointer]':
+                  - /url: /items/c66be2ef-23f9-4bba-b36e-c41c238c5fd3
+                  - 'heading "vLLM V0 to V1: Correctness Before Corrections in RL" [level=3] [ref=e286]'
+                - paragraph [ref=e287]: vLLM's transition from version 0 to version 1 focuses on enhancing correctness in reinforcement learning models prior to making corrections.
+            - generic [ref=e288]:
+              - generic [ref=e289]:
+                - generic [ref=e290]: "3."
+                - generic [ref=e291]: RSS
+                - generic [ref=e293]: Research
+                - 'generic "AI relevance: 7.0/10" [ref=e294]':
+                  - generic [ref=e295]: "7.0"
+                  - generic [ref=e296]: /10
+                - generic [ref=e297]: 1w ago
+                - link "Open source" [ref=e298] [cursor=pointer]:
+                  - /url: https://simonwillison.net/2026/Apr/30/gpt-55-cyber-capabilities/#atom-everything
+                  - text: ↗
+              - generic [ref=e299]:
+                - link "Our evaluation of OpenAI's GPT-5.5 cyber capabilities" [ref=e300] [cursor=pointer]:
+                  - /url: /items/ae1c5a2b-700d-464a-8817-b0ade6a94a49
+                  - heading "Our evaluation of OpenAI's GPT-5.5 cyber capabilities" [level=3] [ref=e301]
+                - paragraph [ref=e302]: The article evaluates the cyber capabilities of OpenAI's GPT-5.5, focusing on its potential applications in cybersecurity.
+            - generic [ref=e303]:
+              - generic [ref=e304]:
+                - generic [ref=e305]: "4."
+                - generic [ref=e306]: RSS
+                - generic [ref=e308]: Research
+                - 'generic "AI relevance: 7.0/10" [ref=e309]':
+                  - generic [ref=e310]: "7.0"
+                  - generic [ref=e311]: /10
+                - generic [ref=e312]: 1w ago
+                - link "Open source" [ref=e313] [cursor=pointer]:
+                  - /url: https://openai.com/index/where-the-goblins-came-from
+                  - text: ↗
+              - generic [ref=e314]:
+                - link "Where the goblins came from" [ref=e315] [cursor=pointer]:
+                  - /url: /items/94416c58-aca5-40d2-a104-c362ea933f56
+                  - heading "Where the goblins came from" [level=3] [ref=e316]
+                - paragraph [ref=e317]: The article discusses the timeline, root causes, and fixes related to the personality-driven quirks seen in GPT-5, referred to as 'goblin outputs'.
+            - generic [ref=e318]:
+              - generic [ref=e319]:
+                - generic [ref=e320]: "5."
+                - generic [ref=e321]: RSS
+                - generic [ref=e323]: Research
+                - 'generic "AI relevance: 9.0/10" [ref=e324]':
+                  - generic [ref=e325]: "9.0"
+                  - generic [ref=e326]: /10
+                - generic [ref=e327]: Nov 19, 2025
+                - link "Open source" [ref=e328] [cursor=pointer]:
+                  - /url: https://openai.com/index/accelerating-science-gpt-5
+                  - text: ↗
+              - generic [ref=e329]:
+                - link "Early experiments in accelerating science with GPT-5" [ref=e330] [cursor=pointer]:
+                  - /url: /items/5db23ce1-940a-4520-bca0-fcf620b2e918
+                  - heading "Early experiments in accelerating science with GPT-5" [level=3] [ref=e331]
+                - paragraph [ref=e332]: OpenAI presents research cases demonstrating how GPT-5 accelerates scientific progress across multiple domains including math, physics, biology, and computer science.
+        - generic [ref=e333]:
+          - generic [ref=e334]:
+            - generic [ref=e335]:
+              - generic [ref=e336]: "04"
+              - heading "MCP / Tool Use" [level=2] [ref=e337]
+              - generic [ref=e338]: top 5
+            - paragraph [ref=e339]: Model Context Protocol servers, tool-calling frameworks, and integration layers.
+          - generic [ref=e340]:
+            - generic [ref=e341]:
+              - generic [ref=e342]:
+                - generic [ref=e343]: "1."
+                - generic [ref=e344]: GitHub
+                - generic [ref=e346]: MCP / Tool Use
+                - 'generic "AI relevance: 8.0/10" [ref=e347]':
+                  - generic [ref=e348]: "8.0"
+                  - generic [ref=e349]: /10
+                - generic [ref=e350]: today
+                - link "Open source" [ref=e351] [cursor=pointer]:
+                  - /url: https://github.com/exa-labs/exa-mcp-server
+                  - text: ↗
+              - generic [ref=e352]:
+                - link "exa-labs/exa-mcp-server" [ref=e353] [cursor=pointer]:
+                  - /url: /items/1572f388-d8ff-4080-811f-9af87513cd49
+                  - heading "exa-labs/exa-mcp-server" [level=3] [ref=e354]
+                - paragraph [ref=e355]: Exa MCP Server is an open-source web search and web crawling framework developed using TypeScript.
+                - paragraph [ref=e356]:
+                  - text: ⭐ 4,411 stars
+                  - generic [ref=e357]: · 331 forks
+                  - generic [ref=e358]: · TypeScript
+            - generic [ref=e359]:
+              - generic [ref=e360]:
+                - generic [ref=e361]: "2."
+                - generic [ref=e362]: GitHub
+                - generic [ref=e364]: MCP / Tool Use
+                - 'generic "AI relevance: 8.0/10" [ref=e365]':
+                  - generic [ref=e366]: "8.0"
+                  - generic [ref=e367]: /10
+                - generic [ref=e368]: today
+                - link "Open source" [ref=e369] [cursor=pointer]:
+                  - /url: https://github.com/homeassistant-ai/ha-mcp
+                  - text: ↗
+              - generic [ref=e370]:
+                - link "homeassistant-ai/ha-mcp" [ref=e371] [cursor=pointer]:
+                  - /url: /items/79b1b29c-be9c-4c86-901b-907aa5a1c350
+                  - heading "homeassistant-ai/ha-mcp" [level=3] [ref=e372]
+                - paragraph [ref=e373]: ha-mcp is an unofficial Home Assistant server that implements the Model Context Protocol (MCP) for improved integrations.
+                - paragraph [ref=e374]:
+                  - text: ⭐ 2,804 stars
+                  - generic [ref=e375]: · 113 forks
+                  - generic [ref=e376]: · Python
+            - generic [ref=e377]:
+              - generic [ref=e378]:
+                - generic [ref=e379]: "3."
+                - generic [ref=e380]: GitHub
+                - generic [ref=e382]: MCP / Tool Use
+                - 'generic "AI relevance: 8.0/10" [ref=e383]':
+                  - generic [ref=e384]: "8.0"
+                  - generic [ref=e385]: /10
+                - generic [ref=e386]: today
+                - link "Open source" [ref=e387] [cursor=pointer]:
+                  - /url: https://github.com/modelcontextprotocol/kotlin-sdk
+                  - text: ↗
+              - generic [ref=e388]:
+                - link "modelcontextprotocol/kotlin-sdk" [ref=e389] [cursor=pointer]:
+                  - /url: /items/0e398d80-69fa-4046-9d66-0a6d53df7477
+                  - heading "modelcontextprotocol/kotlin-sdk" [level=3] [ref=e390]
+                - paragraph [ref=e391]: The Model Context Protocol Kotlin SDK facilitates developing servers and clients that leverage the Model Context Protocol.
+                - paragraph [ref=e392]:
+                  - text: ⭐ 1,358 stars
+                  - generic [ref=e393]: · 211 forks
+                  - generic [ref=e394]: · Kotlin
+            - generic [ref=e395]:
+              - generic [ref=e396]:
+                - generic [ref=e397]: "4."
+                - generic [ref=e398]: GitHub
+                - generic [ref=e400]: MCP / Tool Use
+                - 'generic "AI relevance: 8.0/10" [ref=e401]':
+                  - generic [ref=e402]: "8.0"
+                  - generic [ref=e403]: /10
+                - generic [ref=e404]: today
+                - link "Open source" [ref=e405] [cursor=pointer]:
+                  - /url: https://github.com/0xSteph/pentest-ai
+                  - text: ↗
+              - generic [ref=e406]:
+                - link "0xSteph/pentest-ai" [ref=e407] [cursor=pointer]:
+                  - /url: /items/d80492b3-64dc-4ac8-9be3-edc78fcefca4
+                  - heading "0xSteph/pentest-ai" [level=3] [ref=e408]
+                - paragraph [ref=e409]: pentest-ai is an offensive-security Model Context Protocol (MCP) server that wraps 197 tools and includes 17 specialist agents for vulnerability detection.
+                - paragraph [ref=e410]:
+                  - text: ⭐ 208 stars
+                  - generic [ref=e411]: · 43 forks
+                  - generic [ref=e412]: · Python
+            - generic [ref=e413]:
+              - generic [ref=e414]:
+                - generic [ref=e415]: "5."
+                - generic [ref=e416]: GitHub
+                - generic [ref=e418]: MCP / Tool Use
+                - 'generic "AI relevance: 7.0/10" [ref=e419]':
+                  - generic [ref=e420]: "7.0"
+                  - generic [ref=e421]: /10
+                - generic [ref=e422]: today
+                - link "Open source" [ref=e423] [cursor=pointer]:
+                  - /url: https://github.com/mihaelamj/cupertino
+                  - text: ↗
+              - generic [ref=e424]:
+                - link "mihaelamj/cupertino" [ref=e425] [cursor=pointer]:
+                  - /url: /items/b9698ad1-86fc-491e-8054-fecf205efd43
+                  - heading "mihaelamj/cupertino" [level=3] [ref=e426]
+                - paragraph [ref=e427]: Cupertino is a local Apple Documentation crawler and Model Context Protocol (MCP) server written in Swift.
+                - paragraph [ref=e428]:
+                  - text: ⭐ 722 stars
+                  - generic [ref=e429]: · 28 forks
+                  - generic [ref=e430]: · Swift
+        - generic [ref=e431]:
+          - generic [ref=e432]:
+            - generic [ref=e433]:
+              - generic [ref=e434]: "05"
+              - heading "Code Agents" [level=2] [ref=e435]
+              - generic [ref=e436]: top 5
+            - paragraph [ref=e437]: Autonomous coding assistants, code-review agents, and developer-facing AI tools.
+          - generic [ref=e438]:
+            - generic [ref=e439]:
+              - generic [ref=e440]:
+                - generic [ref=e441]: "1."
+                - generic [ref=e442]: GitHub
+                - generic [ref=e444]: Code Agents
+                - 'generic "AI relevance: 8.0/10" [ref=e445]':
+                  - generic [ref=e446]: "8.0"
+                  - generic [ref=e447]: /10
+                - generic [ref=e448]: today
+                - link "Open source" [ref=e449] [cursor=pointer]:
+                  - /url: https://github.com/njbrake/agent-of-empires
+                  - text: ↗
+              - generic [ref=e450]:
+                - link "njbrake/agent-of-empires" [ref=e451] [cursor=pointer]:
+                  - /url: /items/89d9d253-bc93-4ee6-ae15-189fd967584f
+                  - heading "njbrake/agent-of-empires" [level=3] [ref=e452]
+                - paragraph [ref=e453]: Agent of Empires is a Rust-based application for managing multiple AI coding agents such as Claude Code and OpenCode, accessible via TUI or web interfaces.
+                - paragraph [ref=e454]:
+                  - text: ⭐ 2,166 stars
+                  - generic [ref=e455]: · 184 forks
+                  - generic [ref=e456]: · Rust
+            - generic [ref=e457]:
+              - generic [ref=e458]:
+                - generic [ref=e459]: "2."
+                - generic [ref=e460]: GitHub
+                - generic [ref=e462]: Code Agents
+                - 'generic "AI relevance: 8.0/10" [ref=e463]':
+                  - generic [ref=e464]: "8.0"
+                  - generic [ref=e465]: /10
+                - generic [ref=e466]: today
+                - link "Open source" [ref=e467] [cursor=pointer]:
+                  - /url: https://github.com/manuelschipper/nah
+                  - text: ↗
+              - generic [ref=e468]:
+                - link "manuelschipper/nah" [ref=e469] [cursor=pointer]:
+                  - /url: /items/dd085980-407b-4516-bf1b-11f0ad6bbdf7
+                  - heading "manuelschipper/nah" [level=3] [ref=e470]
+                - paragraph [ref=e471]: Nah is a Python library that implements action-aware permissions for coding agents, providing a deterministic safety guard for developers.
+                - paragraph [ref=e472]:
+                  - text: ⭐ 432 stars
+                  - generic [ref=e473]: · 22 forks
+                  - generic [ref=e474]: · Python
+            - generic [ref=e475]:
+              - generic [ref=e476]:
+                - generic [ref=e477]: "3."
+                - generic [ref=e478]: GitHub
+                - generic [ref=e480]: Code Agents
+                - 'generic "AI relevance: 7.0/10" [ref=e481]':
+                  - generic [ref=e482]: "7.0"
+                  - generic [ref=e483]: /10
+                - generic [ref=e484]: today
+                - link "Open source" [ref=e485] [cursor=pointer]:
+                  - /url: https://github.com/awslabs/iam-policy-autopilot
+                  - text: ↗
+              - generic [ref=e486]:
+                - link "awslabs/iam-policy-autopilot" [ref=e487] [cursor=pointer]:
+                  - /url: /items/28bc5b35-a3b6-49b4-a0d6-bbd1c25cf1bd
+                  - heading "awslabs/iam-policy-autopilot" [level=3] [ref=e488]
+                - paragraph [ref=e489]: IAM Policy Autopilot is an open-source static code analysis tool for creating baseline AWS IAM policies, available as a command-line utility and MCP server.
+                - paragraph [ref=e490]:
+                  - text: ⭐ 356 stars
+                  - generic [ref=e491]: · 38 forks
+                  - generic [ref=e492]: · Rust
+            - generic [ref=e493]:
+              - generic [ref=e494]:
+                - generic [ref=e495]: "4."
+                - generic [ref=e496]: GitHub
+                - generic [ref=e498]: Code Agents
+                - 'generic "AI relevance: 7.0/10" [ref=e499]':
+                  - generic [ref=e500]: "7.0"
+                  - generic [ref=e501]: /10
+                - generic [ref=e502]: today
+                - link "Open source" [ref=e503] [cursor=pointer]:
+                  - /url: https://github.com/manojmallick/sigmap
+                  - text: ↗
+              - generic [ref=e504]:
+                - link "manojmallick/sigmap" [ref=e505] [cursor=pointer]:
+                  - /url: /items/e9a9f99d-807c-4510-a501-f7b0a9d2e63d
+                  - heading "manojmallick/sigmap" [level=3] [ref=e506]
+                - paragraph [ref=e507]: sigmap is a JavaScript library designed to achieve 97% token reduction for AI coding sessions across 21 programming languages with no dependencies.
+                - paragraph [ref=e508]:
+                  - text: ⭐ 368 stars
+                  - generic [ref=e509]: · 26 forks
+                  - generic [ref=e510]: · JavaScript
+            - generic [ref=e511]:
+              - generic [ref=e512]:
+                - generic [ref=e513]: "5."
+                - generic [ref=e514]: GitHub
+                - generic [ref=e516]: Code Agents
+                - 'generic "AI relevance: 7.0/10" [ref=e517]':
+                  - generic [ref=e518]: "7.0"
+                  - generic [ref=e519]: /10
+                - generic [ref=e520]: today
+                - link "Open source" [ref=e521] [cursor=pointer]:
+                  - /url: https://github.com/openshift-eng/ai-helpers
+                  - text: ↗
+              - generic [ref=e522]:
+                - link "openshift-eng/ai-helpers" [ref=e523] [cursor=pointer]:
+                  - /url: /items/c77bea29-826c-4759-890d-3090741e2780
+                  - heading "openshift-eng/ai-helpers" [level=3] [ref=e524]
+                - paragraph [ref=e525]: ai-helpers is a Python library designed to enhance developer productivity when working with Claude Code and other AI assistants.
+                - paragraph [ref=e526]:
+                  - text: ⭐ 85 stars
+                  - generic [ref=e527]: · 258 forks
+                  - generic [ref=e528]: · Python
+        - generic [ref=e529]:
+          - generic [ref=e530]:
+            - generic [ref=e531]:
+              - generic [ref=e532]: "06"
+              - heading "Developer Tools" [level=2] [ref=e533]
+              - generic [ref=e534]: top 5
+            - paragraph [ref=e535]: Infrastructure, observability, testing, and platform tools for AI builders.
+          - generic [ref=e536]:
+            - generic [ref=e537]:
+              - generic [ref=e538]:
+                - generic [ref=e539]: "1."
+                - generic [ref=e540]: GitHub
+                - generic [ref=e542]: Developer Tools
+                - 'generic "AI relevance: 7.0/10" [ref=e543]':
+                  - generic [ref=e544]: "7.0"
+                  - generic [ref=e545]: /10
+                - generic [ref=e546]: today
+                - link "Open source" [ref=e547] [cursor=pointer]:
+                  - /url: https://github.com/cvat-ai/cvat
+                  - text: ↗
+              - generic [ref=e548]:
+                - link "cvat-ai/cvat" [ref=e549] [cursor=pointer]:
+                  - /url: /items/c29c24cc-c3cf-4590-8104-453d156c2120
+                  - heading "cvat-ai/cvat" [level=3] [ref=e550]
+                - paragraph [ref=e551]: CVAT is an open-source Computer Vision Annotation Tool for creating visual datasets with AI-assisted labeling and analytics.
+                - paragraph [ref=e552]:
+                  - text: ⭐ 15,818 stars
+                  - generic [ref=e553]: · 3,673 forks
+                  - generic [ref=e554]: · Python
+            - generic [ref=e555]:
+              - generic [ref=e556]:
+                - generic [ref=e557]: "2."
+                - generic [ref=e558]: GitHub
+                - generic [ref=e560]: Developer Tools
+                - 'generic "AI relevance: 6.0/10" [ref=e561]':
+                  - generic [ref=e562]: "6.0"
+                  - generic [ref=e563]: /10
+                - generic [ref=e564]: today
+                - link "Open source" [ref=e565] [cursor=pointer]:
+                  - /url: https://github.com/FLOX-Foundation/flox
+                  - text: ↗
+              - generic [ref=e566]:
+                - link "FLOX-Foundation/flox" [ref=e567] [cursor=pointer]:
+                  - /url: /items/07f6e945-e6d4-41ae-9395-261744beca0f
+                  - heading "FLOX-Foundation/flox" [level=3] [ref=e568]
+                - paragraph [ref=e569]: FLOX is a modular framework for building trading systems that integrates polyglot strategy bindings and developer tools optimized for AI applications.
+                - paragraph [ref=e570]:
+                  - text: ⭐ 201 stars
+                  - generic [ref=e571]: · 38 forks
+                  - generic [ref=e572]: · C++
+            - generic [ref=e573]:
+              - generic [ref=e574]:
+                - generic [ref=e575]: "3."
+                - generic [ref=e576]: GitHub
+                - generic [ref=e578]: Developer Tools
+                - 'generic "AI relevance: 6.0/10" [ref=e579]':
+                  - generic [ref=e580]: "6.0"
+                  - generic [ref=e581]: /10
+                - generic [ref=e582]: today
+                - link "Open source" [ref=e583] [cursor=pointer]:
+                  - /url: https://github.com/devantler-tech/ksail
+                  - text: ↗
+              - generic [ref=e584]:
+                - link "devantler-tech/ksail" [ref=e585] [cursor=pointer]:
+                  - /url: /items/9c2da44c-c02b-49da-928d-ccf7e5b81bed
+                  - heading "devantler-tech/ksail" [level=3] [ref=e586]
+                - paragraph [ref=e587]: KSAIL is an all-in-one Kubernetes SDK that simplifies the management of clusters across various distributions with integrated GitOps and AI capabilities.
+                - paragraph [ref=e588]:
+                  - text: ⭐ 147 stars
+                  - generic [ref=e589]: · 10 forks
+                  - generic [ref=e590]: · Go
+            - generic [ref=e591]:
+              - generic [ref=e592]:
+                - generic [ref=e593]: "4."
+                - generic [ref=e594]: GitHub
+                - generic [ref=e596]: Developer Tools
+                - 'generic "AI relevance: 5.0/10" [ref=e597]':
+                  - generic [ref=e598]: "5.0"
+                  - generic [ref=e599]: /10
+                - generic [ref=e600]: today
+                - link "Open source" [ref=e601] [cursor=pointer]:
+                  - /url: https://github.com/XiaomingX/indie-hacker-tools-plus
+                  - text: ↗
+              - generic [ref=e602]:
+                - link "XiaomingX/indie-hacker-tools-plus" [ref=e603] [cursor=pointer]:
+                  - /url: /items/be0b2628-31bc-4699-a83e-c93ec03a5a5e
+                  - heading "XiaomingX/indie-hacker-tools-plus" [level=3] [ref=e604]
+                - paragraph [ref=e605]: indie-hacker-tools-plus is a curated collection of proven tech stacks and tools designed to enhance efficiency for independent developers.
+                - paragraph [ref=e606]:
+                  - text: ⭐ 1,677 stars
+                  - generic [ref=e607]: · 148 forks
+            - generic [ref=e608]:
+              - generic [ref=e609]:
+                - generic [ref=e610]: "5."
+                - generic [ref=e611]: RSS
+                - generic [ref=e613]: Developer Tools
+                - 'generic "AI relevance: 7.0/10" [ref=e614]':
+                  - generic [ref=e615]: "7.0"
+                  - generic [ref=e616]: /10
+                - generic [ref=e617]: 5d ago
+                - link "Open source" [ref=e618] [cursor=pointer]:
+                  - /url: https://openai.com/index/simplex
+                  - text: ↗
+              - generic [ref=e619]:
+                - link "Simplex rethinks software development with Codex" [ref=e620] [cursor=pointer]:
+                  - /url: /items/811d329d-2957-4708-a520-e74e2325512d
+                  - heading "Simplex rethinks software development with Codex" [level=3] [ref=e621]
+                - paragraph [ref=e622]: Simplex is a software development tool that integrates ChatGPT Enterprise and Codex to enhance productivity by streamlining design, build, and testing processes.
+    - contentinfo [ref=e623]:
+      - generic [ref=e625]:
+        - generic [ref=e626]: AgentRadar — built with Next.js, Supabase, and Claude
+        - generic [ref=e627]:
+          - link "← feed" [ref=e628] [cursor=pointer]:
+            - /url: /
+          - link "search" [ref=e629] [cursor=pointer]:
+            - /url: /search
+  - button "Open Next.js Dev Tools" [ref=e635] [cursor=pointer]:
+    - img [ref=e636]
+  - alert [ref=e639]
