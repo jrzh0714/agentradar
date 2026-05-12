@@ -15,6 +15,12 @@ import { computeRankingScore } from '@/lib/ranking/score'
 import { normalizeTitle, deriveTitleFromUrl, deriveTitleFromDescription } from '@/lib/ingestion/title'
 import { createServerClient } from '@/lib/supabase/server'
 import type { Item, ItemEnrichmentUpdate } from '@/lib/db/types'
+import { estimatePipelineCost } from '@/lib/workflows/cost-estimation'
+import { runTrendSnapshot, runTrendFlagUpdate } from '@/lib/workflows/trend-detection'
+import { runReclassification } from '@/lib/workflows/reclassification'
+import { runDataQualityCheck } from '@/lib/workflows/data-quality'
+import { runDigestSummaries } from '@/lib/workflows/digest-summaries'
+import type { CostEstimate } from '@/lib/workflows/cost-estimation'
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -44,7 +50,12 @@ export interface RefreshResult {
   titleFixedCount: number
   enrichedCount: number
   failedCount: number
+  reclassifiedCount: number
   rankedCount: number
+  trendingCount: number
+  digestSummariesGenerated: number
+  anomaliesFound: number
+  estimatedCost: CostEstimate | null
   durationMs: number
   /** Set when the run terminated early due to a billing/quota error. */
   error?: string
@@ -291,10 +302,17 @@ async function runRanking(): Promise<number> {
 // ── Main export ───────────────────────────────────────────────────────────────
 
 /**
- * Run the full daily refresh pipeline:
+ * Run the full daily refresh pipeline (10 phases):
+ *   0. Cost estimate — pre-ingestion snapshot
  *   1. Ingest from GitHub, HN, and RSS (concurrent)
- *   2. Enrich new/failed items with AI (capped at `enrichLimit`)
- *   3. Recompute ranking scores for all enriched items
+ *   2. Title cleanup — fix blank/placeholder titles before enrichment
+ *   3. Trend snapshot (weekly — skips items snapshotted < 7 days ago)
+ *   4. Enrichment — sequential with rate-limit delay, capped at limit
+ *   5. Re-classification — re-categorize items post-enrichment
+ *   6. Ranking — paginated fetch, concurrent writes
+ *   7. Trend flag update (post-ranking)
+ *   8. Digest summaries (Mondays only)
+ *   9. Data quality check (always runs)
  *
  * Always resolves — never throws. Any fatal error is captured in `result.error`.
  */
@@ -304,17 +322,52 @@ export async function runDailyRefresh(
   const start = Date.now()
 
   try {
-    // 1. Ingestion — all three sources in parallel.
+    // 0. Cost estimate — pre-ingestion snapshot
+    const estimatedCost = await estimatePipelineCost(enrichLimit).catch((err) => {
+      console.warn('[daily-refresh] Cost estimation failed:', err instanceof Error ? err.message : err)
+      return null
+    })
+
+    // 1. Ingestion
     const ingestionCounts = await runIngestion()
 
-    // 1.5. Title cleanup — fix blank/placeholder titles before enrichment.
+    // 2. Title cleanup
     const titleFixedCount = await runTitleCleanup()
 
-    // 2. Enrichment — sequential with rate-limit delay, capped at limit.
+    // 3. Trend snapshot (weekly — skips items snapshotted < 7 days ago)
+    await runTrendSnapshot().catch((err) =>
+      console.error('[daily-refresh] Trend snapshot error:', err instanceof Error ? err.message : err),
+    )
+
+    // 4. Enrichment
     const { enriched, failed, billingAbort } = await runEnrichment(enrichLimit)
 
-    // 3. Ranking — paginated fetch, concurrent writes.
+    // 5. Re-classification
+    const { reclassified } = await runReclassification().catch((err) => {
+      console.error('[daily-refresh] Reclassification error:', err instanceof Error ? err.message : err)
+      return { reclassified: 0, failed: 0 }
+    })
+
+    // 6. Ranking
     const rankedCount = await runRanking()
+
+    // 7. Trend flag update (post-ranking)
+    const { trendingCount } = await runTrendFlagUpdate().catch((err) => {
+      console.error('[daily-refresh] Trend flag update error:', err instanceof Error ? err.message : err)
+      return { trendingCount: 0 }
+    })
+
+    // 8. Digest summaries (Mondays only)
+    const { generated: digestSummariesGenerated } = await runDigestSummaries().catch((err) => {
+      console.error('[daily-refresh] Digest summaries error:', err instanceof Error ? err.message : err)
+      return { generated: 0, skipped: 0 }
+    })
+
+    // 9. Data quality check (always runs)
+    const healthReport = await runDataQualityCheck().catch((err) => {
+      console.error('[daily-refresh] Data quality check error:', err instanceof Error ? err.message : err)
+      return null
+    })
 
     return {
       success: !billingAbort,
@@ -322,10 +375,20 @@ export async function runDailyRefresh(
       titleFixedCount,
       enrichedCount: enriched,
       failedCount: failed,
+      reclassifiedCount: reclassified,
       rankedCount,
+      trendingCount,
+      digestSummariesGenerated,
+      anomaliesFound: healthReport
+        ? Object.values(healthReport.anomalies).reduce<number>(
+            (sum, v) => sum + (Array.isArray(v) ? v.length : v),
+            0,
+          )
+        : 0,
+      estimatedCost,
       durationMs: Date.now() - start,
       ...(billingAbort
-        ? { error: 'Enrichment aborted — provider billing/quota error. Top up your account and re-run.' }
+        ? { error: 'Enrichment aborted — provider billing/quota error.' }
         : {}),
     }
   } catch (err) {
@@ -337,7 +400,12 @@ export async function runDailyRefresh(
       titleFixedCount: 0,
       enrichedCount: 0,
       failedCount: 0,
+      reclassifiedCount: 0,
       rankedCount: 0,
+      trendingCount: 0,
+      digestSummariesGenerated: 0,
+      anomaliesFound: 0,
+      estimatedCost: null,
       durationMs: Date.now() - start,
       error,
     }
