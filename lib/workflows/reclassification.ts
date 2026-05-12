@@ -26,7 +26,10 @@ export async function runReclassification(): Promise<{ reclassified: number; fai
     .order('created_at', { ascending: true })
     .limit(RECLASSIFY_LIMIT)
 
-  if (error) throw new Error(`Reclassification fetch failed: ${error.message}`)
+  if (error) {
+    console.error('[reclassification] Fetch failed:', error.message)
+    return { reclassified: 0, failed: 0 }
+  }
 
   const items = (data ?? []) as Item[]
   let reclassified = 0
