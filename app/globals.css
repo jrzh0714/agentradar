@@ -117,6 +117,16 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* Radar animation theme variables */
+:root {
+  --radar-color: #34d399;   /* emerald-400 — visible on dark bg */
+  --radar-opacity: 0.15;
+}
+html:not(.dark) {
+  --radar-color: #059669;   /* emerald-600 — darker, visible on light bg */
+  --radar-opacity: 0.45;
+}
+
 /* Light mode: cool-tinted off-white palette — not pure white, easy on the eyes */
 html:not(.dark) {
   /* Page background: very light cool blue-gray, like Vercel/Linear dashboard */

@@ -19,15 +19,15 @@ export function LanguageToggle() {
     >
       {lang === 'en' ? (
         <>
-          <span className="opacity-50">EN</span>
-          <span className="text-zinc-600">/</span>
-          <span>中文</span>
-        </>
-      ) : (
-        <>
           <span>EN</span>
           <span className="text-zinc-600">/</span>
           <span className="opacity-50">中文</span>
+        </>
+      ) : (
+        <>
+          <span className="opacity-50">EN</span>
+          <span className="text-zinc-600">/</span>
+          <span>中文</span>
         </>
       )}
     </button>
