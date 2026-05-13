@@ -156,6 +156,40 @@ export interface HomepageStats {
   rss: number
 }
 
+// ── Weekly Highlights ─────────────────────────────────────────────────────────
+// High-signal items from the last 7 days — agent frameworks, articles, and
+// notable GitHub repos. Used by the At a Glance section on the homepage.
+
+const HIGHLIGHT_CATEGORIES = [
+  'AI Agents',
+  'MCP / Tool Use',
+  'Code Agents',
+  'Workflow Automation',
+  'LLM Frameworks',
+  'Research',
+  'Product Updates',
+  'AI Infrastructure',
+  'Open Source Models',
+]
+
+export async function getWeeklyHighlights(): Promise<HomepageItem[]> {
+  const since = new Date()
+  since.setDate(since.getDate() - 7)
+  const sinceStr = since.toISOString()
+
+  return safeQuery<HomepageItem>((sb) =>
+    sb
+      .from('items')
+      .select(ITEM_SELECT)
+      .eq('status', 'enriched')
+      .in('ai_category', HIGHLIGHT_CATEGORIES)
+      .gte('ai_relevance_score', 0.6)
+      .gte('published_at', sinceStr)
+      .order('ranking_score', { ascending: false })
+      .limit(8),
+  )
+}
+
 export async function getHomepageStats(): Promise<HomepageStats> {
   const supabase = createServerClient()
   const [

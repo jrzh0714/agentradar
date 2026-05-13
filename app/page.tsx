@@ -2,7 +2,7 @@
 export const dynamic = 'force-dynamic'
 
 import Link from 'next/link'
-import { formatCount } from '@/lib/utils'
+import { formatCount, formatRelativeDate } from '@/lib/utils'
 import { ItemSection } from '@/components/ItemSection'
 import { RadarAnimation } from '@/components/RadarAnimation'
 import { ScrollToTop } from '@/components/ScrollToTop'
@@ -11,17 +11,19 @@ import {
   getLatestHighSignal,
   getAiNews,
   getAgentTools,
+  getWeeklyHighlights,
   getHomepageStats,
 } from '@/lib/db/homepage'
 
 export default async function HomePage() {
   // Fetch all sections in parallel — single round-trip latency.
-  const [topPicks, aiNewsRaw, latestRaw, agentToolsRaw, stats] =
+  const [topPicks, aiNewsRaw, latestRaw, agentToolsRaw, weeklyHighlights, stats] =
     await Promise.all([
       getTopPicks(),
       getAiNews(),
       getLatestHighSignal(),
       getAgentTools(28),
+      getWeeklyHighlights(),
       getHomepageStats(),
     ])
 
@@ -37,6 +39,9 @@ export default async function HomePage() {
   const agentTools = agentToolsRaw.filter((i) => !seenIds.has(i.id)).slice(0, 8)
 
   const trendingItems = topPicks.filter((i) => i.trending)
+
+  // Fall back to top picks if the weekly query returns nothing yet
+  const highlights = weeklyHighlights.length >= 3 ? weeklyHighlights : topPicks.slice(0, 6)
 
   return (
     <div className="flex min-h-screen flex-col bg-zinc-950">
@@ -99,62 +104,110 @@ export default async function HomePage() {
         </section>
 
         {/* ── At a Glance ────────────────────────────────────────────────────── */}
-        {topPicks.length > 0 && (
-          <section className="pb-10">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-mono text-xs font-semibold uppercase tracking-widest text-zinc-500">
-                At a glance
+        <section className="pb-14">
+          {/* Section header */}
+          <div className="mb-6 flex items-center justify-between">
+            <div>
+              <h2 className="font-mono text-sm font-semibold uppercase tracking-widest text-zinc-300">
+                This week
               </h2>
-              <div className="flex items-center gap-3">
-                {trendingItems.length > 0 && (
-                  <span className="rounded-full border border-orange-800/40 bg-orange-950/30 px-2 py-0.5 font-mono text-[10px] text-orange-400">
-                    {trendingItems.length} trending ↑
-                  </span>
-                )}
-                <span className="font-mono text-xs text-zinc-600">
-                  {formatCount(stats.total)} items indexed
-                </span>
-              </div>
+              <p className="mt-1 font-mono text-xs text-zinc-600">
+                Top agent frameworks &amp; articles from the last 7 days
+              </p>
             </div>
+            <div className="flex items-center gap-3">
+              {trendingItems.length > 0 && (
+                <span className="rounded-full border border-orange-800/40 bg-orange-950/30 px-2.5 py-1 font-mono text-[10px] text-orange-400">
+                  {trendingItems.length} trending ↑
+                </span>
+              )}
+            </div>
+          </div>
 
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
-              {topPicks.slice(0, 3).map((item) => (
+          {/* Highlight cards — 2-col on md+, 1-col on mobile */}
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+            {highlights.slice(0, 6).map((item, idx) => {
+              const isLead = idx === 0
+              const summary = item.ai_summary?.trim() || item.description?.trim()
+              const dateLabel = item.published_at ? formatRelativeDate(item.published_at) : null
+
+              return (
                 <a
                   key={item.id}
                   href={item.url ?? '#'}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-start gap-3 rounded-lg border border-zinc-800 bg-zinc-900/60 p-3 transition-colors hover:border-zinc-700"
+                  className={[
+                    'group flex flex-col rounded-xl border border-zinc-800 bg-zinc-900/60 p-5 transition-colors hover:border-zinc-700 hover:bg-zinc-900',
+                    isLead ? 'md:col-span-2' : '',
+                    item.trending ? 'border-l-2 border-l-orange-500' : '',
+                  ].filter(Boolean).join(' ')}
                 >
-                  <div className="min-w-0 flex-1">
-                    <p className="line-clamp-1 font-mono text-xs font-medium text-zinc-200 transition-colors group-hover:text-white">
-                      {item.title}
+                  {/* Row 1: source pill + category + trending */}
+                  <div className="mb-3 flex flex-wrap items-center gap-2">
+                    <SourcePill source={item.source} />
+                    {item.ai_category && (
+                      <span className="rounded border border-zinc-700 px-1.5 py-0.5 font-mono text-[10px] text-zinc-500">
+                        {item.ai_category}
+                      </span>
+                    )}
+                    {item.trending && (
+                      <span className="rounded border border-orange-800/50 bg-orange-950/40 px-1.5 py-0.5 font-mono text-[10px] text-orange-400">
+                        ↑ trending
+                      </span>
+                    )}
+                    {dateLabel && (
+                      <span className="ml-auto font-mono text-[10px] text-zinc-600">
+                        {dateLabel}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Title */}
+                  <h3 className={[
+                    'font-mono font-semibold text-zinc-100 transition-colors group-hover:text-white',
+                    isLead ? 'text-base leading-snug' : 'line-clamp-2 text-sm leading-snug',
+                  ].join(' ')}>
+                    {item.title}
+                  </h3>
+
+                  {/* Summary */}
+                  {summary && (
+                    <p className={[
+                      'mt-2 text-sm leading-relaxed text-zinc-400',
+                      isLead ? 'line-clamp-3' : 'line-clamp-2',
+                    ].join(' ')}>
+                      {summary}
                     </p>
-                    <div className="mt-1 flex items-center gap-1.5">
-                      {item.ai_category && (
-                        <span className="font-mono text-[10px] text-zinc-600">
-                          {item.ai_category}
-                        </span>
+                  )}
+
+                  {/* Footer: stars or HN points */}
+                  {(item.github_stars != null || item.hn_points != null) && (
+                    <div className="mt-3 flex items-center gap-3 font-mono text-[10px] text-zinc-600">
+                      {item.github_stars != null && (
+                        <span>★ {formatCount(item.github_stars)}</span>
                       )}
-                      {item.trending && (
-                        <span className="font-mono text-[10px] text-orange-500">↑</span>
+                      {item.hn_points != null && item.hn_points > 0 && (
+                        <span>▲ {item.hn_points} pts</span>
                       )}
                     </div>
-                  </div>
-                  <span className="shrink-0 text-xs text-zinc-700 transition-colors group-hover:text-zinc-400">
-                    ↗
-                  </span>
+                  )}
                 </a>
-              ))}
-            </div>
+              )
+            })}
+          </div>
 
-            {topPicks.length > 3 && (
-              <p className="mt-3 font-mono text-xs text-zinc-600">
-                +{topPicks.length - 3} more top picks below
-              </p>
-            )}
-          </section>
-        )}
+          {/* Link to digest */}
+          <div className="mt-6 flex items-center justify-end">
+            <Link
+              href="/digest"
+              className="group flex items-center gap-1.5 font-mono text-xs text-zinc-500 transition-colors hover:text-zinc-200"
+            >
+              View full weekly digest
+              <span className="transition-transform group-hover:translate-x-0.5">→</span>
+            </Link>
+          </div>
+        </section>
 
         {/* ── Divider ────────────────────────────────────────────────────────── */}
         <hr className="border-zinc-800" />
@@ -212,7 +265,7 @@ export default async function HomePage() {
             <div className="flex flex-wrap items-center gap-3 font-mono text-xs text-zinc-700">
               <span>{formatCount(stats.total)} items indexed</span>
               <span>·</span>
-              <span>AI-enriched & ranked</span>
+              <span>AI-enriched &amp; ranked</span>
               <span>·</span>
               <span className="text-zinc-500">
                 Built by{' '}
@@ -230,7 +283,6 @@ export default async function HomePage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="transition-colors hover:text-zinc-300"
-                aria-label="GitHub"
               >
                 GitHub
               </a>
@@ -239,7 +291,6 @@ export default async function HomePage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="transition-colors hover:text-zinc-300"
-                aria-label="LinkedIn"
               >
                 LinkedIn
               </a>
@@ -266,11 +317,24 @@ function Stat({
 }) {
   return (
     <div className="flex items-center gap-2">
-      {indicator && (
-        <span className={`h-2 w-2 rounded-full ${indicator}`} />
-      )}
+      {indicator && <span className={`h-2 w-2 rounded-full ${indicator}`} />}
       <span className="font-mono text-sm font-semibold text-zinc-100">{value}</span>
       <span className="font-mono text-sm text-zinc-500">{label}</span>
     </div>
+  )
+}
+
+const SOURCE_STYLES: Record<string, { label: string; className: string }> = {
+  github:      { label: 'GitHub',    className: 'border-emerald-800/50 bg-emerald-950/40 text-emerald-400' },
+  hackernews:  { label: 'HN',        className: 'border-orange-800/50 bg-orange-950/40 text-orange-400' },
+  rss:         { label: 'Article',   className: 'border-sky-800/50 bg-sky-950/40 text-sky-400' },
+}
+
+function SourcePill({ source }: { source: string }) {
+  const s = SOURCE_STYLES[source] ?? { label: source, className: 'border-zinc-700 text-zinc-500' }
+  return (
+    <span className={`rounded border px-1.5 py-0.5 font-mono text-[10px] ${s.className}`}>
+      {s.label}
+    </span>
   )
 }
