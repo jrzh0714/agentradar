@@ -1,21 +1,21 @@
 'use client'
 
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import Link from 'next/link'
 import { formatCount, formatRelativeDate } from '@/lib/utils'
 import { TranslatedText } from '@/components/TranslatedText'
-import { T, useT } from '@/components/T'
+import { T } from '@/components/T'
 import type { HomepageItem } from '@/lib/db/homepage'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 type SourceFilter = 'all' | 'github' | 'hackernews' | 'rss'
 
-const SOURCE_CONFIG: Record<SourceFilter, { label: string; pill: string; pillCls: string }> = {
-  all:         { label: 'All',     pill: 'All',     pillCls: 'border-orange-800/40 bg-orange-950/30 text-orange-400' },
-  github:      { label: 'GitHub',  pill: 'GitHub',  pillCls: 'border-emerald-800/40 bg-emerald-950/30 text-emerald-400' },
-  hackernews:  { label: 'HN',      pill: 'HN',      pillCls: 'border-orange-800/40 bg-orange-950/30 text-orange-400' },
-  rss:         { label: 'Article', pill: 'Article', pillCls: 'border-sky-800/40 bg-sky-950/30 text-sky-400' },
+const SOURCE_CONFIG: Record<SourceFilter, { label: string; pillCls: string }> = {
+  all:         { label: 'All',     pillCls: 'border-orange-800/40 bg-orange-950/30 text-orange-400' },
+  github:      { label: 'GitHub',  pillCls: 'border-emerald-800/40 bg-emerald-950/30 text-emerald-400' },
+  hackernews:  { label: 'HN',      pillCls: 'border-orange-800/40 bg-orange-950/30 text-orange-400' },
+  rss:         { label: 'Article', pillCls: 'border-sky-800/40 bg-sky-950/30 text-sky-400' },
 }
 
 // ── Props ─────────────────────────────────────────────────────────────────────
@@ -27,14 +27,15 @@ interface Props {
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export function TrendingSection({ items }: Props) {
-  const t = useT()
-  const containerRef = useRef<HTMLDivElement>(null)
-
-  // Determine which sources actually have trending items
-  const availableSources: SourceFilter[] = ['all']
-  if (items.some((i) => i.source === 'github'))      availableSources.push('github')
-  if (items.some((i) => i.source === 'hackernews'))  availableSources.push('hackernews')
-  if (items.some((i) => i.source === 'rss'))         availableSources.push('rss')
+  // Memoised so its identity is stable — prevents cycleSource/effect from
+  // re-running on every render due to a new array reference each time.
+  const availableSources = useMemo<SourceFilter[]>(() => {
+    const srcs: SourceFilter[] = ['all']
+    if (items.some((i) => i.source === 'github'))     srcs.push('github')
+    if (items.some((i) => i.source === 'hackernews')) srcs.push('hackernews')
+    if (items.some((i) => i.source === 'rss'))        srcs.push('rss')
+    return srcs
+  }, [items])
 
   const [activeSource, setActiveSource] = useState<SourceFilter>('all')
 
@@ -59,11 +60,11 @@ export function TrendingSection({ items }: Props) {
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      // Only fire when the section (or a child) is focused, OR when no input is focused
       const active = document.activeElement
-      const isInput = active instanceof HTMLInputElement || active instanceof HTMLTextAreaElement || active instanceof HTMLSelectElement
+      const isInput = active instanceof HTMLInputElement
+        || active instanceof HTMLTextAreaElement
+        || active instanceof HTMLSelectElement
       if (isInput) return
-
       if (e.key === 'ArrowRight') { e.preventDefault(); cycleSource(1) }
       if (e.key === 'ArrowLeft')  { e.preventDefault(); cycleSource(-1) }
     }
@@ -82,7 +83,7 @@ export function TrendingSection({ items }: Props) {
   }
 
   return (
-    <div ref={containerRef}>
+    <div>
       {/* ── Source tabs + arrow controls ──────────────────────────────────── */}
       <div className="mb-4 flex items-center gap-2">
         {/* Left arrow */}
@@ -106,6 +107,7 @@ export function TrendingSection({ items }: Props) {
                 key={src}
                 type="button"
                 onClick={() => setActiveSource(src)}
+                aria-current={isActive ? 'true' : undefined}
                 className={[
                   'rounded-full border px-2.5 py-0.5 font-mono text-[11px] transition-colors focus:outline-none',
                   isActive
