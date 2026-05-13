@@ -49,7 +49,7 @@ export default async function DigestPage() {
     <div className="flex min-h-screen flex-col bg-zinc-950">
 
       {/* ── Header ─────────────────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-10 border-b border-zinc-800/80 bg-zinc-950/90 backdrop-blur-sm">
+      <header className="sticky top-0 z-10 border-b border-zinc-800/60 bg-zinc-950/75 backdrop-blur-md">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-3">
             <Link href="/" className="font-mono text-sm font-bold tracking-tight text-zinc-100 transition-colors hover:text-zinc-50 dark:hover:text-white">
