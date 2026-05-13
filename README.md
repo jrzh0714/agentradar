@@ -2,7 +2,19 @@
 
 **An AI-curated discovery hub for emerging GenAI tools, agent frameworks, and developer workflows.**
 
-AgentRadar continuously ingests items from GitHub, Hacker News, and technical blogs, uses an LLM to classify and score each item, then ranks the full corpus with a weighted formula. The result is a ranked feed, a keyword search interface, per-item detail pages, and a weekly-style digest — all server-rendered from live data with no manual curation.
+## Background & Motivation
+
+The AI landscape moves faster than any individual developer can track. Every day, new agent frameworks are open-sourced, new research findings are published, new model capabilities land, and new developer tools appear on Hacker News — most of which never trend long enough to reach traditional newsletters or social feeds.
+
+I built AgentRadar because I kept feeling like I was falling behind. Not on the famous projects — those surface themselves — but on the *emerging* ones: the small framework that solves exactly the problem you're working on, the research paper that changes how you think about RAG, the two-week-old repo that will be everywhere in six months. By the time most discovery channels surface these things, the window to learn and build early is already closing.
+
+AgentRadar's goal is to give AI developers and engineers a daily pulse on what's new and worth paying attention to — without the noise of mainstream tech news and without requiring you to monitor a dozen GitHub searches and RSS feeds yourself.
+
+---
+
+## How it works
+
+AgentRadar continuously ingests items from GitHub, Hacker News, and technical blogs, uses an LLM to classify and score each item, then ranks the full corpus with a weighted formula. The result is a ranked feed, a keyword search interface, per-item detail pages, and a weekly digest — all server-rendered from live Supabase data, updated daily, with no manual curation.
 
 ---
 

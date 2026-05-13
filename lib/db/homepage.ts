@@ -157,6 +157,8 @@ export interface HomepageStats {
   github: number
   hackernews: number
   rss: number
+  /** ISO timestamp of the most recently enriched item, or null if none. */
+  lastUpdatedAt: string | null
 }
 
 // ── Weekly Highlights ─────────────────────────────────────────────────────────
@@ -206,16 +208,20 @@ export async function getHomepageStats(): Promise<HomepageStats> {
     { count: github },
     { count: hackernews },
     { count: rss },
+    { data: latestRow },
   ] = await Promise.all([
     supabase.from('items').select('*', { count: 'exact', head: true }).eq('status', 'enriched'),
     supabase.from('items').select('*', { count: 'exact', head: true }).eq('status', 'enriched').eq('source', 'github'),
     supabase.from('items').select('*', { count: 'exact', head: true }).eq('status', 'enriched').eq('source', 'hackernews'),
     supabase.from('items').select('*', { count: 'exact', head: true }).eq('status', 'enriched').eq('source', 'rss'),
+    supabase.from('items').select('updated_at').eq('status', 'enriched').order('updated_at', { ascending: false }).limit(1),
   ])
+  const lastUpdatedAt = (latestRow as Array<{ updated_at: string }> | null)?.[0]?.updated_at ?? null
   return {
-    total:      total      ?? 0,
-    github:     github     ?? 0,
-    hackernews: hackernews ?? 0,
-    rss:        rss        ?? 0,
+    total:         total      ?? 0,
+    github:        github     ?? 0,
+    hackernews:    hackernews ?? 0,
+    rss:           rss        ?? 0,
+    lastUpdatedAt,
   }
 }

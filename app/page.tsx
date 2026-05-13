@@ -79,7 +79,12 @@ export default async function HomePage() {
           <div className="relative z-10">
             <div className="mb-3 flex items-center gap-2">
               <span className="inline-block h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_8px_2px_rgba(52,211,153,0.4)]" />
-              <span className="font-mono text-xs text-emerald-500">live feed</span>
+              <span className="font-mono text-xs text-emerald-500">updated daily</span>
+              {stats.lastUpdatedAt && (
+                <span className="font-mono text-xs text-zinc-600">
+                  · last updated {formatRelativeDate(stats.lastUpdatedAt)}
+                </span>
+              )}
             </div>
 
             <h1 className="mb-5 font-mono text-4xl font-bold tracking-tight text-zinc-100 sm:text-5xl">
