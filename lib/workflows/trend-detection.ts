@@ -18,10 +18,9 @@ export function isTrending(
 export function shouldSnapshot(lastSnapshotDate: string | null): boolean {
   if (!lastSnapshotDate) return true
   const cutoff = new Date()
-  cutoff.setDate(cutoff.getDate() - SNAPSHOT_INTERVAL_DAYS)
-  cutoff.setHours(0, 0, 0, 0)
-  const last = new Date(lastSnapshotDate + 'T00:00:00')
-  return last <= cutoff
+  cutoff.setUTCDate(cutoff.getUTCDate() - SNAPSHOT_INTERVAL_DAYS)
+  const cutoffStr = cutoff.toISOString().split('T')[0]
+  return lastSnapshotDate <= cutoffStr
 }
 
 // ── DB phases ──────────────────────────────────────────────────────────────────
