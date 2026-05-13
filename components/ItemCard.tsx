@@ -86,7 +86,7 @@ export function ItemCard({ item, compact = false, className }: ItemCardProps) {
         <h3
           className={cn(
             'font-mono font-semibold leading-snug text-zinc-100',
-            'transition-colors group-hover:text-zinc-50 dark:group-hover:text-white',
+            'transition-colors group-hover:text-zinc-200 dark:group-hover:text-white',
             'line-clamp-2 text-sm',
           )}
         >

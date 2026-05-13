@@ -53,7 +53,7 @@ export default async function DigestPage() {
       <header className="sticky top-0 z-50 border-b border-zinc-800/60 bg-zinc-950/75 backdrop-blur-md">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-3">
-            <Link href="/" className="font-mono text-sm font-bold tracking-tight text-zinc-100 transition-colors hover:text-zinc-50 dark:hover:text-white">
+            <Link href="/" className="font-mono text-sm font-bold tracking-tight text-zinc-100 transition-colors hover:text-zinc-200 dark:hover:text-white">
               AgentRadar
             </Link>
             <span className="rounded-full bg-zinc-800 px-2 py-0.5 font-mono text-xs text-zinc-500">
@@ -257,7 +257,7 @@ function DigestRow({ item, rank }: { item: HomepageItem; rank: number }) {
           href={`/items/${item.id}`}
           className="group/title block"
         >
-          <h3 className="mb-1 font-mono text-sm font-semibold leading-snug text-zinc-100 transition-colors group-hover/title:text-zinc-50 dark:group-hover/title:text-white">
+          <h3 className="mb-1 font-mono text-sm font-semibold leading-snug text-zinc-100 transition-colors group-hover/title:text-zinc-200 dark:group-hover/title:text-white">
             {title}
           </h3>
         </Link>
