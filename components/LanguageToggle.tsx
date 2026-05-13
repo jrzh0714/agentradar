@@ -9,7 +9,7 @@ export function LanguageToggle() {
 
   useEffect(() => setMounted(true), [])
 
-  if (!mounted) return <div className="h-7 w-14" />
+  if (!mounted) return <div className="h-7 w-12" />
 
   return (
     <button
@@ -21,13 +21,13 @@ export function LanguageToggle() {
         <>
           <span>EN</span>
           <span className="text-zinc-600">/</span>
-          <span className="opacity-50">中文</span>
+          <span className="opacity-50">中</span>
         </>
       ) : (
         <>
           <span className="opacity-50">EN</span>
           <span className="text-zinc-600">/</span>
-          <span>中文</span>
+          <span>中</span>
         </>
       )}
     </button>

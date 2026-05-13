@@ -60,8 +60,8 @@ export default async function DigestPage() {
               beta
             </span>
           </div>
-          <nav className="flex items-center gap-6 font-mono text-xs text-zinc-500">
-            <Link href="/" className="transition-colors hover:text-zinc-200">home</Link>
+          <nav className="flex items-center gap-3 sm:gap-6 font-mono text-xs text-zinc-500">
+            <Link href="/" className="hidden sm:inline transition-colors hover:text-zinc-200">home</Link>
             <Link href="/search" className="transition-colors hover:text-zinc-200">search</Link>
             <LanguageToggle />
             <ThemeToggle />

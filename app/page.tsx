@@ -59,14 +59,14 @@ export default async function HomePage() {
               beta
             </span>
           </div>
-          <nav className="flex items-center gap-6 font-mono text-xs text-zinc-500">
+          <nav className="flex items-center gap-3 sm:gap-6 font-mono text-xs text-zinc-500">
             <Link href="/search" className="transition-colors hover:text-zinc-200">
               search
             </Link>
-            <Link href="/digest" className="transition-colors hover:text-zinc-200">
+            <Link href="/digest" className="hidden sm:inline transition-colors hover:text-zinc-200">
               digest
             </Link>
-            <Link href="/status" className="transition-colors hover:text-zinc-200">
+            <Link href="/status" className="hidden sm:inline transition-colors hover:text-zinc-200">
               status
             </Link>
             <LanguageToggle />
