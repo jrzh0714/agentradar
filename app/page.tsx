@@ -1,5 +1,6 @@
-// Force dynamic rendering — data changes as new items are ingested and ranked.
-export const dynamic = 'force-dynamic'
+// ISR: revalidate every 5 minutes. Items update once daily via cron so
+// 5-min cache gives near-instant loads without serving stale content.
+export const revalidate = 300
 
 import Link from 'next/link'
 import { formatCount, formatRelativeDate } from '@/lib/utils'

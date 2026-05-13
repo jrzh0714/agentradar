@@ -1,5 +1,5 @@
-// Force dynamic — digest reflects live ranked data.
-export const dynamic = 'force-dynamic'
+// ISR: revalidate every 5 minutes. Digest content only changes on daily ingestion.
+export const revalidate = 300
 
 import Link from 'next/link'
 import type { Metadata } from 'next'

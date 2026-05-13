@@ -1,5 +1,6 @@
-// Force dynamic — detail pages depend on live DB data.
-export const dynamic = 'force-dynamic'
+// ISR: revalidate every 5 minutes. Item data changes only during daily
+// enrichment runs, so a 5-min cache gives fast loads without staleness.
+export const revalidate = 300
 
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
