@@ -24,7 +24,25 @@ Rules:
 {"summary_zh":"<translated summary>","why_it_matters_zh":"<translated why it matters>"}`
 
 const BATCH_SIZE = 30
-const REQUEST_DELAY_MS = 400
+
+/**
+ * Delay between translation calls.
+ * Local Ollama needs a longer pause — the 400ms cloud default leaves no
+ * thermal headroom when the GPU is doing all inference work locally.
+ * With OPENAI_BASE_URL pointing to localhost we use 3 s, which keeps
+ * the M-series chip below sustained-load temps and leaves the GPU free
+ * to render the display between calls.
+ */
+const isLocalOllama = (process.env.OPENAI_BASE_URL ?? '').includes('localhost')
+const REQUEST_DELAY_MS = isLocalOllama ? 3000 : 400
+
+/**
+ * Max items per run when using local Ollama.
+ * Prevents multi-hour sustained GPU sessions that make the machine
+ * unresponsive. Run the script multiple times across different sessions
+ * to translate a large backlog incrementally.
+ */
+const LOCAL_MAX_ITEMS = 100
 
 interface TranslationResult {
   summary_zh: string
@@ -80,6 +98,15 @@ export interface TranslationRunResult {
 export async function runTranslation(
   limit = BATCH_SIZE,
 ): Promise<TranslationRunResult> {
+  // Clamp to LOCAL_MAX_ITEMS when running against local Ollama to prevent
+  // sustained GPU load that makes the machine unresponsive.
+  const effectiveLimit = isLocalOllama ? Math.min(limit, LOCAL_MAX_ITEMS) : limit
+  if (isLocalOllama && limit > LOCAL_MAX_ITEMS) {
+    console.log(
+      `[translation] Local Ollama detected — clamping limit from ${limit} → ${LOCAL_MAX_ITEMS} (thermal safety). Re-run to continue the backlog.`,
+    )
+  }
+
   const supabase = createServerClient()
 
   const { data, error } = await supabase
@@ -89,7 +116,7 @@ export async function runTranslation(
     .not('ai_summary', 'is', null)
     .is('ai_summary_zh', null)
     .order('ranking_score', { ascending: false })
-    .limit(limit)
+    .limit(effectiveLimit)
 
   if (error) {
     console.error('[translation] Fetch failed:', error.message)
