@@ -35,5 +35,15 @@ npm-debug.log*
 # vercel
 .vercel
 
-.vercel
 .superpowers/
+
+# playwright session captures
+.playwright-mcp/
+
+# claude code worktrees (local only)
+.claude/worktrees/
+
+# QA / screenshot artifacts at repo root
+/*.png
+/*.jpg
+/*.jpeg
