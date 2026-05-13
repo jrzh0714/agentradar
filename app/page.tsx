@@ -8,6 +8,7 @@ import { RadarAnimation } from '@/components/RadarAnimation'
 import { ScrollToTop } from '@/components/ScrollToTop'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { LanguageToggle } from '@/components/LanguageToggle'
+import { TranslatedText } from '@/components/TranslatedText'
 import {
   getTopPicks,
   getLatestHighSignal,
@@ -182,12 +183,15 @@ export default async function HomePage() {
 
                   {/* Summary */}
                   {summary && (
-                    <p className={[
-                      'mt-2 font-description text-sm leading-relaxed text-zinc-400',
-                      isLead ? 'line-clamp-3' : 'line-clamp-2',
-                    ].join(' ')}>
-                      {summary}
-                    </p>
+                    <TranslatedText
+                      as="p"
+                      en={summary}
+                      zh={item.ai_summary_zh ?? null}
+                      className={[
+                        'mt-2 font-description text-sm leading-relaxed text-zinc-400',
+                        isLead ? 'line-clamp-3' : 'line-clamp-2',
+                      ].join(' ')}
+                    />
                   )}
 
                   {/* Footer: stars or HN points */}

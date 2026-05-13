@@ -116,12 +116,16 @@ async function callAnthropic(options: AiCallOptions): Promise<string> {
 // ── OpenAI provider ───────────────────────────────────────────────────────────
 
 let _openai: OpenAI | null = null
+let _openaiBaseURL: string | undefined
 
 function getOpenAIClient(): OpenAI {
-  if (!_openai) {
-    const apiKey = process.env.OPENAI_API_KEY
-    if (!apiKey) throw new Error('Missing OPENAI_API_KEY')
-    _openai = new OpenAI({ apiKey })
+  const apiKey = process.env.OPENAI_API_KEY
+  if (!apiKey) throw new Error('Missing OPENAI_API_KEY')
+  const baseURL = process.env.OPENAI_BASE_URL
+  // Re-create client if base URL changed (e.g. switching between cloud and Ollama)
+  if (!_openai || baseURL !== _openaiBaseURL) {
+    _openaiBaseURL = baseURL
+    _openai = new OpenAI({ apiKey, ...(baseURL ? { baseURL } : {}) })
   }
   return _openai
 }

@@ -10,6 +10,7 @@ import { HnPrefixBadge } from '@/components/ui/HnPrefixBadge'
 import { formatRelativeDate } from '@/lib/utils'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { LanguageToggle } from '@/components/LanguageToggle'
+import { TranslatedText } from '@/components/TranslatedText'
 import { getDisplayTitle, getTitlePrefix } from '@/lib/ingestion/title'
 import { getDigestSections, ITEMS_PER_SECTION } from '@/lib/db/digest'
 import { getDigestSummariesForWeek, getCurrentMonday } from '@/lib/db/digest-summaries'
@@ -256,16 +257,19 @@ function DigestRow({ item, rank }: { item: HomepageItem; rank: number }) {
           href={`/items/${item.id}`}
           className="group/title block"
         >
-          <h3 className="mb-1 font-mono text-sm font-semibold leading-snug text-zinc-100 transition-colors group-hover/title:text-white">
+          <h3 className="mb-1 font-mono text-sm font-semibold leading-snug text-zinc-100 transition-colors group-hover/title:text-zinc-50 dark:group-hover/title:text-white">
             {title}
           </h3>
         </Link>
 
         {/* Summary */}
         {summary && (
-          <p className="line-clamp-2 text-xs leading-relaxed text-zinc-500">
-            {summary}
-          </p>
+          <TranslatedText
+            as="p"
+            en={summary}
+            zh={item.ai_summary_zh ?? null}
+            className="line-clamp-2 font-description text-xs leading-relaxed text-zinc-500"
+          />
         )}
 
         {/* GitHub signals inline */}
