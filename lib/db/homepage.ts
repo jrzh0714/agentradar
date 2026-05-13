@@ -152,13 +152,20 @@ export async function getAgentTools(limit = 28): Promise<HomepageItem[]> {
 
 // ── Trending ─────────────────────────────────────────────────────────────────
 // Primary: items explicitly flagged trending=true (score rose ≥ threshold since snapshot).
-// Fallback: when fewer than MIN_TRENDING are flagged, supplement with recently-indexed
-// high-signal items (created in the last RECENCY_DAYS). This keeps the section alive
-// while the score-delta system accumulates enough history to work on its own.
+// Fallback: when fewer than MIN_TRENDING are flagged, query each source separately
+// so GitHub's higher absolute scores can't crowd out HN/RSS items. Each source
+// contributes its best recent items; results are merged and sorted by ranking_score.
 
-const MIN_TRENDING  = 3
-const RECENCY_DAYS  = 7
-const FALLBACK_MIN_SCORE = 65
+const MIN_TRENDING = 3
+const RECENCY_DAYS = 7
+
+// Per-source minimum score thresholds — calibrated to each source's score range:
+//   GitHub repos score 65–90, HN stories 45–70, RSS articles 40–65
+const SCORE_FLOOR: Record<string, number> = {
+  github:     60,
+  hackernews: 45,
+  rss:        40,
+}
 
 export async function getTrendingItems(limit = 8): Promise<HomepageItem[]> {
   const explicit = await safeQuery<HomepageItem>((sb) =>
@@ -172,26 +179,59 @@ export async function getTrendingItems(limit = 8): Promise<HomepageItem[]> {
   )
   if (explicit.length >= MIN_TRENDING) return explicit.slice(0, limit)
 
-  // Fallback: recently indexed items with strong scores, mixed with any explicit ones
+  // Fallback: query each source independently so no single source dominates
   const since = new Date()
   since.setDate(since.getDate() - RECENCY_DAYS)
-  const recent = await safeQuery<HomepageItem>((sb) =>
-    sb
-      .from('items')
-      .select(ITEM_SELECT)
-      .eq('status', 'enriched')
-      .gte('ranking_score', FALLBACK_MIN_SCORE)
-      .gte('created_at', since.toISOString())
-      .order('ranking_score', { ascending: false })
-      .limit(limit + explicit.length),
-  )
+  const sinceStr = since.toISOString()
+
+  // Allocate slots roughly evenly; take a little extra from each for post-merge trimming
+  const perSource = Math.ceil(limit / 3) + 1
+
+  const [github, hn, rss] = await Promise.all([
+    safeQuery<HomepageItem>((sb) =>
+      sb.from('items').select(ITEM_SELECT)
+        .eq('status', 'enriched').eq('source', 'github')
+        .gte('ranking_score', SCORE_FLOOR.github).gte('created_at', sinceStr)
+        .order('ranking_score', { ascending: false }).limit(perSource),
+    ),
+    safeQuery<HomepageItem>((sb) =>
+      sb.from('items').select(ITEM_SELECT)
+        .eq('status', 'enriched').eq('source', 'hackernews')
+        .gte('ranking_score', SCORE_FLOOR.hackernews).gte('created_at', sinceStr)
+        .order('ranking_score', { ascending: false }).limit(perSource),
+    ),
+    safeQuery<HomepageItem>((sb) =>
+      sb.from('items').select(ITEM_SELECT)
+        .eq('status', 'enriched').eq('source', 'rss')
+        .gte('ranking_score', SCORE_FLOOR.rss).gte('created_at', sinceStr)
+        .order('ranking_score', { ascending: false }).limit(perSource),
+    ),
+  ])
+
+  // Interleave: take one from each source in rotation so all sources appear early
+  const pool = interleave(github, hn, rss)
 
   const explicitIds = new Set(explicit.map((i) => i.id))
-  const merged = [
-    ...explicit,
-    ...recent.filter((i) => !explicitIds.has(i.id)),
-  ]
-  return merged.slice(0, limit)
+  const seen = new Set(explicitIds)
+  const fallback = pool.filter((i) => {
+    if (seen.has(i.id)) return false
+    seen.add(i.id)
+    return true
+  })
+
+  return [...explicit, ...fallback].slice(0, limit)
+}
+
+/** Round-robin merge: pick one item from each array in turn until all are exhausted. */
+function interleave<T>(...arrays: T[][]): T[] {
+  const result: T[] = []
+  const maxLen = Math.max(...arrays.map((a) => a.length))
+  for (let i = 0; i < maxLen; i++) {
+    for (const arr of arrays) {
+      if (i < arr.length) result.push(arr[i])
+    }
+  }
+  return result
 }
 
 // ── Stats ─────────────────────────────────────────────────────────────────────
