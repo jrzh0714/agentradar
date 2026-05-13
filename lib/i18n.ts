@@ -39,6 +39,9 @@ export const translations = {
     'home.ai_enriched_ranked': 'AI-enriched & ranked',
 
     // ── Homepage sections ──────────────────────────────────────────────────
+    'home.trending_now':      'Trending Now',
+    'home.trending_desc':     'Fast-rising items gaining traction in the last 48 hours.',
+    'home.no_trending':       'No trending items right now — check back soon.',
     'home.this_week':         'This week',
     'home.this_week_desc':    'Emerging frameworks & articles — up-and-coming, not already famous',
     'home.view_digest':       'View full weekly digest',
@@ -159,6 +162,9 @@ export const translations = {
     'home.ai_enriched_ranked': 'AI 增强 & 智能排名',
 
     // ── Homepage sections ──────────────────────────────────────────────────
+    'home.trending_now':      '热门趋势',
+    'home.trending_desc':     '过去 48 小时内快速上升的热门内容。',
+    'home.no_trending':       '暂无趋势内容，请稍后再来。',
     'home.this_week':         '本周精选',
     'home.this_week_desc':    '新兴框架与文章 — 发现潜力项目，而非已成名的热门内容',
     'home.view_digest':       '查看完整周报',

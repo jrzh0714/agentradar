@@ -150,6 +150,22 @@ export async function getAgentTools(limit = 28): Promise<HomepageItem[]> {
   )
 }
 
+// ── Trending ─────────────────────────────────────────────────────────────────
+// Items explicitly flagged trending=true by the enrichment pipeline.
+// Ordered by ranking_score so the highest-signal items float first.
+
+export async function getTrendingItems(limit = 8): Promise<HomepageItem[]> {
+  return safeQuery<HomepageItem>((sb) =>
+    sb
+      .from('items')
+      .select(ITEM_SELECT)
+      .eq('status', 'enriched')
+      .eq('trending', true)
+      .order('ranking_score', { ascending: false })
+      .limit(limit),
+  )
+}
+
 // ── Stats ─────────────────────────────────────────────────────────────────────
 
 export interface HomepageStats {

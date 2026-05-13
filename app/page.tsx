@@ -16,18 +16,20 @@ import {
   getAiNews,
   getAgentTools,
   getWeeklyHighlights,
+  getTrendingItems,
   getHomepageStats,
 } from '@/lib/db/homepage'
 
 export default async function HomePage() {
   // Fetch all sections in parallel — single round-trip latency.
-  const [topPicks, aiNewsRaw, latestRaw, agentToolsRaw, weeklyHighlights, stats] =
+  const [topPicks, aiNewsRaw, latestRaw, agentToolsRaw, weeklyHighlights, trendingRaw, stats] =
     await Promise.all([
       getTopPicks(),
       getAiNews(),
       getLatestHighSignal(),
       getAgentTools(28),
       getWeeklyHighlights(),
+      getTrendingItems(8),
       getHomepageStats(),
     ])
 
@@ -42,7 +44,8 @@ export default async function HomePage() {
 
   const agentTools = agentToolsRaw.filter((i) => !seenIds.has(i.id)).slice(0, 8)
 
-  const trendingItems = topPicks.filter((i) => i.trending)
+  // Trending: standalone fetch, no dedup needed (they can overlap — that's fine)
+  const trending = trendingRaw
 
   // Fall back to top picks if the weekly query returns nothing yet
   const highlights = weeklyHighlights.length >= 3 ? weeklyHighlights : topPicks.slice(0, 6)
@@ -116,6 +119,98 @@ export default async function HomePage() {
           </div>
         </section>
 
+        {/* ── Trending Now ───────────────────────────────────────────────────── */}
+        <section className="pb-12">
+          <div className="mb-5 flex items-center gap-3">
+            <span className="inline-block h-2 w-2 rounded-full bg-orange-500 shadow-[0_0_8px_2px_rgba(249,115,22,0.4)]" />
+            <h2 className="font-mono text-sm font-semibold uppercase tracking-widest text-orange-400">
+              <T k="home.trending_now" />
+            </h2>
+            {trending.length > 0 && (
+              <span className="rounded-full border border-orange-800/40 bg-orange-950/30 px-2 py-0.5 font-mono text-[10px] tabular-nums text-orange-400">
+                {trending.length}
+              </span>
+            )}
+          </div>
+
+          {trending.length === 0 ? (
+            <p className="font-mono text-xs text-zinc-600">
+              <T k="home.no_trending" />
+            </p>
+          ) : (
+            <div className="space-y-0 divide-y divide-zinc-800/60 rounded-xl border border-orange-900/30 bg-orange-950/10">
+              {trending.map((item, i) => {
+                const summary = item.ai_summary?.trim() || item.description?.trim()
+                const dateLabel = item.published_at ? formatRelativeDate(item.published_at) : null
+                const hasUrl = Boolean(item.url?.trim())
+
+                return (
+                  <div key={item.id} className="group flex items-start gap-4 px-4 py-3.5">
+                    {/* Rank */}
+                    <span className="mt-0.5 w-5 shrink-0 font-mono text-xs tabular-nums text-orange-600/70">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+
+                    {/* Content */}
+                    <div className="min-w-0 flex-1">
+                      <div className="mb-1 flex flex-wrap items-center gap-1.5">
+                        <SourcePill source={item.source} />
+                        {item.ai_category && (
+                          <span className="rounded border border-zinc-700 px-1.5 py-0.5 font-mono text-[10px] text-zinc-500">
+                            {item.ai_category}
+                          </span>
+                        )}
+                        {dateLabel && (
+                          <span className="ml-auto font-mono text-[10px] text-zinc-600">{dateLabel}</span>
+                        )}
+                      </div>
+
+                      <Link
+                        href={`/items/${item.id}`}
+                        className="group/t block"
+                      >
+                        <p className="font-mono text-sm font-semibold leading-snug text-zinc-100 transition-colors group-hover/t:text-zinc-200 dark:group-hover/t:text-white line-clamp-1">
+                          {item.title}
+                        </p>
+                      </Link>
+
+                      {summary && (
+                        <TranslatedText
+                          as="p"
+                          en={summary}
+                          zh={item.ai_summary_zh ?? null}
+                          className="mt-0.5 line-clamp-1 font-description text-xs leading-relaxed text-zinc-500"
+                        />
+                      )}
+
+                      {/* Signals */}
+                      <div className="mt-1 flex items-center gap-3 font-mono text-[10px] text-zinc-700">
+                        {item.github_stars != null && (
+                          <span>★ {formatCount(item.github_stars)}</span>
+                        )}
+                        {item.hn_points != null && item.hn_points > 0 && (
+                          <span>▲ {item.hn_points} pts</span>
+                        )}
+                        {hasUrl && (
+                          <a
+                            href={item.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="ml-auto text-zinc-700 transition-colors hover:text-zinc-300"
+                            aria-label="Open source"
+                          >
+                            ↗
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </section>
+
         {/* ── At a Glance ────────────────────────────────────────────────────── */}
         <section className="pb-14">
           {/* Section header */}
@@ -127,13 +222,6 @@ export default async function HomePage() {
               <p className="mt-1 font-mono text-xs text-zinc-600">
                 <T k="home.this_week_desc" />
               </p>
-            </div>
-            <div className="flex items-center gap-3">
-              {trendingItems.length > 0 && (
-                <span className="rounded-full border border-orange-800/40 bg-orange-950/30 px-2.5 py-1 font-mono text-[10px] text-orange-400">
-                  {trendingItems.length} <T k="common.trending" />
-                </span>
-              )}
             </div>
           </div>
 
