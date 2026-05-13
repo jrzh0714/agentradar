@@ -7,6 +7,7 @@ import { ItemSection } from '@/components/ItemSection'
 import { RadarAnimation } from '@/components/RadarAnimation'
 import { ScrollToTop } from '@/components/ScrollToTop'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import { LanguageToggle } from '@/components/LanguageToggle'
 import {
   getTopPicks,
   getLatestHighSignal,
@@ -64,6 +65,7 @@ export default async function HomePage() {
             <Link href="/digest" className="transition-colors hover:text-zinc-200">
               digest
             </Link>
+            <LanguageToggle />
             <ThemeToggle />
           </nav>
         </div>
@@ -84,12 +86,12 @@ export default async function HomePage() {
               Agent<span className="text-zinc-400">Radar</span>
             </h1>
 
-            <p className="mb-3 max-w-2xl text-lg leading-relaxed text-zinc-300">
+            <p className="mb-3 max-w-2xl font-description text-lg leading-relaxed text-zinc-300">
               Track emerging AI agents, developer tools, open-source projects, and model
               updates in one curated feed.
             </p>
 
-            <p className="mb-10 max-w-2xl text-sm leading-relaxed text-zinc-500">
+            <p className="mb-10 max-w-2xl font-description text-sm leading-relaxed text-zinc-500">
               Items are continuously ingested from GitHub, Hacker News, and technical blogs,
               enriched by AI to extract category, maturity, and relevance, then ranked by a
               composite score that weighs signal quality, recency, and community adoption.
@@ -176,7 +178,7 @@ export default async function HomePage() {
                   {/* Summary */}
                   {summary && (
                     <p className={[
-                      'mt-2 text-sm leading-relaxed text-zinc-400',
+                      'mt-2 font-description text-sm leading-relaxed text-zinc-400',
                       isLead ? 'line-clamp-3' : 'line-clamp-2',
                     ].join(' ')}>
                       {summary}

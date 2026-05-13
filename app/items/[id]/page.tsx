@@ -14,6 +14,7 @@ import { getItemById, getRelatedItems } from '@/lib/db/items-detail'
 import { HnPrefixBadge } from '@/components/ui/HnPrefixBadge'
 import { getDisplayTitle, getTitlePrefix } from '@/lib/ingestion/title'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import { LanguageToggle } from '@/components/LanguageToggle'
 
 // ── Metadata ───────────────────────────────────────────────────────────────────
 
@@ -72,6 +73,7 @@ export default async function ItemDetailPage({
             <Link href="/digest" className="transition-colors hover:text-zinc-200">
               digest
             </Link>
+            <LanguageToggle />
             <ThemeToggle />
           </nav>
         </div>

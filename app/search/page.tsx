@@ -8,6 +8,7 @@ import { SearchControls } from './SearchControls'
 import { searchItems } from '@/lib/db/search'
 import type { DateRange, SearchSort } from '@/lib/db/search'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import { LanguageToggle } from '@/components/LanguageToggle'
 
 // ── Metadata ──────────────────────────────────────────────────────────────────
 
@@ -97,6 +98,7 @@ export default async function SearchPage({
             <Link href="/digest" className="transition-colors hover:text-zinc-200">
               digest
             </Link>
+            <LanguageToggle />
             <ThemeToggle />
           </nav>
         </div>

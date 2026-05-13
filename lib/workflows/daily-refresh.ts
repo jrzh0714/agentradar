@@ -20,6 +20,7 @@ import { runTrendSnapshot, runTrendFlagUpdate } from '@/lib/workflows/trend-dete
 import { runReclassification } from '@/lib/workflows/reclassification'
 import { runDataQualityCheck } from '@/lib/workflows/data-quality'
 import { runDigestSummaries } from '@/lib/workflows/digest-summaries'
+import { runTranslation } from '@/lib/workflows/translation'
 import type { CostEstimate } from '@/lib/workflows/cost-estimation'
 
 // ── Constants ─────────────────────────────────────────────────────────────────
@@ -53,6 +54,7 @@ export interface RefreshResult {
   reclassifiedCount: number
   rankedCount: number
   trendingCount: number
+  translatedCount: number
   digestSummariesGenerated: number
   anomaliesFound: number
   estimatedCost: CostEstimate | null
@@ -357,13 +359,19 @@ export async function runDailyRefresh(
       return { trendingCount: 0 }
     })
 
-    // 8. Digest summaries (Mondays only)
+    // 8. Translation — Simplified Chinese (top-ranked untranslated items)
+    const { translated: translatedCount } = await runTranslation(50).catch((err) => {
+      console.error('[daily-refresh] Translation error:', err instanceof Error ? err.message : err)
+      return { translated: 0, failed: 0, skipped: 0 }
+    })
+
+    // 9. Digest summaries (Mondays only)
     const { generated: digestSummariesGenerated } = await runDigestSummaries().catch((err) => {
       console.error('[daily-refresh] Digest summaries error:', err instanceof Error ? err.message : err)
       return { generated: 0, skipped: 0 }
     })
 
-    // 9. Data quality check (always runs)
+    // 10. Data quality check (always runs)
     const healthReport = await runDataQualityCheck().catch((err) => {
       console.error('[daily-refresh] Data quality check error:', err instanceof Error ? err.message : err)
       return null
@@ -378,6 +386,7 @@ export async function runDailyRefresh(
       reclassifiedCount: reclassified,
       rankedCount,
       trendingCount,
+      translatedCount,
       digestSummariesGenerated,
       anomaliesFound: healthReport
         ? Object.values(healthReport.anomalies).reduce<number>(
@@ -403,6 +412,7 @@ export async function runDailyRefresh(
       reclassifiedCount: 0,
       rankedCount: 0,
       trendingCount: 0,
+      translatedCount: 0,
       digestSummariesGenerated: 0,
       anomaliesFound: 0,
       estimatedCost: null,

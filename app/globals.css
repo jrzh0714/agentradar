@@ -117,18 +117,35 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-/* Light mode: invert the zinc scale so all hardcoded dark classes flip automatically */
+/* Light mode: cool-tinted off-white palette — not pure white, easy on the eyes */
 html:not(.dark) {
-  --color-zinc-950: oklch(0.985 0 0);
-  --color-zinc-900: oklch(0.96 0 0);
-  --color-zinc-800: oklch(0.9 0 0);
-  --color-zinc-700: oklch(0.78 0 0);
-  --color-zinc-600: oklch(0.60 0 0);
-  --color-zinc-500: oklch(0.46 0 0);
-  --color-zinc-400: oklch(0.36 0 0);
-  --color-zinc-300: oklch(0.28 0 0);
-  --color-zinc-200: oklch(0.20 0 0);
-  --color-zinc-100: oklch(0.13 0 0);
+  /* Page background: very light cool blue-gray, like Vercel/Linear dashboard */
+  --color-zinc-950: oklch(0.955 0.007 240);
+  /* Card surfaces: near-white with slight cool tint */
+  --color-zinc-900: oklch(0.978 0.004 240);
+  /* Borders */
+  --color-zinc-800: oklch(0.878 0.009 240);
+  /* Border hover */
+  --color-zinc-700: oklch(0.775 0.011 240);
+  /* Muted text */
+  --color-zinc-600: oklch(0.575 0.012 240);
+  /* Secondary text */
+  --color-zinc-500: oklch(0.455 0.012 240);
+  /* Body text */
+  --color-zinc-400: oklch(0.355 0.010 240);
+  /* Strong text */
+  --color-zinc-300: oklch(0.268 0.009 240);
+  /* Heading text */
+  --color-zinc-200: oklch(0.195 0.007 240);
+  /* Primary text: deep cool near-black */
+  --color-zinc-100: oklch(0.125 0.006 240);
+}
+
+@layer utilities {
+  /* Inter — optimised for body copy, descriptions, summaries */
+  .font-description {
+    font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  }
 }
 
 @layer base {

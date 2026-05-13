@@ -41,6 +41,10 @@ export interface Item {
   ai_maturity: string | null
   ai_relevance_score: number | null
 
+  // Translations
+  ai_summary_zh: string | null
+  ai_why_it_matters_zh: string | null
+
   // Ranking / pipeline state
   ranking_score: number
   // Trend detection

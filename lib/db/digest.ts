@@ -34,6 +34,7 @@ const DIGEST_SELECT = [
   'hn_points', 'hn_comments',
   'ai_summary', 'ai_why_it_matters', 'ai_category', 'ai_tags',
   'ai_maturity', 'ai_relevance_score', 'ranking_score', 'trending',
+  'ai_summary_zh', 'ai_why_it_matters_zh',
 ].join(', ')
 
 // ── Section definitions ────────────────────────────────────────────────────────

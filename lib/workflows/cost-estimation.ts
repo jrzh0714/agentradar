@@ -9,6 +9,39 @@ export const MODEL_RATES: Record<string, number> = {
   'mock': 0,
 }
 
+/**
+ * Translation cost per item (Simplified Chinese).
+ *
+ * Based on GPT-4o-mini rates ($0.15/1M input, $0.60/1M output):
+ *   ~245 input tokens (system prompt + English text) → $0.037 / 1000 items
+ *   ~200 output tokens (Chinese text)               → $0.120 / 1000 items
+ *   Total ≈ $0.0002/item  →  $0.40 for 2,000-item corpus
+ *
+ * Monthly ongoing (30 new items/day):
+ *   30 × $0.0002 × 30 days ≈ $0.18/month
+ */
+export const TRANSLATION_RATE_PER_ITEM = 0.0002
+
+/**
+ * Full operational cost breakdown (monthly, approximate).
+ *
+ * | Service           | Cost/month | Notes                                       |
+ * |-------------------|-----------|---------------------------------------------|
+ * | Vercel Pro        | $20.00    | Required for Cron Jobs                      |
+ * | Supabase          |  $0.00    | Free tier (≤500MB DB, ≤2GB bandwidth)       |
+ * | AI enrichment     |  $0.18    | 30 items/day × $0.0002 × 30 days           |
+ * | AI translation ZH |  $0.18    | 30 items/day × $0.0002 × 30 days           |
+ * | AI digest summ.   |  $0.26    | 13 categories × 4 Mondays × $0.005/call    |
+ * | AI reclassify     |  $0.10    | ~500 items/month × $0.0002                  |
+ * | GitHub API        |  $0.00    | Authenticated; 5,000 req/hour               |
+ * | Star refresh      |  $0.00    | GitHub API only                             |
+ * |-------------------|-----------|---------------------------------------------|
+ * | TOTAL             | ~$20.72   | Dominated by Vercel Pro                     |
+ *
+ * Without Vercel Pro (manual pipeline triggers): ~$0.72/month
+ * One-time translation of 2,000-item corpus: ~$0.40
+ */
+
 export interface CostEstimate {
   pendingItems: number
   willProcess: number

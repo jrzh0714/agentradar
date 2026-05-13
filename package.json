@@ -12,6 +12,7 @@
     "health": "curl -s https://agentradar-nine.vercel.app/api/health | npx --yes json",
     "estimate": "curl -s -H \"Authorization: Bearer $CRON_SECRET\" https://agentradar-nine.vercel.app/api/pipeline/estimate | npx --yes json",
     "refresh:stars": "npx tsx scripts/refresh-github-stars.ts",
+    "translate": "npx tsx scripts/translate-items.ts",
     "cleanup:github": "npx tsx scripts/cleanup-github-artifacts.ts",
     "cleanup:titles": "npx tsx scripts/cleanup-titles.ts",
     "ingest:github": "npx tsx scripts/ingest-github.ts",

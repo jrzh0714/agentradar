@@ -8,6 +8,7 @@ import { TagList } from '@/components/ui/TagList'
 import { HnPrefixBadge } from '@/components/ui/HnPrefixBadge'
 import { TrendingBadge } from '@/components/ui/TrendingBadge'
 import { getDisplayTitle, getTitlePrefix } from '@/lib/ingestion/title'
+import { TranslatedText } from '@/components/TranslatedText'
 import type { HomepageItem } from '@/lib/db/homepage'
 
 // ── Defensive rendering helpers ───────────────────────────────────────────────
@@ -94,23 +95,27 @@ export function ItemCard({ item, compact = false, className }: ItemCardProps) {
       </Link>
 
       {/* ── Summary ─────────────────────────────────────────────────────── */}
-      <p
+      <TranslatedText
+        as="p"
+        en={summary}
+        zh={item.ai_summary_zh ?? null}
         className={cn(
-          'mb-2 text-sm leading-relaxed',
+          'mb-2 font-description text-sm leading-relaxed',
           summary === 'No summary available yet.'
             ? 'text-zinc-600 italic'
             : 'text-zinc-400',
           compact ? 'line-clamp-2' : 'line-clamp-3',
         )}
-      >
-        {summary}
-      </p>
+      />
 
       {/* ── Why it matters ──────────────────────────────────────────────── */}
       {!compact && item.ai_why_it_matters?.trim() && (
-        <p className="mb-3 line-clamp-2 border-l-2 border-zinc-700 pl-3 text-xs leading-relaxed text-zinc-500 italic">
-          {item.ai_why_it_matters}
-        </p>
+        <TranslatedText
+          as="p"
+          en={item.ai_why_it_matters}
+          zh={item.ai_why_it_matters_zh ?? null}
+          className="mb-3 line-clamp-2 border-l-2 border-zinc-700 pl-3 font-description text-xs leading-relaxed text-zinc-500 italic"
+        />
       )}
 
       {/* ── Tags ────────────────────────────────────────────────────────── */}
