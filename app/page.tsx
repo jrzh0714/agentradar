@@ -174,7 +174,7 @@ export default async function HomePage() {
 
                   {/* Title */}
                   <h3 className={[
-                    'font-mono font-semibold text-zinc-100 transition-colors group-hover:text-white',
+                    'font-mono font-semibold text-zinc-100 transition-colors group-hover:text-zinc-50 dark:group-hover:text-white',
                     isLead ? 'text-base leading-snug' : 'line-clamp-2 text-sm leading-snug',
                   ].join(' ')}>
                     {item.title}
