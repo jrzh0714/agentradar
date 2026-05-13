@@ -151,11 +151,17 @@ export async function getAgentTools(limit = 28): Promise<HomepageItem[]> {
 }
 
 // ── Trending ─────────────────────────────────────────────────────────────────
-// Items explicitly flagged trending=true by the enrichment pipeline.
-// Ordered by ranking_score so the highest-signal items float first.
+// Primary: items explicitly flagged trending=true (score rose ≥ threshold since snapshot).
+// Fallback: when fewer than MIN_TRENDING are flagged, supplement with recently-indexed
+// high-signal items (created in the last RECENCY_DAYS). This keeps the section alive
+// while the score-delta system accumulates enough history to work on its own.
+
+const MIN_TRENDING  = 3
+const RECENCY_DAYS  = 7
+const FALLBACK_MIN_SCORE = 65
 
 export async function getTrendingItems(limit = 8): Promise<HomepageItem[]> {
-  return safeQuery<HomepageItem>((sb) =>
+  const explicit = await safeQuery<HomepageItem>((sb) =>
     sb
       .from('items')
       .select(ITEM_SELECT)
@@ -164,6 +170,28 @@ export async function getTrendingItems(limit = 8): Promise<HomepageItem[]> {
       .order('ranking_score', { ascending: false })
       .limit(limit),
   )
+  if (explicit.length >= MIN_TRENDING) return explicit.slice(0, limit)
+
+  // Fallback: recently indexed items with strong scores, mixed with any explicit ones
+  const since = new Date()
+  since.setDate(since.getDate() - RECENCY_DAYS)
+  const recent = await safeQuery<HomepageItem>((sb) =>
+    sb
+      .from('items')
+      .select(ITEM_SELECT)
+      .eq('status', 'enriched')
+      .gte('ranking_score', FALLBACK_MIN_SCORE)
+      .gte('created_at', since.toISOString())
+      .order('ranking_score', { ascending: false })
+      .limit(limit + explicit.length),
+  )
+
+  const explicitIds = new Set(explicit.map((i) => i.id))
+  const merged = [
+    ...explicit,
+    ...recent.filter((i) => !explicitIds.has(i.id)),
+  ]
+  return merged.slice(0, limit)
 }
 
 // ── Stats ─────────────────────────────────────────────────────────────────────

@@ -1,7 +1,9 @@
 import { createServerClient } from '@/lib/supabase/server'
 
-const TREND_THRESHOLD = 20
-const SNAPSHOT_INTERVAL_DAYS = 7
+// Score must rise by this many points over the snapshot window to qualify as trending.
+// Kept low because composite ranking_score typically moves by 1–3 pts per cycle.
+const TREND_THRESHOLD = 1.5
+const SNAPSHOT_INTERVAL_DAYS = 3
 const BATCH_SIZE = 500
 const WRITE_CONCURRENCY = 50
 
