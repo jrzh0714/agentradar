@@ -12,14 +12,15 @@
  */
 import { createServerClient } from '@/lib/supabase/server'
 import type { HomepageItem } from '@/lib/db/homepage'
+import { MAX_EMERGING_STARS } from '@/lib/db/homepage'
 
 // ── Config ─────────────────────────────────────────────────────────────────────
 
 /** Items displayed per section. */
 export const ITEMS_PER_SECTION = 5
 
-/** Candidates fetched per section before in-memory dedup. 3× gives enough headroom. */
-const FETCH_PER_SECTION = 15
+/** Candidates fetched per section before in-memory dedup. 4× gives headroom after star filtering. */
+const FETCH_PER_SECTION = 20
 
 /** Minimum relevance score — items below this are noise. */
 const MIN_RELEVANCE = 0.5
@@ -110,6 +111,7 @@ export async function getDigestSections(): Promise<DigestSection[]> {
         .eq('status', 'enriched')
         .in('ai_category', def.categories)
         .gte('ai_relevance_score', MIN_RELEVANCE)
+        .or(`github_stars.is.null,github_stars.lt.${MAX_EMERGING_STARS}`)
         .order('ranking_score', { ascending: false })
         .limit(FETCH_PER_SECTION)
 

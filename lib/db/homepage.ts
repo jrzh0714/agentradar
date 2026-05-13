@@ -157,8 +157,13 @@ export interface HomepageStats {
 }
 
 // ── Weekly Highlights ─────────────────────────────────────────────────────────
-// High-signal items from the last 7 days — agent frameworks, articles, and
-// notable GitHub repos. Used by the At a Glance section on the homepage.
+// Up-and-coming items from the last 7 days. GitHub repos above MAX_STARS are
+// already well-known and excluded — AgentRadar is for discovery, not for
+// surfacing projects that are already household names.
+// RSS and HN items (github_stars IS NULL) are never filtered out by this cap.
+
+/** GitHub star ceiling for "emerging" discovery sections. */
+export const MAX_EMERGING_STARS = 10_000
 
 const HIGHLIGHT_CATEGORIES = [
   'AI Agents',
@@ -185,6 +190,7 @@ export async function getWeeklyHighlights(): Promise<HomepageItem[]> {
       .in('ai_category', HIGHLIGHT_CATEGORIES)
       .gte('ai_relevance_score', 0.6)
       .gte('published_at', sinceStr)
+      .or(`github_stars.is.null,github_stars.lt.${MAX_EMERGING_STARS}`)
       .order('ranking_score', { ascending: false })
       .limit(8),
   )

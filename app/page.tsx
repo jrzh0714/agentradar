@@ -112,7 +112,7 @@ export default async function HomePage() {
                 This week
               </h2>
               <p className="mt-1 font-mono text-xs text-zinc-600">
-                Top agent frameworks &amp; articles from the last 7 days
+                Emerging frameworks &amp; articles — up-and-coming, not already famous
               </p>
             </div>
             <div className="flex items-center gap-3">
