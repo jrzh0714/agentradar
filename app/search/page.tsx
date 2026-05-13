@@ -7,6 +7,7 @@ import { ItemCard } from '@/components/ItemCard'
 import { SearchControls } from './SearchControls'
 import { searchItems } from '@/lib/db/search'
 import type { DateRange, SearchSort } from '@/lib/db/search'
+import { ThemeToggle } from '@/components/ThemeToggle'
 
 // ── Metadata ──────────────────────────────────────────────────────────────────
 
@@ -96,6 +97,7 @@ export default async function SearchPage({
             <Link href="/digest" className="transition-colors hover:text-zinc-200">
               digest
             </Link>
+            <ThemeToggle />
           </nav>
         </div>
       </header>

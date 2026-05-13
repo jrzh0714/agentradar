@@ -8,6 +8,7 @@ import { CategoryBadge } from '@/components/ui/CategoryBadge'
 import { ScorePill } from '@/components/ui/ScorePill'
 import { HnPrefixBadge } from '@/components/ui/HnPrefixBadge'
 import { formatRelativeDate } from '@/lib/utils'
+import { ThemeToggle } from '@/components/ThemeToggle'
 import { getDisplayTitle, getTitlePrefix } from '@/lib/ingestion/title'
 import { getDigestSections, ITEMS_PER_SECTION } from '@/lib/db/digest'
 import { getDigestSummariesForWeek, getCurrentMonday } from '@/lib/db/digest-summaries'
@@ -60,6 +61,7 @@ export default async function DigestPage() {
           <nav className="flex items-center gap-6 font-mono text-xs text-zinc-500">
             <Link href="/" className="transition-colors hover:text-zinc-200">home</Link>
             <Link href="/search" className="transition-colors hover:text-zinc-200">search</Link>
+            <ThemeToggle />
           </nav>
         </div>
       </header>

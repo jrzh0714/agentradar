@@ -6,6 +6,7 @@ import { formatCount, formatRelativeDate } from '@/lib/utils'
 import { ItemSection } from '@/components/ItemSection'
 import { RadarAnimation } from '@/components/RadarAnimation'
 import { ScrollToTop } from '@/components/ScrollToTop'
+import { ThemeToggle } from '@/components/ThemeToggle'
 import {
   getTopPicks,
   getLatestHighSignal,
@@ -63,6 +64,7 @@ export default async function HomePage() {
             <Link href="/digest" className="transition-colors hover:text-zinc-200">
               digest
             </Link>
+            <ThemeToggle />
           </nav>
         </div>
       </header>
