@@ -9,22 +9,8 @@ import { HnPrefixBadge } from '@/components/ui/HnPrefixBadge'
 import { TrendingBadge } from '@/components/ui/TrendingBadge'
 import { getDisplayTitle, getTitlePrefix } from '@/lib/ingestion/title'
 import { TranslatedText } from '@/components/TranslatedText'
+import { T } from '@/components/T'
 import type { HomepageItem } from '@/lib/db/homepage'
-
-// ── Defensive rendering helpers ───────────────────────────────────────────────
-
-/**
- * Returns the best available summary text.
- * Priority: ai_summary → raw description → static fallback.
- */
-function safeSummary(
-  aiSummary: string | null | undefined,
-  description: string | null | undefined,
-): string {
-  if (aiSummary?.trim()) return aiSummary.trim()
-  if (description?.trim()) return description.trim()
-  return 'No summary available yet.'
-}
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
@@ -36,12 +22,12 @@ interface ItemCardProps {
 }
 
 export function ItemCard({ item, compact = false, className }: ItemCardProps) {
-  const relScore  = item.ai_relevance_score != null ? item.ai_relevance_score * 10 : null
-  const dateLabel = formatRelativeDate(item.published_at)
-  const title     = getDisplayTitle(item)
-  const prefix    = getTitlePrefix(item.title)
-  const summary   = safeSummary(item.ai_summary, item.description)
-  const hasUrl    = Boolean(item.url?.trim())
+  const relScore    = item.ai_relevance_score != null ? item.ai_relevance_score * 10 : null
+  const dateLabel   = formatRelativeDate(item.published_at)
+  const title       = getDisplayTitle(item)
+  const prefix      = getTitlePrefix(item.title)
+  const summaryEn   = item.ai_summary?.trim() || item.description?.trim() || null
+  const hasUrl      = Boolean(item.url?.trim())
 
   return (
     <article
@@ -95,18 +81,21 @@ export function ItemCard({ item, compact = false, className }: ItemCardProps) {
       </Link>
 
       {/* ── Summary ─────────────────────────────────────────────────────── */}
-      <TranslatedText
-        as="p"
-        en={summary}
-        zh={item.ai_summary_zh ?? null}
-        className={cn(
-          'mb-2 font-description text-sm leading-relaxed',
-          summary === 'No summary available yet.'
-            ? 'text-zinc-600 italic'
-            : 'text-zinc-400',
-          compact ? 'line-clamp-2' : 'line-clamp-3',
-        )}
-      />
+      {summaryEn ? (
+        <TranslatedText
+          as="p"
+          en={summaryEn}
+          zh={item.ai_summary_zh ?? null}
+          className={cn(
+            'mb-2 font-description text-sm leading-relaxed text-zinc-400',
+            compact ? 'line-clamp-2' : 'line-clamp-3',
+          )}
+        />
+      ) : (
+        <p className={cn('mb-2 font-description text-sm leading-relaxed text-zinc-600 italic', compact ? 'line-clamp-2' : 'line-clamp-3')}>
+          <T k="card.no_summary" />
+        </p>
+      )}
 
       {/* ── Why it matters ──────────────────────────────────────────────── */}
       {!compact && item.ai_why_it_matters?.trim() && (

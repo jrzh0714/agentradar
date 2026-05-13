@@ -11,6 +11,7 @@ import { formatRelativeDate } from '@/lib/utils'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { LanguageToggle } from '@/components/LanguageToggle'
 import { TranslatedText } from '@/components/TranslatedText'
+import { T } from '@/components/T'
 import { getDisplayTitle, getTitlePrefix } from '@/lib/ingestion/title'
 import { getDigestSections, ITEMS_PER_SECTION } from '@/lib/db/digest'
 import { getDigestSummariesForWeek, getCurrentMonday } from '@/lib/db/digest-summaries'
@@ -57,12 +58,16 @@ export default async function DigestPage() {
               AgentRadar
             </Link>
             <span className="rounded-full bg-zinc-800 px-2 py-0.5 font-mono text-xs text-zinc-500">
-              beta
+              <T k="common.beta" />
             </span>
           </div>
           <nav className="flex items-center gap-3 sm:gap-6 font-mono text-xs text-zinc-500">
-            <Link href="/" className="hidden sm:inline transition-colors hover:text-zinc-200">home</Link>
-            <Link href="/search" className="transition-colors hover:text-zinc-200">search</Link>
+            <Link href="/" className="hidden sm:inline transition-colors hover:text-zinc-200">
+              <T k="nav.home" />
+            </Link>
+            <Link href="/search" className="transition-colors hover:text-zinc-200">
+              <T k="nav.search" />
+            </Link>
             <LanguageToggle />
             <ThemeToggle />
           </nav>
@@ -74,28 +79,26 @@ export default async function DigestPage() {
         {/* ── Digest masthead ─────────────────────────────────────────────── */}
         <section className="border-b border-zinc-800 py-12">
           <p className="mb-3 font-mono text-xs uppercase tracking-widest text-zinc-600">
-            Week of {weekLabel()}
+            <T k="digest.week_of" /> {weekLabel()}
           </p>
-          <h1 className="mb-4 font-mono text-3xl font-bold tracking-tight text-zinc-100 sm:text-4xl">
-            This Week in AI&nbsp;Agents<br className="hidden sm:block" />
-            {' '}&amp; Developer&nbsp;Tools
+          <h1 className="mb-4 font-mono text-3xl font-bold tracking-tight text-zinc-100 sm:text-4xl" style={{ whiteSpace: 'pre-line' }}>
+            <T k="digest.title" />
           </h1>
           <p className="mb-6 max-w-2xl text-sm leading-relaxed text-zinc-400">
-            A ranked briefing of emerging agent frameworks, model updates, research,
-            MCP tools, and developer workflows.
+            <T k="digest.subtitle" />
           </p>
 
           {/* Stats row */}
           <div className="flex flex-wrap items-center gap-4 font-mono text-xs text-zinc-600">
             <span>
-              <span className="text-zinc-300">{totalItems}</span> items curated
+              <span className="text-zinc-300">{totalItems}</span> <T k="digest.items_curated" />
             </span>
             <span>·</span>
             <span>
-              <span className="text-zinc-300">{visibleSections.length}</span> sections
+              <span className="text-zinc-300">{visibleSections.length}</span> <T k="digest.sections" />
             </span>
             <span>·</span>
-            <span>ranked by AI relevance &amp; community signal</span>
+            <span><T k="digest.ranked_by" /></span>
           </div>
         </section>
 
@@ -103,11 +106,10 @@ export default async function DigestPage() {
         <section className="border-b border-zinc-800 py-8">
           <div className="rounded-lg border border-zinc-800 bg-zinc-900/60 px-6 py-5">
             <p className="mb-1 font-mono text-xs uppercase tracking-widest text-zinc-600">
-              Editor&apos;s note
+              <T k="digest.editors_note" />
             </p>
             <p className="text-sm leading-relaxed text-zinc-300">
-              AgentRadar is tracking high-signal activity across AI agents, model APIs, MCP
-              tooling, code agents, research, and developer infrastructure.
+              <T k="digest.editors_text" />
             </p>
           </div>
         </section>
@@ -115,7 +117,7 @@ export default async function DigestPage() {
         {/* ── Table of contents ───────────────────────────────────────────── */}
         <section className="border-b border-zinc-800 py-6">
           <p className="mb-4 font-mono text-xs uppercase tracking-widest text-zinc-600">
-            In this digest
+            <T k="digest.in_this_digest" />
           </p>
           <ol className="space-y-1.5">
             {visibleSections.map((s, i) => (
@@ -130,7 +132,7 @@ export default async function DigestPage() {
                   {s.title}
                 </a>
                 <span className="font-mono text-xs text-zinc-700">
-                  {s.items.length} item{s.items.length !== 1 ? 's' : ''}
+                  {s.items.length} <T k={s.items.length !== 1 ? 'digest.items' : 'digest.item'} />
                 </span>
               </li>
             ))}
@@ -155,11 +157,15 @@ export default async function DigestPage() {
         <div className="mx-auto max-w-4xl px-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <span className="font-mono text-xs text-zinc-600">
-              AgentRadar — built with Next.js, Supabase, and Claude
+              <T k="footer.built_with" />
             </span>
             <div className="flex items-center gap-4 font-mono text-xs text-zinc-700">
-              <Link href="/" className="transition-colors hover:text-zinc-400">← feed</Link>
-              <Link href="/search" className="transition-colors hover:text-zinc-400">search</Link>
+              <Link href="/" className="transition-colors hover:text-zinc-400">
+                <T k="nav.back_feed" />
+              </Link>
+              <Link href="/search" className="transition-colors hover:text-zinc-400">
+                <T k="nav.search" />
+              </Link>
             </div>
           </div>
         </div>
@@ -189,7 +195,7 @@ function DigestSectionBlock({
           </span>
           <h2 className="font-mono text-lg font-bold text-zinc-100">{section.title}</h2>
           <span className="font-mono text-xs text-zinc-700">
-            top {Math.min(section.items.length, ITEMS_PER_SECTION)}
+            <T k="digest.top" /> {Math.min(section.items.length, ITEMS_PER_SECTION)}
           </span>
         </div>
         <p className="pl-8 text-sm text-zinc-500">{section.description}</p>
@@ -199,7 +205,7 @@ function DigestSectionBlock({
       {summary && (
         <div className="mb-6 rounded-lg border-l-2 border-indigo-600 bg-zinc-900 px-5 py-4">
           <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-zinc-600">
-            This week
+            <T k="digest.this_week_label" />
           </p>
           <p className="text-sm leading-relaxed text-zinc-300">{summary}</p>
         </div>
@@ -275,9 +281,9 @@ function DigestRow({ item, rank }: { item: HomepageItem; rank: number }) {
         {/* GitHub signals inline */}
         {item.github_stars != null && (
           <p className="mt-1 font-mono text-xs text-zinc-700">
-            ⭐ {item.github_stars.toLocaleString()} stars
+            ⭐ {item.github_stars.toLocaleString()} <T k="common.stars" />
             {item.github_forks != null && item.github_forks > 0 && (
-              <span className="ml-2">· {item.github_forks.toLocaleString()} forks</span>
+              <span className="ml-2">· {item.github_forks.toLocaleString()} <T k="common.forks" /></span>
             )}
             {item.github_language && (
               <span className="ml-2">· {item.github_language}</span>
@@ -288,9 +294,9 @@ function DigestRow({ item, rank }: { item: HomepageItem; rank: number }) {
         {/* HN signals inline */}
         {item.hn_points != null && (
           <p className="mt-1 font-mono text-xs text-zinc-700">
-            ▲ {item.hn_points} points
+            ▲ {item.hn_points} <T k="common.points" />
             {item.hn_comments != null && item.hn_comments > 0 && (
-              <span className="ml-2">· {item.hn_comments} comments</span>
+              <span className="ml-2">· {item.hn_comments} <T k="common.comments" /></span>
             )}
           </p>
         )}

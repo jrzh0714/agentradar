@@ -1,13 +1,15 @@
+import type { ReactNode } from 'react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { ItemCard } from '@/components/ItemCard'
+import { T } from '@/components/T'
 import type { HomepageItem } from '@/lib/db/homepage'
 
 interface ItemSectionProps {
-  title: string
-  description?: string
+  title: ReactNode
+  description?: ReactNode
   items: HomepageItem[]
-  emptyMessage?: string
+  emptyMessage?: ReactNode
   /** Number of grid columns on larger viewports. Defaults to 2. */
   columns?: 2 | 3
   /** Show compact cards (no why_it_matters, fewer tags). */
@@ -21,12 +23,14 @@ export function ItemSection({
   title,
   description,
   items,
-  emptyMessage = 'No items available yet.',
+  emptyMessage,
   columns = 2,
   compact = false,
   viewAllHref,
   className,
 }: ItemSectionProps) {
+  const empty = emptyMessage ?? <T k="section.empty_default" />
+
   return (
     <section className={cn('', className)}>
       {/* Section header */}
@@ -49,7 +53,7 @@ export function ItemSection({
             href={viewAllHref}
             className="group mt-0.5 shrink-0 flex items-center gap-1 font-mono text-xs text-zinc-500 transition-colors hover:text-zinc-200"
           >
-            See all
+            <T k="common.see_all" />
             <span className="transition-transform group-hover:translate-x-0.5">→</span>
           </Link>
         )}
@@ -58,7 +62,7 @@ export function ItemSection({
       {/* Grid or empty state */}
       {items.length === 0 ? (
         <div className="flex min-h-[120px] items-center justify-center rounded-xl border border-dashed border-zinc-800 bg-zinc-900/50">
-          <p className="font-mono text-xs text-zinc-600">{emptyMessage}</p>
+          <p className="font-mono text-xs text-zinc-600">{empty}</p>
         </div>
       ) : (
         <div

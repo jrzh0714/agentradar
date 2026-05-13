@@ -15,6 +15,8 @@ import { HnPrefixBadge } from '@/components/ui/HnPrefixBadge'
 import { getDisplayTitle, getTitlePrefix } from '@/lib/ingestion/title'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { LanguageToggle } from '@/components/LanguageToggle'
+import { TranslatedText } from '@/components/TranslatedText'
+import { T } from '@/components/T'
 
 // ── Metadata ───────────────────────────────────────────────────────────────────
 
@@ -63,15 +65,15 @@ export default async function ItemDetailPage({
               AgentRadar
             </Link>
             <span className="rounded-full bg-zinc-800 px-2 py-0.5 font-mono text-xs text-zinc-500">
-              beta
+              <T k="common.beta" />
             </span>
           </div>
           <nav className="flex items-center gap-3 sm:gap-6 font-mono text-xs text-zinc-500">
             <Link href="/search" className="transition-colors hover:text-zinc-200">
-              search
+              <T k="nav.search" />
             </Link>
             <Link href="/digest" className="hidden sm:inline transition-colors hover:text-zinc-200">
-              digest
+              <T k="nav.digest" />
             </Link>
             <LanguageToggle />
             <ThemeToggle />
@@ -85,7 +87,7 @@ export default async function ItemDetailPage({
         <nav className="mb-8 flex items-center gap-2 font-mono text-xs text-zinc-600">
           <Link href="/" className="flex items-center gap-1 transition-colors hover:text-zinc-300">
             <span>←</span>
-            <span>home</span>
+            <span><T k="nav.home" /></span>
           </Link>
           {item.ai_category && (
             <>
@@ -114,19 +116,19 @@ export default async function ItemDetailPage({
           {/* Source metadata row */}
           <div className="mb-5 flex flex-wrap items-center gap-4 font-mono text-xs text-zinc-500">
             {item.author && (
-              <span>by <span className="text-zinc-400">{item.author}</span></span>
+              <span><T k="common.by" /> <span className="text-zinc-400">{item.author}</span></span>
             )}
             {dateLabel && (
-              <span>published <span className="text-zinc-400">{dateLabel}</span></span>
+              <span><T k="common.published" /> <span className="text-zinc-400">{dateLabel}</span></span>
             )}
             {item.source === 'github' && item.github_stars != null && (
               <span className="flex items-center gap-1">
                 <span>⭐</span>
                 <span className="tabular-nums text-zinc-400">{formatCount(item.github_stars)}</span>
-                <span>stars</span>
+                <T k="common.stars" />
                 {item.github_forks != null && item.github_forks > 0 && (
                   <span className="text-zinc-600">
-                    · {formatCount(item.github_forks)} forks
+                    · {formatCount(item.github_forks)} <T k="common.forks" />
                   </span>
                 )}
                 {item.github_language && (
@@ -138,9 +140,9 @@ export default async function ItemDetailPage({
               <span className="flex items-center gap-1">
                 <span className="text-orange-600">▲</span>
                 <span className="tabular-nums text-zinc-400">{item.hn_points}</span>
-                <span>points</span>
+                <T k="common.points" />
                 {item.hn_comments != null && item.hn_comments > 0 && (
-                  <span className="text-zinc-600">· {item.hn_comments} comments</span>
+                  <span className="text-zinc-600">· {item.hn_comments} <T k="common.comments" /></span>
                 )}
               </span>
             )}
@@ -154,7 +156,7 @@ export default async function ItemDetailPage({
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 font-mono text-xs text-zinc-300 transition-colors hover:border-zinc-500 hover:text-zinc-100 dark:hover:text-white"
             >
-              View source
+              <T k="common.view_source" />
               <span>↗</span>
             </a>
           )}
@@ -165,23 +167,32 @@ export default async function ItemDetailPage({
         {/* ── AI Briefing ────────────────────────────────────────────────────── */}
         <section className="mb-10 space-y-6">
           <h2 className="font-mono text-xs font-semibold uppercase tracking-widest text-zinc-600">
-            AI Briefing
+            <T k="item.ai_briefing" />
           </h2>
 
           {/* Summary */}
           {item.ai_summary?.trim() ? (
             <div>
-              <h3 className="mb-2 font-mono text-sm font-semibold text-zinc-300">Summary</h3>
-              <p className="text-sm leading-relaxed text-zinc-400">{item.ai_summary}</p>
+              <h3 className="mb-2 font-mono text-sm font-semibold text-zinc-300">
+                <T k="item.summary" />
+              </h3>
+              <TranslatedText
+                as="p"
+                en={item.ai_summary}
+                zh={item.ai_summary_zh ?? null}
+                className="text-sm leading-relaxed text-zinc-400"
+              />
             </div>
           ) : item.description?.trim() ? (
             <div>
-              <h3 className="mb-2 font-mono text-sm font-semibold text-zinc-300">Description</h3>
+              <h3 className="mb-2 font-mono text-sm font-semibold text-zinc-300">
+                <T k="item.description" />
+              </h3>
               <p className="text-sm leading-relaxed text-zinc-400">{item.description}</p>
             </div>
           ) : (
             <p className="text-sm italic text-zinc-600">
-              No AI summary yet — this item may still be processing.
+              <T k="item.no_summary" />
             </p>
           )}
 
@@ -189,9 +200,14 @@ export default async function ItemDetailPage({
           {item.ai_why_it_matters?.trim() && (
             <div className="rounded-lg border-l-2 border-zinc-600 bg-zinc-900 px-5 py-4">
               <h3 className="mb-2 font-mono text-xs font-semibold uppercase tracking-wider text-zinc-500">
-                Why it matters
+                <T k="item.why_it_matters" />
               </h3>
-              <p className="text-sm leading-relaxed text-zinc-300">{item.ai_why_it_matters}</p>
+              <TranslatedText
+                as="p"
+                en={item.ai_why_it_matters}
+                zh={item.ai_why_it_matters_zh ?? null}
+                className="text-sm leading-relaxed text-zinc-300"
+              />
             </div>
           )}
         </section>
@@ -199,34 +215,34 @@ export default async function ItemDetailPage({
         {/* ── Classification ─────────────────────────────────────────────────── */}
         <section className="mb-10 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
           <h2 className="mb-5 font-mono text-xs font-semibold uppercase tracking-widest text-zinc-600">
-            Classification
+            <T k="item.classification" />
           </h2>
 
           <div className="space-y-4">
             {/* Tags */}
             {item.ai_tags && item.ai_tags.length > 0 && (
-              <Row label="Tags">
+              <Row label={<T k="item.tags" />}>
                 <TagList tags={item.ai_tags} max={10} />
               </Row>
             )}
 
             {/* Audience */}
             {item.ai_audience && item.ai_audience.length > 0 && (
-              <Row label="Audience">
+              <Row label={<T k="item.audience" />}>
                 <span className="text-sm text-zinc-300">{item.ai_audience.join(', ')}</span>
               </Row>
             )}
 
             {/* Scores */}
             {relScore != null && (
-              <Row label="AI Relevance">
+              <Row label={<T k="item.ai_relevance" />}>
                 <span className="font-mono text-sm tabular-nums text-zinc-300">
                   {relScore.toFixed(1)} / 10
                 </span>
               </Row>
             )}
             {item.ranking_score != null && (
-              <Row label="Radar Score">
+              <Row label={<T k="item.radar_score" />}>
                 <span className="font-mono text-sm tabular-nums text-zinc-300">
                   {item.ranking_score.toFixed(2)}
                 </span>
@@ -235,15 +251,15 @@ export default async function ItemDetailPage({
 
             {/* Dates */}
             {dateLabel && (
-              <Row label="Published">{dateLabel}</Row>
+              <Row label={<T k="item.published" />}>{dateLabel}</Row>
             )}
             {createdLabel && (
-              <Row label="Indexed">{createdLabel}</Row>
+              <Row label={<T k="item.indexed" />}>{createdLabel}</Row>
             )}
 
             {/* Source ID */}
             {item.source_id && item.source === 'github' && (
-              <Row label="Repository">
+              <Row label={<T k="item.repository" />}>
                 <a
                   href={`https://github.com/${item.source_id}`}
                   target="_blank"
@@ -261,7 +277,7 @@ export default async function ItemDetailPage({
         {related.length > 0 && (
           <section>
             <h2 className="mb-5 font-mono text-xs font-semibold uppercase tracking-widest text-zinc-600">
-              Related Items
+              <T k="item.related_items" />
             </h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {related.map((r) => (
@@ -277,13 +293,13 @@ export default async function ItemDetailPage({
         <div className="mx-auto max-w-4xl px-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <span className="font-mono text-xs text-zinc-600">
-              AgentRadar — built with Next.js, Supabase, and Claude
+              <T k="footer.built_with" />
             </span>
             <Link
               href="/"
               className="font-mono text-xs text-zinc-700 transition-colors hover:text-zinc-400"
             >
-              ← back to feed
+              <T k="nav.back_feed" />
             </Link>
           </div>
         </div>
@@ -294,11 +310,13 @@ export default async function ItemDetailPage({
 
 // ── Small helper ──────────────────────────────────────────────────────────────
 
+import type { ReactNode } from 'react'
+
 function Row({
   label,
   children,
 }: {
-  label: string
+  label: ReactNode
   children: React.ReactNode
 }) {
   return (

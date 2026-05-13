@@ -9,6 +9,7 @@ import { ScrollToTop } from '@/components/ScrollToTop'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { LanguageToggle } from '@/components/LanguageToggle'
 import { TranslatedText } from '@/components/TranslatedText'
+import { T } from '@/components/T'
 import {
   getTopPicks,
   getLatestHighSignal,
@@ -56,18 +57,18 @@ export default async function HomePage() {
               AgentRadar
             </span>
             <span className="rounded-full bg-zinc-800 px-2 py-0.5 font-mono text-xs text-zinc-500">
-              beta
+              <T k="common.beta" />
             </span>
           </div>
           <nav className="flex items-center gap-3 sm:gap-6 font-mono text-xs text-zinc-500">
             <Link href="/search" className="transition-colors hover:text-zinc-200">
-              search
+              <T k="nav.search" />
             </Link>
             <Link href="/digest" className="hidden sm:inline transition-colors hover:text-zinc-200">
-              digest
+              <T k="nav.digest" />
             </Link>
             <Link href="/status" className="hidden sm:inline transition-colors hover:text-zinc-200">
-              status
+              <T k="nav.status" />
             </Link>
             <LanguageToggle />
             <ThemeToggle />
@@ -83,10 +84,12 @@ export default async function HomePage() {
           <div className="relative z-10">
             <div className="mb-3 flex items-center gap-2">
               <span className="inline-block h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_8px_2px_rgba(52,211,153,0.4)]" />
-              <span className="font-mono text-xs text-emerald-500">updated daily</span>
+              <span className="font-mono text-xs text-emerald-500">
+                <T k="common.updated_daily" />
+              </span>
               {stats.lastUpdatedAt && (
                 <span className="font-mono text-xs text-zinc-600">
-                  · last updated {formatRelativeDate(stats.lastUpdatedAt)}
+                  · <T k="common.last_updated" /> {formatRelativeDate(stats.lastUpdatedAt)}
                 </span>
               )}
             </div>
@@ -96,22 +99,19 @@ export default async function HomePage() {
             </h1>
 
             <p className="mb-3 max-w-2xl font-description text-lg leading-relaxed text-zinc-300">
-              Track emerging AI agents, developer tools, open-source projects, and model
-              updates in one curated feed.
+              <T k="home.tagline" />
             </p>
 
             <p className="mb-10 max-w-2xl font-description text-sm leading-relaxed text-zinc-500">
-              Items are continuously ingested from GitHub, Hacker News, and technical blogs,
-              enriched by AI to extract category, maturity, and relevance, then ranked by a
-              composite score that weighs signal quality, recency, and community adoption.
+              <T k="home.description" />
             </p>
 
             {/* Stats strip */}
             <div className="flex flex-wrap gap-6">
-              <Stat value={formatCount(stats.total)} label="enriched items" />
-              <Stat value={formatCount(stats.github)} label="GitHub repos" indicator="bg-emerald-500" />
-              <Stat value={formatCount(stats.rss)} label="RSS articles" indicator="bg-sky-500" />
-              <Stat value={String(stats.hackernews)} label="HN stories" indicator="bg-orange-500" />
+              <Stat value={formatCount(stats.total)} labelKey="home.enriched_items" />
+              <Stat value={formatCount(stats.github)} labelKey="home.github_repos" indicator="bg-emerald-500" />
+              <Stat value={formatCount(stats.rss)} labelKey="home.rss_articles" indicator="bg-sky-500" />
+              <Stat value={String(stats.hackernews)} labelKey="home.hn_stories" indicator="bg-orange-500" />
             </div>
           </div>
         </section>
@@ -122,16 +122,16 @@ export default async function HomePage() {
           <div className="mb-6 flex items-center justify-between">
             <div>
               <h2 className="font-mono text-sm font-semibold uppercase tracking-widest text-zinc-300">
-                This week
+                <T k="home.this_week" />
               </h2>
               <p className="mt-1 font-mono text-xs text-zinc-600">
-                Emerging frameworks &amp; articles — up-and-coming, not already famous
+                <T k="home.this_week_desc" />
               </p>
             </div>
             <div className="flex items-center gap-3">
               {trendingItems.length > 0 && (
                 <span className="rounded-full border border-orange-800/40 bg-orange-950/30 px-2.5 py-1 font-mono text-[10px] text-orange-400">
-                  {trendingItems.length} trending ↑
+                  {trendingItems.length} <T k="common.trending" />
                 </span>
               )}
             </div>
@@ -166,7 +166,7 @@ export default async function HomePage() {
                     )}
                     {item.trending && (
                       <span className="rounded border border-orange-800/50 bg-orange-950/40 px-1.5 py-0.5 font-mono text-[10px] text-orange-400">
-                        ↑ trending
+                        <T k="common.trending" />
                       </span>
                     )}
                     {dateLabel && (
@@ -219,7 +219,7 @@ export default async function HomePage() {
               href="/digest"
               className="group flex items-center gap-1.5 font-mono text-xs text-zinc-500 transition-colors hover:text-zinc-200"
             >
-              View full weekly digest
+              <T k="home.view_digest" />
               <span className="transition-transform group-hover:translate-x-0.5">→</span>
             </Link>
           </div>
@@ -233,43 +233,43 @@ export default async function HomePage() {
 
           {/* 1. Top Picks */}
           <ItemSection
-            title="Top Picks"
-            description="Highest-signal tools and updates across all sources."
+            title={<T k="section.top_picks" />}
+            description={<T k="section.top_picks_desc" />}
             items={topPicks}
             columns={3}
             compact
             viewAllHref="/search"
-            emptyMessage="No top picks yet — run enrichment and ranking first."
+            emptyMessage={<T k="section.empty_top_picks" />}
           />
 
           {/* 2. AI News & Research */}
           <ItemSection
-            title="AI News & Research"
-            description="Model launches, research papers, and platform updates from blogs and HN."
+            title={<T k="section.ai_news" />}
+            description={<T k="section.ai_news_desc" />}
             items={aiNews}
             columns={2}
             viewAllHref="/search?category=Research"
-            emptyMessage="No news or research items found."
+            emptyMessage={<T k="section.empty_news" />}
           />
 
           {/* 3. Latest High-Signal */}
           <ItemSection
-            title="Latest High-Signal Updates"
-            description="Recently published items with strong AI/engineering relevance."
+            title={<T k="section.latest" />}
+            description={<T k="section.latest_desc" />}
             items={latestSignal}
             columns={2}
             viewAllHref="/search?sort=newest"
-            emptyMessage="No recent items found."
+            emptyMessage={<T k="section.empty_latest" />}
           />
 
           {/* 4. Agent & MCP Tools */}
           <ItemSection
-            title="Agent & MCP Tools"
-            description="Frameworks, tool-use libraries, and automation platforms for AI builders."
+            title={<T k="section.agent_tools" />}
+            description={<T k="section.agent_tools_desc" />}
             items={agentTools}
             columns={2}
             viewAllHref="/search?category=AI+Agents"
-            emptyMessage="No agent or MCP tools found."
+            emptyMessage={<T k="section.empty_agents" />}
           />
 
         </div>
@@ -280,15 +280,15 @@ export default async function HomePage() {
         <div className="mx-auto max-w-6xl px-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <span className="font-mono text-xs text-zinc-600">
-              AgentRadar — built with Next.js, Supabase, and Claude
+              <T k="footer.built_with" />
             </span>
             <div className="flex flex-wrap items-center gap-3 font-mono text-xs text-zinc-700">
-              <span>{formatCount(stats.total)} items indexed</span>
+              <span>{formatCount(stats.total)} <T k="home.items_indexed" /></span>
               <span>·</span>
-              <span>AI-enriched &amp; ranked</span>
+              <span><T k="home.ai_enriched_ranked" /></span>
               <span>·</span>
               <span className="text-zinc-500">
-                Built by{' '}
+                <T k="footer.built_by" />{' '}
                 <a
                   href="https://www.linkedin.com/in/jzheng44/"
                   target="_blank"
@@ -326,20 +326,22 @@ export default async function HomePage() {
 
 // ── Small helpers ─────────────────────────────────────────────────────────────
 
+import type { TranslationKey } from '@/lib/i18n'
+
 function Stat({
   value,
-  label,
+  labelKey,
   indicator,
 }: {
   value: string
-  label: string
+  labelKey: TranslationKey
   indicator?: string
 }) {
   return (
     <div className="flex items-center gap-2">
       {indicator && <span className={`h-2 w-2 rounded-full ${indicator}`} />}
       <span className="font-mono text-sm font-semibold text-zinc-100">{value}</span>
-      <span className="font-mono text-sm text-zinc-500">{label}</span>
+      <span className="font-mono text-sm text-zinc-500"><T k={labelKey} /></span>
     </div>
   )
 }

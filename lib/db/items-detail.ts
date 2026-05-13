@@ -25,7 +25,9 @@ export type DetailItem = Pick<
   | 'hn_points'
   | 'hn_comments'
   | 'ai_summary'
+  | 'ai_summary_zh'
   | 'ai_why_it_matters'
+  | 'ai_why_it_matters_zh'
   | 'ai_category'
   | 'ai_tags'
   | 'ai_maturity'
@@ -46,8 +48,9 @@ const DETAIL_SELECT = [
   'published_at', 'created_at',
   'github_stars', 'github_forks', 'github_language',
   'hn_points', 'hn_comments',
-  'ai_summary', 'ai_why_it_matters', 'ai_category', 'ai_tags',
-  'ai_audience', 'ai_maturity', 'ai_relevance_score', 'ranking_score', 'trending',
+  'ai_summary', 'ai_summary_zh', 'ai_why_it_matters', 'ai_why_it_matters_zh',
+  'ai_category', 'ai_tags', 'ai_audience', 'ai_maturity',
+  'ai_relevance_score', 'ranking_score', 'trending',
 ].join(', ')
 
 // Matches HomepageItem exactly — used for related items so ItemCard works without a cast.
@@ -55,8 +58,8 @@ const RELATED_SELECT = [
   'id', 'title', 'url', 'source', 'description', 'published_at',
   'github_stars', 'github_forks', 'github_language',
   'hn_points', 'hn_comments',
-  'ai_summary', 'ai_why_it_matters', 'ai_category', 'ai_tags', 'ai_maturity',
-  'ai_relevance_score', 'ranking_score', 'trending',
+  'ai_summary', 'ai_summary_zh', 'ai_why_it_matters', 'ai_why_it_matters_zh',
+  'ai_category', 'ai_tags', 'ai_maturity', 'ai_relevance_score', 'ranking_score', 'trending',
 ].join(', ')
 
 // ── getItemById ────────────────────────────────────────────────────────────────

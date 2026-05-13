@@ -5,10 +5,12 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ItemCard } from '@/components/ItemCard'
 import { SearchControls } from './SearchControls'
+import { SearchResultsLabel, SortedByLabel } from './SearchResultsLabel'
 import { searchItems } from '@/lib/db/search'
 import type { DateRange, SearchSort } from '@/lib/db/search'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { LanguageToggle } from '@/components/LanguageToggle'
+import { T } from '@/components/T'
 
 // ── Metadata ──────────────────────────────────────────────────────────────────
 
@@ -45,16 +47,6 @@ function parseFloat_(raw: string | string[] | undefined): number {
   return isFinite(n) ? n : 0
 }
 
-// ── Sort label ────────────────────────────────────────────────────────────────
-
-const SORT_LABELS: Record<SearchSort, string> = {
-  ranking: 'radar score',
-  newest: 'publish date',
-  relevance: 'AI relevance',
-  stars: 'GitHub stars',
-  discussed: 'HN discussion',
-}
-
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default async function SearchPage({
@@ -74,10 +66,6 @@ export default async function SearchPage({
 
   const results = await searchItems({ q, source, category, maturity, minScore, dateRange, sort })
 
-  const resultLabel = q
-    ? `${results.length} result${results.length !== 1 ? 's' : ''} for "${q}"`
-    : `${results.length} high-signal item${results.length !== 1 ? 's' : ''}`
-
   return (
     <div className="flex min-h-screen flex-col bg-zinc-950">
       {/* ── Header ─────────────────────────────────────────────────────────── */}
@@ -88,15 +76,15 @@ export default async function SearchPage({
               AgentRadar
             </Link>
             <span className="rounded-full bg-zinc-800 px-2 py-0.5 font-mono text-xs text-zinc-500">
-              beta
+              <T k="common.beta" />
             </span>
           </div>
           <nav className="flex items-center gap-3 sm:gap-6 font-mono text-xs text-zinc-500">
             <Link href="/search" className="text-zinc-200">
-              search
+              <T k="nav.search" />
             </Link>
             <Link href="/digest" className="hidden sm:inline transition-colors hover:text-zinc-200">
-              digest
+              <T k="nav.digest" />
             </Link>
             <LanguageToggle />
             <ThemeToggle />
@@ -107,9 +95,11 @@ export default async function SearchPage({
       <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-10">
         {/* ── Page title ─────────────────────────────────────────────────── */}
         <div className="mb-6">
-          <h1 className="mb-1 font-mono text-xl font-semibold text-zinc-100">Search</h1>
+          <h1 className="mb-1 font-mono text-xl font-semibold text-zinc-100">
+            <T k="search.title" />
+          </h1>
           <p className="font-mono text-xs text-zinc-500">
-            AI-enriched tools, repos, and articles indexed from GitHub, HN, and blogs.
+            <T k="search.subtitle" />
           </p>
         </div>
 
@@ -131,10 +121,12 @@ export default async function SearchPage({
 
         {/* ── Result count ────────────────────────────────────────────────── */}
         <div className="mt-6 mb-4 flex items-center gap-2 border-b border-zinc-800 pb-4">
-          <span className="font-mono text-xs text-zinc-500">{resultLabel}</span>
+          <span className="font-mono text-xs text-zinc-500">
+            <SearchResultsLabel count={results.length} q={q} />
+          </span>
           {results.length > 0 && (
             <span className="font-mono text-xs text-zinc-700">
-              · sorted by {SORT_LABELS[sort]}
+              <SortedByLabel sort={sort} />
             </span>
           )}
         </div>
@@ -142,9 +134,11 @@ export default async function SearchPage({
         {/* ── Results ─────────────────────────────────────────────────────── */}
         {results.length === 0 ? (
           <div className="flex min-h-[240px] flex-col items-center justify-center rounded-xl border border-dashed border-zinc-800 bg-zinc-900/50">
-            <p className="mb-1 font-mono text-sm text-zinc-400">No results found</p>
+            <p className="mb-1 font-mono text-sm text-zinc-400">
+              <T k="search.no_results" />
+            </p>
             <p className="font-mono text-xs text-zinc-600">
-              {q ? 'Try a broader query or remove some filters.' : 'Try adjusting your filters.'}
+              {q ? <T k="search.no_results_q" /> : <T k="search.no_results_f" />}
             </p>
           </div>
         ) : (
@@ -160,7 +154,7 @@ export default async function SearchPage({
       <footer className="border-t border-zinc-800 py-6">
         <div className="mx-auto max-w-6xl px-6">
           <span className="font-mono text-xs text-zinc-700">
-            AgentRadar — built with Next.js, Supabase, and Claude
+            <T k="footer.built_with" />
           </span>
         </div>
       </footer>

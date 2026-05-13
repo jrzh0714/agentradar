@@ -3,6 +3,7 @@
 import { useRef, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
+import { useT } from '@/components/T'
 import type { DateRange, SearchSort } from '@/lib/db/search'
 
 // ── Constants ─────────────────────────────────────────────────────────────────
@@ -48,12 +49,12 @@ const DATE_RANGE_OPTIONS: { label: string; value: DateRange }[] = [
   { label: 'Last 90 days', value: '90d' },
 ]
 
-const SORT_OPTIONS: { label: string; value: SearchSort }[] = [
-  { label: 'Best match', value: 'ranking' },
-  { label: 'Highest relevance', value: 'relevance' },
-  { label: 'Newest', value: 'newest' },
-  { label: 'Most stars (GitHub)', value: 'stars' },
-  { label: 'Most discussed (HN)', value: 'discussed' },
+const SORT_OPTIONS: { labelKey: string; value: SearchSort }[] = [
+  { labelKey: 'search.sort_radar', value: 'ranking' },
+  { labelKey: 'search.sort_relevance', value: 'relevance' },
+  { labelKey: 'search.sort_newest', value: 'newest' },
+  { labelKey: 'search.sort_stars', value: 'stars' },
+  { labelKey: 'search.sort_discussed', value: 'discussed' },
 ]
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -118,6 +119,7 @@ export function SearchControls({
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const inputRef = useRef<HTMLInputElement>(null)
+  const t = useT()
 
   /** Build a /search URL from current state, merged with any overrides. */
   function buildUrl(overrides: Record<string, string>): string {
@@ -194,7 +196,8 @@ export function SearchControls({
     })
   }
   if (sort && sort !== 'ranking') {
-    const sortLabel = SORT_OPTIONS.find((o) => o.value === sort)?.label ?? sort
+    const sortOpt = SORT_OPTIONS.find((o) => o.value === sort)
+    const sortLabel = sortOpt ? t(sortOpt.labelKey as Parameters<typeof t>[0]) : sort
     chips.push({
       label: `sort: ${sortLabel}`,
       onRemove: () => navigate({ sort: 'ranking' }),
@@ -231,7 +234,7 @@ export function SearchControls({
             type="text"
             name="q"
             defaultValue={q}
-            placeholder="Search AgentRadar… try 'claude', 'mcp', 'rag'"
+            placeholder={t('search.placeholder')}
             className={cn(
               'w-full rounded-lg border border-zinc-700 bg-zinc-900 py-2.5 pl-9 pr-4',
               'font-mono text-sm text-zinc-100 placeholder:text-zinc-600',
@@ -246,7 +249,7 @@ export function SearchControls({
             'font-mono text-sm text-zinc-200 transition-colors hover:border-zinc-600 hover:bg-zinc-700',
           )}
         >
-          Search
+          {t('search.button')}
         </button>
       </form>
 
@@ -267,7 +270,7 @@ export function SearchControls({
                   : 'text-zinc-500 hover:text-zinc-300',
               )}
             >
-              {s === 'hackernews' ? 'HN' : s}
+              {s === 'all' ? t('search.source_all') : s === 'hackernews' ? 'HN' : s}
             </button>
           ))}
         </div>
@@ -278,7 +281,7 @@ export function SearchControls({
           onChange={(e) => navigate({ category: e.target.value })}
           className={selectCls(!!category)}
         >
-          <option value="">Category</option>
+          <option value="">{t('search.category_ph')}</option>
           {CATEGORIES.map((c) => (
             <option key={c} value={c}>{c}</option>
           ))}
@@ -323,8 +326,10 @@ export function SearchControls({
           onChange={(e) => navigate({ sort: e.target.value })}
           className={selectCls(sort !== 'ranking')}
         >
-          {SORT_OPTIONS.map(({ label, value }) => (
-            <option key={value} value={value}>{label}</option>
+          {SORT_OPTIONS.map(({ labelKey, value }) => (
+            <option key={value} value={value}>
+              {t(labelKey as Parameters<typeof t>[0])}
+            </option>
           ))}
         </select>
 
@@ -345,7 +350,7 @@ export function SearchControls({
             }
             className="ml-auto font-mono text-xs text-zinc-600 underline-offset-2 hover:text-zinc-400 hover:underline"
           >
-            clear all
+            {t('search.clear_all')}
           </button>
         )}
       </div>
@@ -353,7 +358,7 @@ export function SearchControls({
       {/* ── Active filter chips ──────────────────────────────────────────────── */}
       {chips.length > 0 && (
         <div className="flex flex-wrap items-center gap-2">
-          <span className="font-mono text-xs text-zinc-600">Active:</span>
+          <span className="font-mono text-xs text-zinc-600">{t('search.active')}</span>
           {chips.map((chip) => (
             <FilterChip key={chip.label} label={chip.label} onRemove={chip.onRemove} />
           ))}
