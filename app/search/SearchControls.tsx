@@ -94,11 +94,15 @@ function FilterChip({
 
 // ── Shared select style ───────────────────────────────────────────────────────
 
-const selectCls = cn(
-  'rounded-lg border border-zinc-800 bg-zinc-900 px-2.5 py-1.5',
-  'font-mono text-xs text-zinc-300 focus:outline-none focus:ring-1 focus:ring-zinc-600',
-  'cursor-pointer',
-)
+function selectCls(active: boolean) {
+  return cn(
+    'rounded-lg border px-2.5 py-1.5 bg-zinc-900',
+    'font-mono text-xs focus:outline-none focus:ring-1 focus:ring-zinc-500 cursor-pointer transition-colors',
+    active
+      ? 'border-zinc-500 text-zinc-100'
+      : 'border-zinc-800 text-zinc-400 hover:border-zinc-700',
+  )
+}
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
@@ -272,7 +276,7 @@ export function SearchControls({
         <select
           value={category}
           onChange={(e) => navigate({ category: e.target.value })}
-          className={cn(selectCls, !category && 'text-zinc-500')}
+          className={selectCls(!!category)}
         >
           <option value="">Category</option>
           {CATEGORIES.map((c) => (
@@ -284,7 +288,7 @@ export function SearchControls({
         <select
           value={maturity}
           onChange={(e) => navigate({ maturity: e.target.value })}
-          className={cn(selectCls, !maturity && 'text-zinc-500')}
+          className={selectCls(!!maturity)}
         >
           {MATURITY_OPTIONS.map(({ label, value }) => (
             <option key={value} value={value}>{label}</option>
@@ -295,7 +299,7 @@ export function SearchControls({
         <select
           value={String(minScore)}
           onChange={(e) => navigate({ min_score: e.target.value })}
-          className={cn(selectCls, minScore === 0 && 'text-zinc-500')}
+          className={selectCls(minScore > 0)}
         >
           {MIN_RELEVANCE_OPTIONS.map(({ label, value }) => (
             <option key={value} value={value}>{label}</option>
@@ -306,7 +310,7 @@ export function SearchControls({
         <select
           value={dateRange}
           onChange={(e) => navigate({ date_range: e.target.value })}
-          className={cn(selectCls, dateRange === 'all' && 'text-zinc-500')}
+          className={selectCls(dateRange !== 'all')}
         >
           {DATE_RANGE_OPTIONS.map(({ label, value }) => (
             <option key={value} value={value}>{label}</option>
@@ -317,7 +321,7 @@ export function SearchControls({
         <select
           value={sort}
           onChange={(e) => navigate({ sort: e.target.value })}
-          className={selectCls}
+          className={selectCls(sort !== 'ranking')}
         >
           {SORT_OPTIONS.map(({ label, value }) => (
             <option key={value} value={value}>{label}</option>

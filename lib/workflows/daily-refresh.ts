@@ -22,6 +22,7 @@ import { runDataQualityCheck } from '@/lib/workflows/data-quality'
 import { runDigestSummaries } from '@/lib/workflows/digest-summaries'
 import { runTranslation } from '@/lib/workflows/translation'
 import type { CostEstimate } from '@/lib/workflows/cost-estimation'
+import { logPipelineRun } from '@/lib/db/pipeline-runs'
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -377,7 +378,7 @@ export async function runDailyRefresh(
       return null
     })
 
-    return {
+    const successResult: RefreshResult = {
       success: !billingAbort,
       ingestionCounts,
       titleFixedCount,
@@ -400,10 +401,12 @@ export async function runDailyRefresh(
         ? { error: 'Enrichment aborted — provider billing/quota error.' }
         : {}),
     }
+    await logPipelineRun(successResult)
+    return successResult
   } catch (err) {
     const error = err instanceof Error ? err.message : String(err)
     console.error('[daily-refresh] Fatal error:', error)
-    return {
+    const failResult: RefreshResult = {
       success: false,
       ingestionCounts: { github: 0, hn: 0, rss: 0 },
       titleFixedCount: 0,
@@ -419,5 +422,7 @@ export async function runDailyRefresh(
       durationMs: Date.now() - start,
       error,
     }
+    await logPipelineRun(failResult)
+    return failResult
   }
 }

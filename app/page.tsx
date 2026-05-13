@@ -66,6 +66,9 @@ export default async function HomePage() {
             <Link href="/digest" className="transition-colors hover:text-zinc-200">
               digest
             </Link>
+            <Link href="/status" className="transition-colors hover:text-zinc-200">
+              status
+            </Link>
             <LanguageToggle />
             <ThemeToggle />
           </nav>
@@ -235,6 +238,7 @@ export default async function HomePage() {
             items={topPicks}
             columns={3}
             compact
+            viewAllHref="/search"
             emptyMessage="No top picks yet — run enrichment and ranking first."
           />
 
@@ -244,6 +248,7 @@ export default async function HomePage() {
             description="Model launches, research papers, and platform updates from blogs and HN."
             items={aiNews}
             columns={2}
+            viewAllHref="/search?category=Research"
             emptyMessage="No news or research items found."
           />
 
@@ -253,6 +258,7 @@ export default async function HomePage() {
             description="Recently published items with strong AI/engineering relevance."
             items={latestSignal}
             columns={2}
+            viewAllHref="/search?sort=newest"
             emptyMessage="No recent items found."
           />
 
@@ -262,6 +268,7 @@ export default async function HomePage() {
             description="Frameworks, tool-use libraries, and automation platforms for AI builders."
             items={agentTools}
             columns={2}
+            viewAllHref="/search?category=AI+Agents"
             emptyMessage="No agent or MCP tools found."
           />
 
