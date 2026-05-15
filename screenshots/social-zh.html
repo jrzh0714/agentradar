@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1080px;
+    height: 1440px;
+    background: #09090b;
+    font-family: 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+    overflow: hidden;
+    position: relative;
+    color: #f4f4f5;
+  }
+
+  .bg-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(249,115,22,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(249,115,22,0.04) 1px, transparent 1px);
+    background-size: 54px 54px;
+  }
+  .glow-top {
+    position: absolute; top: -150px; right: -80px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(249,115,22,0.1) 0%, transparent 65%);
+  }
+  .glow-mid {
+    position: absolute; top: 680px; left: -80px;
+    width: 450px; height: 450px;
+    background: radial-gradient(circle, rgba(52,211,153,0.07) 0%, transparent 65%);
+  }
+  .glow-bot {
+    position: absolute; bottom: -80px; right: -80px;
+    width: 450px; height: 450px;
+    background: radial-gradient(circle, rgba(56,189,248,0.06) 0%, transparent 65%);
+  }
+
+  .page {
+    position: relative; z-index: 1;
+    padding: 52px 68px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  /* Header */
+  .header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 40px;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 8px 2px rgba(16,185,129,0.5);
+  }
+  .brand-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 17px; font-weight: 700; color: #f4f4f5;
+  }
+  .badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: #71717a;
+    background: #18181b; border: 1px solid #27272a;
+    padding: 2px 8px; border-radius: 20px;
+  }
+  .updated {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: #52525b;
+  }
+
+  /* Hero */
+  .hero { margin-bottom: 28px; }
+  .hero-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: #f97316;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .hero-label::before {
+    content: '';
+    display: inline-block; width: 20px; height: 1px;
+    background: #f97316; opacity: 0.5;
+  }
+  .hero h1 {
+    font-size: 50px; font-weight: 700;
+    line-height: 1.15; letter-spacing: -1.5px;
+    color: #f4f4f5; margin-bottom: 12px;
+  }
+  .hero h1 .accent { color: #f97316; }
+  .hero p {
+    font-size: 15px; color: #71717a; line-height: 1.7;
+    max-width: 680px;
+  }
+
+  /* Stats */
+  .stats {
+    display: flex; gap: 0; margin-bottom: 28px;
+    border: 1px solid #1c1c1e; border-radius: 10px;
+    overflow: hidden; background: rgba(24,24,27,0.5);
+  }
+  .stat {
+    flex: 1; padding: 16px 22px;
+    border-right: 1px solid #1c1c1e;
+  }
+  .stat:last-child { border-right: none; }
+  .stat-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 24px; font-weight: 700; color: #f4f4f5;
+    letter-spacing: -1px; display: block;
+  }
+  .stat-label { font-size: 11px; color: #52525b; }
+
+  /* Screenshots — main wide + 2 small side by side */
+  .screens {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    grid-template-rows: auto;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .screen-wrap {
+    border-radius: 9px; overflow: hidden;
+    border: 1px solid #27272a; background: #111113;
+  }
+  .screen-bar {
+    background: #18181b; border-bottom: 1px solid #27272a;
+    padding: 6px 10px;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .sdot { width: 7px; height: 7px; border-radius: 50%; }
+  .sdot-r { background:#ef4444; opacity:.6; }
+  .sdot-y { background:#f59e0b; opacity:.6; }
+  .sdot-g { background:#22c55e; opacity:.6; }
+  .screen-bar-url {
+    flex: 1; margin: 0 7px;
+    background: #09090b; border: 1px solid #27272a; border-radius: 3px;
+    height: 13px; display: flex; align-items: center; padding: 0 6px;
+  }
+  .screen-bar-url span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7px; color: #3f3f46;
+  }
+  .screen-img {
+    width: 100%; display: block;
+    object-fit: cover; object-position: top;
+  }
+  .screen-main { grid-row: 1 / 3; }
+  .screen-main .screen-img { height: 270px; }
+  .screen-side .screen-img  { height: 125px; }
+
+  /* Features */
+  .features {
+    flex: 1;
+    display: flex; flex-direction: column; gap: 0;
+    border: 1px solid #1c1c1e; border-radius: 10px;
+    overflow: hidden; background: rgba(24,24,27,0.4);
+    margin-bottom: 28px;
+  }
+  .feat {
+    display: flex; align-items: center; gap: 14px;
+    padding: 13px 22px;
+    border-bottom: 1px solid #1c1c1e;
+    flex: 1;
+  }
+  .feat:last-child { border-bottom: none; }
+  .feat-icon {
+    width: 30px; height: 30px; border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-size: 13px;
+  }
+  .feat-icon.orange { background: rgba(249,115,22,0.1); color: #f97316; border: 1px solid rgba(249,115,22,0.2); }
+  .feat-icon.green  { background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
+  .feat-icon.sky    { background: rgba(56,189,248,0.1); color: #38bdf8; border: 1px solid rgba(56,189,248,0.2); }
+  .feat-title { font-size: 14px; font-weight: 700; color: #e4e4e7; margin-bottom: 1px; }
+  .feat-desc  { font-size: 12px; color: #52525b; line-height: 1.5; }
+
+  /* CTA */
+  .cta {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 28px;
+    background: rgba(249,115,22,0.06);
+    border: 1px solid rgba(249,115,22,0.2);
+    border-radius: 10px;
+  }
+  .cta-title { font-size: 17px; font-weight: 700; color: #f4f4f5; margin-bottom: 3px; }
+  .cta-sub   { font-size: 12px; color: #71717a; }
+  .cta-url {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; color: #f97316;
+    background: rgba(249,115,22,0.1);
+    border: 1px solid rgba(249,115,22,0.3);
+    padding: 9px 18px; border-radius: 7px; white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="glow-top"></div>
+  <div class="glow-mid"></div>
+  <div class="glow-bot"></div>
+
+  <div class="page">
+
+    <div class="header">
+      <div class="brand">
+        <div class="brand-dot"></div>
+        <span class="brand-name">AgentRadar</span>
+        <span class="badge">beta</span>
+      </div>
+      <span class="updated">每日更新 · 免费使用</span>
+    </div>
+
+    <div class="hero">
+      <div class="hero-label">AI 生态追踪工具</div>
+      <h1>发现下一个<span class="accent">爆款</span><br>AI 框架 — 就用<br>AgentRadar</h1>
+      <p>自动追踪 GitHub、Hacker News 和技术博客，Claude AI 智能提取摘要与评分，帮你在信息爆炸中找到真正有价值的内容。</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><span class="stat-num">2.5k</span><span class="stat-label">条内容已收录</span></div>
+      <div class="stat"><span class="stat-num">210</span><span class="stat-label">GitHub 项目</span></div>
+      <div class="stat"><span class="stat-num">2.3k</span><span class="stat-label">RSS 文章</span></div>
+      <div class="stat"><span class="stat-num">6</span><span class="stat-label">HN 话题</span></div>
+    </div>
+
+    <div class="screens">
+      <div class="screen-wrap screen-main">
+        <div class="screen-bar">
+          <div class="sdot sdot-r"></div><div class="sdot sdot-y"></div><div class="sdot sdot-g"></div>
+          <div class="screen-bar-url"><span>agentradar.vercel.app</span></div>
+        </div>
+        <img class="screen-img" src="02-homepage-zh-dark.png" alt="首页">
+      </div>
+      <div class="screen-wrap screen-side">
+        <div class="screen-bar">
+          <div class="sdot sdot-r"></div><div class="sdot sdot-y"></div><div class="sdot sdot-g"></div>
+          <div class="screen-bar-url"><span>/search</span></div>
+        </div>
+        <img class="screen-img" src="05-search-zh-dark.png" alt="搜索">
+      </div>
+      <div class="screen-wrap screen-side">
+        <div class="screen-bar">
+          <div class="sdot sdot-r"></div><div class="sdot sdot-y"></div><div class="sdot sdot-g"></div>
+          <div class="screen-bar-url"><span>/items/...</span></div>
+        </div>
+        <img class="screen-img" src="09-item-detail-zh-dark.png" alt="详情">
+      </div>
+    </div>
+
+    <div class="features">
+      <div class="feat">
+        <div class="feat-icon green">⚡</div>
+        <div>
+          <div class="feat-title">多源自动抓取</div>
+          <div class="feat-desc">持续从 GitHub、Hacker News 和 100+ RSS 技术博客抓取内容，无需手动筛选</div>
+        </div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon orange">✦</div>
+        <div>
+          <div class="feat-title">Claude AI 深度增强</div>
+          <div class="feat-desc">自动提取分类、成熟度、相关性评分、中英文摘要和「为何重要」</div>
+        </div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon orange">📡</div>
+        <div>
+          <div class="feat-title">趋势检测 &amp; 智能排名</div>
+          <div class="feat-desc">综合评分系统追踪分数变化，自动发现正在快速上升的项目</div>
+        </div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon sky">📰</div>
+        <div>
+          <div class="feat-title">每周 AI Agent 周报</div>
+          <div class="feat-desc">Agent 框架、模型更新、MCP 工具、代码 Agent 六大分类精选</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta">
+      <div>
+        <div class="cta-title">立即体验 AgentRadar</div>
+        <div class="cta-sub">免费使用 · 每日更新 · Next.js · Supabase · Claude · Vercel</div>
+      </div>
+      <span class="cta-url">agentradar.vercel.app</span>
+    </div>
+
+  </div>
+</body>
+</html>

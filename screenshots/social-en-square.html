@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1080px;
+    height: 1080px;
+    background: #09090b;
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .bg-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(249,115,22,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(249,115,22,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+  .glow-tr {
+    position: absolute; top: -150px; right: -100px;
+    width: 580px; height: 580px;
+    background: radial-gradient(circle, rgba(249,115,22,0.09) 0%, transparent 65%);
+  }
+  .glow-bl {
+    position: absolute; bottom: -100px; left: -80px;
+    width: 480px; height: 480px;
+    background: radial-gradient(circle, rgba(52,211,153,0.06) 0%, transparent 65%);
+  }
+
+  .page {
+    position: relative; z-index: 1;
+    padding: 60px 68px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  /* ── Header ── */
+  .header {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 8px 2px rgba(16,185,129,0.5);
+  }
+  .brand-name {
+    font-size: 16px; font-weight: 700; color: #f4f4f5;
+  }
+  .badge {
+    font-size: 10px; color: #71717a;
+    background: #18181b; border: 1px solid #27272a;
+    padding: 2px 8px; border-radius: 20px;
+  }
+  .url-tag {
+    font-size: 11px; color: #52525b;
+  }
+
+  /* ── Headline ── */
+  .headline h1 {
+    font-size: 52px; font-weight: 700;
+    line-height: 1.15; letter-spacing: -1px;
+    color: #f4f4f5;
+  }
+  .headline h1 .accent { color: #f97316; }
+  .headline .sub {
+    margin-top: 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px; color: #71717a; line-height: 1.65;
+    max-width: 700px; font-weight: 400;
+  }
+
+  /* ── App mockup ── */
+  .mockup {
+    border-radius: 10px; overflow: hidden;
+    border: 1px solid #27272a; background: #111113;
+  }
+  .mockup-bar {
+    background: #18181b; border-bottom: 1px solid #27272a;
+    padding: 8px 12px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot-r { background: #ef4444; opacity: .65; }
+  .dot-y { background: #f59e0b; opacity: .65; }
+  .dot-g { background: #22c55e; opacity: .65; }
+  .mockup-bar-url {
+    flex: 1; margin: 0 8px;
+    background: #09090b; border: 1px solid #27272a; border-radius: 4px;
+    height: 17px; display: flex; align-items: center; padding: 0 8px;
+  }
+  .mockup-bar-url span { font-size: 8px; color: #3f3f46; }
+  .mockup img {
+    width: 100%; display: block;
+    height: 290px; object-fit: cover; object-position: top left;
+  }
+
+  /* ── Feature grid ── */
+  .features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .feat {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 14px 16px;
+    background: rgba(24,24,27,0.5);
+    border: 1px solid #1c1c1e;
+    border-radius: 9px;
+  }
+  .feat-icon {
+    width: 28px; height: 28px; border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-size: 12px;
+  }
+  .feat-icon.orange { background: rgba(249,115,22,0.1); color: #f97316; border: 1px solid rgba(249,115,22,0.2); }
+  .feat-icon.green  { background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
+  .feat-icon.sky    { background: rgba(56,189,248,0.1); color: #38bdf8; border: 1px solid rgba(56,189,248,0.2); }
+  .feat-body {}
+  .feat-title { font-size: 12px; font-weight: 600; color: #e4e4e7; margin-bottom: 2px; }
+  .feat-desc  { font-family: 'Inter', sans-serif; font-size: 11px; color: #52525b; line-height: 1.5; }
+
+  /* ── Footer ── */
+  .footer {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .stats { display: flex; gap: 28px; }
+  .stat-num { font-size: 20px; font-weight: 700; color: #f4f4f5; letter-spacing: -0.5px; }
+  .stat-label { font-size: 10px; color: #52525b; margin-top: 1px; }
+
+  .stack { display: flex; gap: 6px; align-items: center; }
+  .stack-tag {
+    font-size: 10px; color: #3f3f46;
+    border: 1px solid #27272a; padding: 3px 7px; border-radius: 4px;
+  }
+</style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="glow-tr"></div>
+  <div class="glow-bl"></div>
+
+  <div class="page">
+
+    <div class="header">
+      <div class="brand">
+        <div class="brand-dot"></div>
+        <span class="brand-name">AgentRadar</span>
+        <span class="badge">beta</span>
+      </div>
+      <span class="url-tag">agentradarlive.vercel.app</span>
+    </div>
+
+    <div class="headline">
+      <h1>Track the <span class="accent">AI&nbsp;Agent</span><br>Ecosystem — Before<br>It Goes Mainstream.</h1>
+      <p class="sub">Auto-ingests GitHub, HN & RSS. AI-enriched by Claude, ranked by signal, surfaced before everyone else.</p>
+    </div>
+
+    <div class="mockup">
+      <div class="mockup-bar">
+        <div class="dot dot-r"></div>
+        <div class="dot dot-y"></div>
+        <div class="dot dot-g"></div>
+        <div class="mockup-bar-url"><span>agentradarlive.vercel.app</span></div>
+      </div>
+      <img src="01-homepage-en-dark.png" alt="AgentRadar">
+    </div>
+
+    <div class="features">
+      <div class="feat">
+        <div class="feat-icon green">⚡</div>
+        <div class="feat-body">
+          <div class="feat-title">Multi-source ingestion</div>
+          <div class="feat-desc">GitHub repos, HN stories & 100+ RSS feeds, continuously</div>
+        </div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon orange">✦</div>
+        <div class="feat-body">
+          <div class="feat-title">Claude AI enrichment</div>
+          <div class="feat-desc">Category, maturity, relevance score & summary per item</div>
+        </div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon orange">📡</div>
+        <div class="feat-body">
+          <div class="feat-title">Trending detection</div>
+          <div class="feat-desc">Score-delta system surfaces fast-rising items across sources</div>
+        </div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon sky">🌐</div>
+        <div class="feat-body">
+          <div class="feat-title">Full Chinese localization</div>
+          <div class="feat-desc">UI + AI-generated summaries in 中文</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="stats">
+        <div>
+          <div class="stat-num">2.5k</div>
+          <div class="stat-label">items indexed</div>
+        </div>
+        <div>
+          <div class="stat-num">210</div>
+          <div class="stat-label">GitHub repos</div>
+        </div>
+        <div>
+          <div class="stat-num">2.3k</div>
+          <div class="stat-label">RSS articles</div>
+        </div>
+      </div>
+      <div class="stack">
+        <span class="stack-tag">Next.js</span>
+        <span class="stack-tag">Supabase</span>
+        <span class="stack-tag">Claude</span>
+        <span class="stack-tag">Vercel</span>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

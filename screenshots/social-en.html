@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1200px;
+    height: 628px;
+    background: #09090b;
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Subtle radar grid background */
+  .bg-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(249,115,22,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(249,115,22,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* Radial glow top-right */
+  .glow {
+    position: absolute;
+    top: -120px;
+    right: -80px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(249,115,22,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .glow-left {
+    position: absolute;
+    bottom: -100px;
+    left: -60px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(52,211,153,0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .layout {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    height: 100%;
+  }
+
+  /* ── Left panel ── */
+  .left {
+    width: 520px;
+    flex-shrink: 0;
+    padding: 44px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .brand-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #f4f4f5;
+    letter-spacing: -0.3px;
+  }
+  .brand-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 8px 2px rgba(16,185,129,0.5);
+  }
+  .badge {
+    background: #27272a;
+    color: #71717a;
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 20px;
+    border: 1px solid #3f3f46;
+  }
+
+  .headline {
+    margin-top: 0;
+  }
+  .headline h1 {
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #f4f4f5;
+    letter-spacing: -0.5px;
+  }
+  .headline h1 .accent {
+    color: #f97316;
+  }
+  .headline .sub {
+    margin-top: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    color: #71717a;
+    line-height: 1.6;
+    font-weight: 400;
+  }
+
+  .features {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 12px;
+    color: #a1a1aa;
+  }
+  .feature-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #f97316;
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+  .feature-dot.green { background: #10b981; }
+  .feature-dot.blue  { background: #38bdf8; }
+
+  .stats {
+    display: flex;
+    gap: 28px;
+  }
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .stat-num {
+    font-size: 20px;
+    font-weight: 700;
+    color: #f4f4f5;
+    letter-spacing: -0.5px;
+  }
+  .stat-label {
+    font-size: 10px;
+    color: #52525b;
+  }
+
+  .footer-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .url {
+    font-size: 11px;
+    color: #f97316;
+    opacity: 0.8;
+  }
+  .stack {
+    display: flex;
+    gap: 6px;
+  }
+  .stack-tag {
+    font-size: 9px;
+    color: #52525b;
+    border: 1px solid #27272a;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  /* ── Divider ── */
+  .divider {
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, #27272a 20%, #27272a 80%, transparent);
+    flex-shrink: 0;
+  }
+
+  /* ── Right panel — app mockup ── */
+  .right {
+    flex: 1;
+    padding: 32px 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .mockup-window {
+    background: #111113;
+    border: 1px solid #27272a;
+    border-radius: 10px;
+    overflow: hidden;
+    flex: 1;
+    position: relative;
+  }
+  .mockup-titlebar {
+    background: #18181b;
+    border-bottom: 1px solid #27272a;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot-r { background: #ef4444; opacity: 0.7; }
+  .dot-y { background: #f59e0b; opacity: 0.7; }
+  .dot-g { background: #22c55e; opacity: 0.7; }
+  .url-bar {
+    flex: 1;
+    background: #09090b;
+    border: 1px solid #27272a;
+    border-radius: 4px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    margin: 0 8px;
+  }
+  .url-bar span {
+    font-size: 8px;
+    color: #52525b;
+  }
+
+  .mockup-img {
+    width: 100%;
+    height: calc(100% - 35px);
+    object-fit: cover;
+    object-position: top left;
+    display: block;
+    transform: scale(1.01);
+    transform-origin: top left;
+  }
+
+  /* small tag row below mockup */
+  .tag-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .tag {
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    border: 1px solid;
+  }
+  .tag-orange { color: #f97316; border-color: rgba(249,115,22,0.3); background: rgba(249,115,22,0.05); }
+  .tag-green  { color: #10b981; border-color: rgba(16,185,129,0.3); background: rgba(16,185,129,0.05); }
+  .tag-sky    { color: #38bdf8; border-color: rgba(56,189,248,0.3); background: rgba(56,189,248,0.05); }
+  .tag-zinc   { color: #a1a1aa; border-color: #27272a; background: transparent; }
+</style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="glow"></div>
+  <div class="glow-left"></div>
+
+  <div class="layout">
+    <!-- LEFT -->
+    <div class="left">
+
+      <div class="brand">
+        <div class="brand-dot"></div>
+        <span class="brand-name">AgentRadar</span>
+        <span class="badge">beta</span>
+      </div>
+
+      <div class="headline">
+        <h1>Track the <span class="accent">AI&nbsp;Agent</span><br>Ecosystem — Before<br>It Goes Mainstream.</h1>
+        <p class="sub">Auto-ingests GitHub, Hacker News & RSS. AI-enriched,<br>ranked by signal, surfaced before everyone else.</p>
+      </div>
+
+      <div class="features">
+        <div class="feature"><div class="feature-dot green"></div><span>Continuously ingests GitHub repos, HN stories & RSS articles</span></div>
+        <div class="feature"><div class="feature-dot"></div><span>Claude AI extracts category, maturity, relevance & summary</span></div>
+        <div class="feature"><div class="feature-dot"></div><span>Composite ranking + trending detection across all sources</span></div>
+        <div class="feature"><div class="feature-dot blue"></div><span>Weekly digest &amp; multi-source filter with keyboard shortcuts</span></div>
+        <div class="feature"><div class="feature-dot green"></div><span>Full Chinese localization — UI + AI-generated summaries</span></div>
+      </div>
+
+      <div class="stats">
+        <div class="stat-item">
+          <span class="stat-num">2.5k</span>
+          <span class="stat-label">items indexed</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">210</span>
+          <span class="stat-label">GitHub repos</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">2.3k</span>
+          <span class="stat-label">RSS articles</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">6</span>
+          <span class="stat-label">HN stories</span>
+        </div>
+      </div>
+
+      <div class="footer-row">
+        <span class="url">agentradar.vercel.app</span>
+        <div class="stack">
+          <span class="stack-tag">Next.js</span>
+          <span class="stack-tag">Supabase</span>
+          <span class="stack-tag">Claude</span>
+          <span class="stack-tag">Vercel</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- RIGHT -->
+    <div class="right">
+      <div class="mockup-window">
+        <div class="mockup-titlebar">
+          <div class="dot dot-r"></div>
+          <div class="dot dot-y"></div>
+          <div class="dot dot-g"></div>
+          <div class="url-bar"><span>agentradar.vercel.app</span></div>
+        </div>
+        <img class="mockup-img" src="01-homepage-en-dark.png" alt="AgentRadar homepage">
+      </div>
+      <div class="tag-row">
+        <span class="tag tag-orange">● Trending Now</span>
+        <span class="tag tag-green">GitHub</span>
+        <span class="tag tag-orange">HN</span>
+        <span class="tag tag-sky">Articles</span>
+        <span class="tag tag-zinc">AI Agents</span>
+        <span class="tag tag-zinc">MCP / Tool Use</span>
+        <span class="tag tag-zinc">Open Source Models</span>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
