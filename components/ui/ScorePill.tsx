@@ -7,10 +7,10 @@ import { cn } from '@/lib/utils'
  */
 
 function scoreColor(score: number): string {
-  if (score >= 9) return 'text-emerald-400'
-  if (score >= 7) return 'text-blue-400'
-  if (score >= 5) return 'text-amber-400'
-  return 'text-zinc-500'
+  if (score >= 9) return 'text-emerald-600 dark:text-emerald-400'
+  if (score >= 7) return 'text-blue-600    dark:text-blue-400'
+  if (score >= 5) return 'text-amber-600   dark:text-amber-400'
+  return 'text-zinc-500 dark:text-zinc-500'
 }
 
 interface ScorePillProps {
@@ -29,7 +29,7 @@ export function ScorePill({ score, className }: ScorePillProps) {
       title={`AI relevance: ${display}/10`}
     >
       <span className={cn('font-semibold tabular-nums', color)}>{display}</span>
-      <span className="text-zinc-600">/10</span>
+      <span className="text-zinc-500 dark:text-zinc-600">/10</span>
     </span>
   )
 }
@@ -46,7 +46,7 @@ interface RankScoreBadgeProps {
 export function RankScoreBadge({ score, className }: RankScoreBadgeProps) {
   return (
     <span
-      className={cn('font-mono text-xs tabular-nums text-zinc-600', className)}
+      className={cn('font-mono text-xs tabular-nums text-zinc-500 dark:text-zinc-600', className)}
       title={`Ranking score: ${score.toFixed(2)}`}
     >
       #{score.toFixed(1)}

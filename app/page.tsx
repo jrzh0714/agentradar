@@ -89,7 +89,7 @@ export default async function HomePage() {
           <div className="relative z-10">
             <div className="mb-3 flex items-center gap-2">
               <span className="inline-block h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_8px_2px_rgba(52,211,153,0.4)]" />
-              <span className="font-mono text-xs text-emerald-500">
+              <span className="font-mono text-xs text-emerald-600 dark:text-emerald-500">
                 <T k="common.updated_daily" />
               </span>
               {stats.lastUpdatedAt && (
@@ -125,11 +125,11 @@ export default async function HomePage() {
         <section className="pb-12">
           <div className="mb-4 flex items-center gap-3">
             <span className="inline-block h-2 w-2 rounded-full bg-orange-500 shadow-[0_0_8px_2px_rgba(249,115,22,0.4)]" />
-            <h2 className="font-mono text-sm font-semibold uppercase tracking-widest text-orange-400">
+            <h2 className="font-mono text-sm font-semibold uppercase tracking-widest text-orange-600 dark:text-orange-400">
               <T k="home.trending_now" />
             </h2>
             {trending.length > 0 && (
-              <span className="rounded-full border border-orange-800/40 bg-orange-950/30 px-2 py-0.5 font-mono text-[10px] tabular-nums text-orange-400">
+              <span className="rounded-full border border-orange-300 bg-orange-100 px-2 py-0.5 font-mono text-[10px] tabular-nums text-orange-700 dark:border-orange-800/40 dark:bg-orange-950/30 dark:text-orange-400">
                 {trending.length}
               </span>
             )}
@@ -179,7 +179,7 @@ export default async function HomePage() {
                       </span>
                     )}
                     {item.trending && (
-                      <span className="rounded border border-orange-800/50 bg-orange-950/40 px-1.5 py-0.5 font-mono text-[10px] text-orange-400">
+                      <span className="rounded border border-orange-300 bg-orange-100 px-1.5 py-0.5 font-mono text-[10px] text-orange-700 dark:border-orange-800/50 dark:bg-orange-950/40 dark:text-orange-400">
                         <T k="common.trending" />
                       </span>
                     )}
@@ -361,9 +361,9 @@ function Stat({
 }
 
 const SOURCE_STYLES: Record<string, { label: string; className: string }> = {
-  github:      { label: 'GitHub',    className: 'border-emerald-800/50 bg-emerald-950/40 text-emerald-400' },
-  hackernews:  { label: 'HN',        className: 'border-orange-800/50 bg-orange-950/40 text-orange-400' },
-  rss:         { label: 'Article',   className: 'border-sky-800/50 bg-sky-950/40 text-sky-400' },
+  github:      { label: 'GitHub',    className: 'border-emerald-300 bg-emerald-100 text-emerald-700 dark:border-emerald-800/50 dark:bg-emerald-950/40 dark:text-emerald-400' },
+  hackernews:  { label: 'HN',        className: 'border-orange-300 bg-orange-100 text-orange-700 dark:border-orange-800/50 dark:bg-orange-950/40 dark:text-orange-400' },
+  rss:         { label: 'Article',   className: 'border-sky-300 bg-sky-100 text-sky-700 dark:border-sky-800/50 dark:bg-sky-950/40 dark:text-sky-400' },
 }
 
 function SourcePill({ source }: { source: string }) {

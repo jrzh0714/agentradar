@@ -4,18 +4,18 @@ import type { ItemSource } from '@/lib/db/types'
 const SOURCE_CONFIG: Record<ItemSource, { label: string; dot: string; pill: string }> = {
   github: {
     label: 'GitHub',
-    dot:   'bg-emerald-400',
-    pill:  'bg-emerald-950 text-emerald-300 border-emerald-800',
+    dot:   'bg-emerald-500 dark:bg-emerald-400',
+    pill:  'bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800',
   },
   hackernews: {
     label: 'HN',
-    dot:   'bg-orange-400',
-    pill:  'bg-orange-950 text-orange-300 border-orange-800',
+    dot:   'bg-orange-500 dark:bg-orange-400',
+    pill:  'bg-orange-100 text-orange-700 border-orange-300 dark:bg-orange-950 dark:text-orange-300 dark:border-orange-800',
   },
   rss: {
     label: 'RSS',
-    dot:   'bg-sky-400',
-    pill:  'bg-sky-950 text-sky-300 border-sky-800',
+    dot:   'bg-sky-500 dark:bg-sky-400',
+    pill:  'bg-sky-100 text-sky-700 border-sky-300 dark:bg-sky-950 dark:text-sky-300 dark:border-sky-800',
   },
 }
 
