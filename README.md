@@ -2,6 +2,10 @@
 
 **An AI-curated discovery hub for emerging GenAI tools, agent frameworks, and developer workflows.**
 
+🔗 **Live:** [agentradarlive.vercel.app](https://agentradarlive.vercel.app)
+
+---
+
 ## Background & Motivation
 
 The AI landscape moves faster than any individual developer can track. Every day, new agent frameworks are open-sourced, new research findings are published, new model capabilities land, and new developer tools appear on Hacker News — most of which never trend long enough to reach traditional newsletters or social feeds.
@@ -12,31 +16,43 @@ AgentRadar's goal is to give AI developers and engineers a daily pulse on what's
 
 ---
 
-## How it works
+## Screenshots
 
-AgentRadar continuously ingests items from GitHub, Hacker News, and technical blogs, uses an LLM to classify and score each item, then ranks the full corpus with a weighted formula. The result is a ranked feed, a keyword search interface, per-item detail pages, and a weekly digest — all server-rendered from live Supabase data, updated daily, with no manual curation.
+### Homepage
+![AgentRadar homepage](screenshots/01-homepage-en-dark.png)
+
+### Search
+![AgentRadar search](screenshots/04-search-en-dark.png)
+
+### Weekly Digest
+![AgentRadar digest](screenshots/06-digest-en-dark.png)
+
+### Item Detail
+![AgentRadar item detail](screenshots/08-item-detail-en-dark.png)
+
+### Chinese Localization
+![AgentRadar in Chinese](screenshots/02-homepage-zh-dark.png)
 
 ---
 
-## Live demo
+## How it works
 
-> _Coming soon — deploy your own instance using the instructions below._
-
-## Screenshots
-
-> _Add screenshots after first deployment._
+AgentRadar continuously ingests items from GitHub, Hacker News, and technical blogs, uses an LLM to classify and score each item, then ranks the full corpus with a weighted formula. The result is a ranked feed, a trending section, a keyword search interface, per-item detail pages, and a weekly digest — all ISR-cached from Supabase data, updated daily, with no manual curation.
 
 ---
 
 ## Key features
 
-- **Multi-source ingestion** — GitHub Search API, Hacker News Algolia API, and RSS feeds from six curated technical blogs
+- **Multi-source ingestion** — GitHub Search API, Hacker News Algolia API, and RSS feeds from curated technical blogs
 - **AI enrichment** — each item is summarized, categorized, tagged, scored for relevance, and assessed for maturity by an LLM (OpenAI or Anthropic, configurable)
 - **Composite ranking** — a five-signal weighted formula ranks all enriched items, with an aggressive low-relevance penalty
-- **Homepage** — four curated sections (Top Picks, AI News, Latest High-Signal, Agent & MCP Tools) with cross-section deduplication
+- **Trending detection** — score-delta system flags fast-rising items across all sources; displayed as a dedicated "Trending Now" section on the homepage
+- **Homepage** — four curated sections (Top Picks, AI News, Latest High-Signal, Agent & MCP Tools) with cross-section deduplication, plus a "This Week" highlight grid
 - **Search** — keyword search with URL-persisted filters: source, category, maturity, minimum relevance threshold (≥5–9/10), date range (1d / 7d / 30d / 90d), and five sort modes (ranking, newest, relevance, stars, most discussed). Active filter chips show what's applied and support one-click removal.
 - **Item detail pages** — full AI briefing, classification panel, and contextually related items
-- **Weekly digest** — six editorial sections surfacing the best items per category, with a table of contents
+- **Weekly digest** — six editorial sections surfacing the best items per category, with a table of contents and AI-written section summaries
+- **Chinese localization** — full UI translation plus AI-generated Chinese summaries for every item, with a one-click language toggle persisted to localStorage
+- **ISR caching** — homepage, digest, and item detail pages use `revalidate = 300` (5-minute Vercel edge cache), delivering sub-100ms TTFB for most requests
 - **Title quality pipeline** — `normalizeTitle`, `deriveTitleFromUrl`, `deriveTitleFromDescription`, and `getDisplayTitle` resolve blank, null, or placeholder titles at render time; HN "Show HN / Ask HN / Tell HN" prefixes are surfaced as badges without mutating stored titles; a `cleanup-titles` script fixes DB rows retroactively
 - **Data quality controls** — fork artifact cleanup, ingestion blocklist, Zod validation on all AI output, defensive UI fallbacks
 
@@ -69,9 +85,9 @@ graph TD
         IT[("items table<br/>status: new → enriched")]
     end
 
-    subgraph App ["Next.js App Router (Server Components)"]
+    subgraph App ["Next.js App Router (ISR, revalidate=300)"]
         HP["/ Homepage"]
-        SP["/search"]
+        SP["/search (force-dynamic)"]
         DP["/digest"]
         IP["/items/[id]"]
     end
@@ -100,7 +116,7 @@ graph TD
 | Database | Supabase (Postgres, service-role server-side) |
 | AI enrichment | OpenAI API (`gpt-4o-mini`) or Anthropic API (`claude-3-5-haiku`) |
 | Validation | Zod — all external API responses and AI output |
-| Deployment | Vercel |
+| Deployment | Vercel (ISR edge caching, Cron jobs) |
 | Runtime scripts | `tsx` (Node.js, no build step) |
 
 ---
@@ -115,7 +131,7 @@ Three independent scripts pull from external sources and upsert rows into the `i
 |---|---|---|
 | `ingest-github.ts` | GitHub Search API | 8 configurable queries with `fork:false`, quality filters |
 | `ingest-hn.ts` | HN Algolia API | Keyword queries filtered by minimum points |
-| `ingest-rss.ts` | RSS feeds | Six curated technical blogs (OpenAI, Hugging Face, GitHub, LangChain, Vercel, Simon Willison) |
+| `ingest-rss.ts` | RSS feeds | Curated technical blogs (OpenAI, Hugging Face, GitHub, LangChain, Vercel, Simon Willison) |
 
 Duplicate prevention uses `canonical_url` as a unique key — upserts are idempotent.
 
@@ -235,7 +251,7 @@ All external data is validated before touching the database:
 ### Steps
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/agentradar
+git clone https://github.com/jrzh0714/agentradar
 cd agentradar
 npm install
 cp .env.example .env.local   # fill in your keys
@@ -286,7 +302,7 @@ npm run dev         # start dev server at localhost:3000
 npm run build       # production build
 npm run lint        # ESLint
 npm run typecheck   # tsc --noEmit
-npm run test        # 54 unit tests: ranking (10) + title quality (44)
+npm run test        # unit tests: ranking + title quality
 ```
 
 ### Data pipeline
@@ -294,7 +310,7 @@ npm run test        # 54 unit tests: ranking (10) + title quality (44)
 ```bash
 # Ingestion — fetch new items from external sources
 npm run ingest:github        # GitHub Search API (8 queries)
-npm run ingest:rss           # RSS feeds (6 sources)
+npm run ingest:rss           # RSS feeds
 npm run ingest:hn            # HN Algolia API
 npm run ingest:all           # all three in sequence
 
@@ -327,17 +343,21 @@ npm run rank
 
 ## Deployment (Vercel + Supabase)
 
-See [docs/deployment.md](docs/deployment.md) for full instructions.
-
-Quick summary:
-
 1. Push to GitHub
 2. Import into Vercel — framework preset: Next.js
 3. Add all env vars from the table above in Vercel project settings
 4. Deploy
-5. Run ingestion and enrichment scripts locally pointing at the production Supabase URL
 
-Ingestion is currently manual (or run locally via cron). A Vercel Cron job can be added to automate this.
+Run ingestion and enrichment scripts locally pointing at the production Supabase URL to seed the database before going live.
+
+### Caching strategy
+
+| Route | Mode | Why |
+|---|---|---|
+| `/` | ISR `revalidate=300` | Heavy parallel queries; data changes once daily |
+| `/digest` | ISR `revalidate=300` | Digest content only updates on ingestion |
+| `/items/[id]` | ISR `revalidate=300` | Per-item data is stable; cached per unique path |
+| `/search` | `force-dynamic` | Infinite URL param combinations; already fast at ~2s P75 |
 
 ---
 
@@ -363,11 +383,11 @@ Vercel Cron calls `GET /api/refresh/daily` at **08:00 UTC every day**. The route
 ### Manual trigger
 
 ```bash
-curl -X POST https://your-app.vercel.app/api/refresh/daily \
+curl -X POST https://agentradarlive.vercel.app/api/refresh/daily \
   -H "Authorization: Bearer $CRON_SECRET"
 ```
 
-Or locally (with `.env.local` containing `CRON_SECRET`):
+Or locally:
 
 ```bash
 curl -X POST http://localhost:3000/api/refresh/daily \
@@ -377,13 +397,6 @@ curl -X POST http://localhost:3000/api/refresh/daily \
 ### Cost estimate
 
 At `claude-3-5-haiku` / `gpt-4o-mini` rates, enriching 150 items costs ≈ $0.15–$0.30/day. Reduce `DAILY_ENRICH_LIMIT` in Vercel env vars to lower this.
-
-### Environment variables
-
-| Variable | Required | Default | Purpose |
-|---|---|---|---|
-| `CRON_SECRET` | Yes | — | Bearer token for `/api/refresh/daily` |
-| `DAILY_ENRICH_LIMIT` | No | `150` | Max items enriched per cron run |
 
 ---
 
@@ -403,9 +416,8 @@ At `claude-3-5-haiku` / `gpt-4o-mini` rates, enriching 150 items costs ≈ $0.15
 - [ ] Embedding-based semantic search (pgvector) as an alternative to keyword `ilike`
 - [ ] RSS feed management UI — add/remove feeds without code changes
 - [ ] User-facing "subscribe to digest" email delivery
-- [ ] Trend detection — flag items whose ranking score increased significantly week-over-week
-- [ ] AI-generated digest summaries (one paragraph per section, not per item)
 - [ ] Source credibility scoring beyond the fixed `source_quality` constants
+- [ ] Personalized feed based on saved topics or viewed items
 
 ---
 
@@ -414,27 +426,31 @@ At `claude-3-5-haiku` / `gpt-4o-mini` rates, enriching 150 items costs ≈ $0.15
 ```
 agentradar/
 ├── app/                    # Next.js App Router pages
-│   ├── page.tsx            # Homepage
+│   ├── page.tsx            # Homepage (ISR)
 │   ├── search/             # Search page + SearchControls client component
-│   ├── digest/             # Weekly digest
-│   └── items/[id]/         # Item detail + not-found
+│   ├── digest/             # Weekly digest (ISR)
+│   └── items/[id]/         # Item detail (ISR) + not-found
 ├── components/
 │   ├── ItemCard.tsx        # Card used on homepage, search, detail related
 │   ├── ItemSection.tsx     # Section wrapper with heading + grid
+│   ├── TrendingSection.tsx # Trending Now strip
+│   ├── LanguageToggle.tsx  # EN/ZH switcher
+│   ├── TranslatedText.tsx  # Renders EN or ZH content based on language context
 │   └── ui/                 # SourceBadge, CategoryBadge, ScorePill, TagList, MaturityBadge
 ├── config/
 │   ├── github-queries.ts   # Search queries + ingestion blocklist
-│   └── rss-feeds.ts        # RSS feed list (reference; live list is in DB)
+│   └── rss-feeds.ts        # RSS feed list
 ├── lib/
 │   ├── ai/                 # LLM provider abstraction + Zod schemas
 │   ├── db/                 # Data-fetching helpers (homepage, search, digest, detail)
 │   ├── ingestion/          # Per-source fetch + normalize logic; title.ts quality utilities
+│   ├── i18n/               # Translation keys and EN/ZH string map
 │   ├── ranking/            # computeRankingScore + unit tests
 │   ├── supabase/           # server.ts (service role) + client.ts (publishable key)
 │   ├── validation/         # Zod schemas for external APIs
 │   └── workflows/          # daily-refresh.ts — orchestrates ingestion → title cleanup → enrichment → ranking
 ├── scripts/                # CLI pipeline scripts (ingest, enrich, rank, cleanup-github, cleanup-titles)
-├── docs/                   # Architecture, case study, deployment guides
+├── screenshots/            # App screenshots used in README and social cards
 └── supabase/               # DB migrations
 ```
 
