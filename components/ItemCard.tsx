@@ -7,9 +7,11 @@ import { ScorePill } from '@/components/ui/ScorePill'
 import { TagList } from '@/components/ui/TagList'
 import { HnPrefixBadge } from '@/components/ui/HnPrefixBadge'
 import { TrendingBadge } from '@/components/ui/TrendingBadge'
+import { NewBadge } from '@/components/ui/NewBadge'
 import { getDisplayTitle, getTitlePrefix } from '@/lib/ingestion/title'
 import { TranslatedText } from '@/components/TranslatedText'
 import { T } from '@/components/T'
+import { isNewToday } from '@/lib/db/homepage'
 import type { HomepageItem } from '@/lib/db/homepage'
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -58,8 +60,9 @@ export function ItemCard({ item, compact = false, className }: ItemCardProps) {
       </div>
 
       {/* ── Row 2: category + maturity + HN prefix badge ────────────────── */}
-      {(item.ai_category || item.ai_maturity || prefix || item.trending) && (
+      {(item.ai_category || item.ai_maturity || prefix || item.trending || isNewToday(item)) && (
         <div className="mb-3 flex flex-wrap items-center gap-1.5">
+          {isNewToday(item) && <NewBadge />}
           {item.ai_category && <CategoryBadge category={item.ai_category} />}
           {item.ai_maturity && <MaturityBadge maturity={item.ai_maturity} />}
           {prefix && <HnPrefixBadge prefix={prefix} />}

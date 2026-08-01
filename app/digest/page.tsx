@@ -10,6 +10,7 @@ import { HnPrefixBadge } from '@/components/ui/HnPrefixBadge'
 import { formatRelativeDate } from '@/lib/utils'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { LanguageToggle } from '@/components/LanguageToggle'
+import { SubscribeForm } from '@/components/SubscribeForm'
 import { TranslatedText } from '@/components/TranslatedText'
 import { T } from '@/components/T'
 import { getDisplayTitle, getTitlePrefix } from '@/lib/ingestion/title'
@@ -111,6 +112,27 @@ export default async function DigestPage() {
             <p className="text-sm leading-relaxed text-zinc-300">
               <T k="digest.editors_text" />
             </p>
+          </div>
+        </section>
+
+        {/* ── Email signup ────────────────────────────────────────────────── */}
+        <section className="border-b border-zinc-800 py-8">
+          <div className="rounded-lg border-l-2 border-indigo-600 bg-zinc-900/60 px-6 py-5">
+            <p className="mb-1 font-mono text-sm font-semibold text-zinc-200">
+              <T k="digest.subscribe_title" />
+            </p>
+            <p className="mb-4 text-xs leading-relaxed text-zinc-500">
+              <T k="digest.subscribe_desc" />
+            </p>
+            <div className="flex flex-wrap items-center gap-4">
+              <SubscribeForm />
+              <a
+                href="/feed.xml"
+                className="font-mono text-xs text-zinc-600 underline underline-offset-2 transition-colors hover:text-zinc-300"
+              >
+                RSS
+              </a>
+            </div>
           </div>
         </section>
 

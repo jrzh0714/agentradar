@@ -33,6 +33,7 @@ export type HomepageItem = Pick<
   | 'trending'
   | 'ai_summary_zh'
   | 'ai_why_it_matters_zh'
+  | 'created_at'
 >
 
 const ITEM_SELECT = [
@@ -41,8 +42,14 @@ const ITEM_SELECT = [
   'hn_points', 'hn_comments',
   'ai_summary', 'ai_why_it_matters', 'ai_category', 'ai_tags', 'ai_maturity',
   'ai_relevance_score', 'ranking_score', 'trending',
-  'ai_summary_zh', 'ai_why_it_matters_zh',
+  'ai_summary_zh', 'ai_why_it_matters_zh', 'created_at',
 ].join(', ')
+
+/** True when the item was ingested within the last 24 hours. */
+export function isNewToday(item: Pick<HomepageItem, 'created_at'>): boolean {
+  if (!item.created_at) return false
+  return Date.now() - new Date(item.created_at).getTime() < 24 * 60 * 60 * 1000
+}
 
 // ── Query helper ─────────────────────────────────────────────────────────────
 
@@ -243,6 +250,8 @@ export interface HomepageStats {
   rss: number
   /** ISO timestamp of the most recently enriched item, or null if none. */
   lastUpdatedAt: string | null
+  /** Items ingested in the last 24 hours. */
+  newToday: number
 }
 
 // ── Weekly Highlights ─────────────────────────────────────────────────────────
@@ -287,18 +296,21 @@ export async function getWeeklyHighlights(): Promise<HomepageItem[]> {
 
 export async function getHomepageStats(): Promise<HomepageStats> {
   const supabase = createServerClient()
+  const since24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
   const [
     { count: total },
     { count: github },
     { count: hackernews },
     { count: rss },
     { data: latestRow },
+    { count: newToday },
   ] = await Promise.all([
     supabase.from('items').select('*', { count: 'exact', head: true }).eq('status', 'enriched'),
     supabase.from('items').select('*', { count: 'exact', head: true }).eq('status', 'enriched').eq('source', 'github'),
     supabase.from('items').select('*', { count: 'exact', head: true }).eq('status', 'enriched').eq('source', 'hackernews'),
     supabase.from('items').select('*', { count: 'exact', head: true }).eq('status', 'enriched').eq('source', 'rss'),
     supabase.from('items').select('updated_at').eq('status', 'enriched').order('updated_at', { ascending: false }).limit(1),
+    supabase.from('items').select('*', { count: 'exact', head: true }).eq('status', 'enriched').gte('created_at', since24h),
   ])
   const lastUpdatedAt = (latestRow as Array<{ updated_at: string }> | null)?.[0]?.updated_at ?? null
   return {
@@ -307,5 +319,6 @@ export async function getHomepageStats(): Promise<HomepageStats> {
     hackernews:    hackernews ?? 0,
     rss:           rss        ?? 0,
     lastUpdatedAt,
+    newToday:      newToday   ?? 0,
   }
 }

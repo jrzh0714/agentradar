@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono, Inter } from 'next/font/google'
 import './globals.css'
+import { Analytics } from '@vercel/analytics/next'
 import { ThemeProvider } from '@/components/ThemeProvider'
 import { LanguageProvider } from '@/components/LanguageProvider'
 
@@ -23,6 +24,9 @@ export const metadata: Metadata = {
   title: 'AgentRadar — AI tool discovery for developers',
   description:
     'Track emerging GenAI tools, agent frameworks, GitHub projects, and developer workflows. AI-curated and ranked daily.',
+  alternates: {
+    types: { 'application/rss+xml': '/feed.xml' },
+  },
 }
 
 export default function RootLayout({
@@ -36,6 +40,7 @@ export default function RootLayout({
         <ThemeProvider>
           <LanguageProvider>{children}</LanguageProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   )

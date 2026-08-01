@@ -53,6 +53,10 @@ AgentRadar continuously ingests items from GitHub, Hacker News, and technical bl
 - **Weekly digest** — six editorial sections surfacing the best items per category, with a table of contents and AI-written section summaries
 - **Chinese localization** — full UI translation plus AI-generated Chinese summaries for every item, with a one-click language toggle persisted to localStorage
 - **ISR caching** — homepage, digest, and item detail pages use `revalidate = 300` (5-minute Vercel edge cache), delivering sub-100ms TTFB for most requests
+- **"New today" signal** — items ingested in the last 24h get a NEW badge, and the homepage hero shows a live "+N new today" counter, so returning visitors can see the daily delta at a glance
+- **Digest email signup** — a signup form on `/digest` captures interest in a weekly email digest (delivery not yet built — this is a demand probe before investing in send infrastructure)
+- **RSS feed** — `/feed.xml` mirrors the weekly digest sections for feed readers, auto-discoverable via a `<link>` tag
+- **Web analytics** — Vercel Web Analytics tracks page views and visitor counts to measure return-visit behavior
 - **Title quality pipeline** — `normalizeTitle`, `deriveTitleFromUrl`, `deriveTitleFromDescription`, and `getDisplayTitle` resolve blank, null, or placeholder titles at render time; HN "Show HN / Ask HN / Tell HN" prefixes are surfaced as badges without mutating stored titles; a `cleanup-titles` script fixes DB rows retroactively
 - **Data quality controls** — fork artifact cleanup, ingestion blocklist, Zod validation on all AI output, defensive UI fallbacks
 
@@ -346,9 +350,12 @@ npm run rank
 1. Push to GitHub
 2. Import into Vercel — framework preset: Next.js
 3. Add all env vars from the table above in Vercel project settings
-4. Deploy
+4. Run `supabase/migrations/` in order against your Supabase project (SQL editor or CLI)
+5. Deploy
 
 Run ingestion and enrichment scripts locally pointing at the production Supabase URL to seed the database before going live.
+
+Vercel Web Analytics is enabled via `@vercel/analytics` — no extra setup needed beyond deploying; enable the Analytics tab in your Vercel project dashboard to see traffic data.
 
 ### Caching strategy
 
@@ -412,10 +419,10 @@ At `claude-3-5-haiku` / `gpt-4o-mini` rates, enriching 150 items costs ≈ $0.15
 
 ## Future improvements
 
+- [ ] Send weekly digest emails to `subscribers` table signups (form ships first as a demand probe; delivery TBD based on signup rate)
 - [ ] Re-enrichment job for items where `github_stars` has changed significantly
 - [ ] Embedding-based semantic search (pgvector) as an alternative to keyword `ilike`
 - [ ] RSS feed management UI — add/remove feeds without code changes
-- [ ] User-facing "subscribe to digest" email delivery
 - [ ] Source credibility scoring beyond the fixed `source_quality` constants
 - [ ] Personalized feed based on saved topics or viewed items
 
@@ -428,15 +435,18 @@ agentradar/
 ├── app/                    # Next.js App Router pages
 │   ├── page.tsx            # Homepage (ISR)
 │   ├── search/             # Search page + SearchControls client component
-│   ├── digest/             # Weekly digest (ISR)
-│   └── items/[id]/         # Item detail (ISR) + not-found
+│   ├── digest/             # Weekly digest (ISR) + email signup form
+│   ├── items/[id]/         # Item detail (ISR) + not-found
+│   ├── feed.xml/           # RSS feed of the weekly digest
+│   └── api/subscribe/      # Digest signup endpoint — writes to subscribers table
 ├── components/
 │   ├── ItemCard.tsx        # Card used on homepage, search, detail related
 │   ├── ItemSection.tsx     # Section wrapper with heading + grid
 │   ├── TrendingSection.tsx # Trending Now strip
 │   ├── LanguageToggle.tsx  # EN/ZH switcher
 │   ├── TranslatedText.tsx  # Renders EN or ZH content based on language context
-│   └── ui/                 # SourceBadge, CategoryBadge, ScorePill, TagList, MaturityBadge
+│   ├── SubscribeForm.tsx   # Digest email signup form (client)
+│   └── ui/                 # SourceBadge, CategoryBadge, ScorePill, MaturityBadge, NewBadge, TrendingBadge
 ├── config/
 │   ├── github-queries.ts   # Search queries + ingestion blocklist
 │   └── rss-feeds.ts        # RSS feed list

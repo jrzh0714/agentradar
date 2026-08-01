@@ -92,6 +92,11 @@ export default async function HomePage() {
               <span className="font-mono text-xs text-emerald-600 dark:text-emerald-500">
                 <T k="common.updated_daily" />
               </span>
+              {stats.newToday > 0 && (
+                <span className="rounded-full border border-indigo-300 bg-indigo-100 px-2 py-0.5 font-mono text-[10px] tabular-nums text-indigo-700 dark:border-indigo-800/40 dark:bg-indigo-950/30 dark:text-indigo-400">
+                  +{stats.newToday} <T k="home.new_today" />
+                </span>
+              )}
               {stats.lastUpdatedAt && (
                 <span className="font-mono text-xs text-zinc-600">
                   · <T k="common.last_updated" /> {formatRelativeDate(stats.lastUpdatedAt)}

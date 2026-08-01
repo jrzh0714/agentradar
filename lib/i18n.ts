@@ -25,8 +25,10 @@ export const translations = {
     'common.points':      'points',
     'common.comments':    'comments',
     'common.trending':    '↑ trending',
+    'common.new':         'NEW',
     'common.updated_daily':   'updated daily',
     'common.last_updated':    'last updated',
+    'home.new_today':     'new in the last 24h',
 
     // ── Homepage hero ──────────────────────────────────────────────────────
     'home.tagline':       'Track emerging AI agents, developer tools, open-source projects, and model updates in one curated feed.',
@@ -94,6 +96,12 @@ export const translations = {
     'digest.top':             'top',
     'digest.item':            'item',
     'digest.items':           'items',
+    'digest.subscribe_title':       'Get this digest by email',
+    'digest.subscribe_desc':        'One email a week with the highest-signal items. No spam, unsubscribe anytime.',
+    'digest.subscribe_placeholder': 'you@example.com',
+    'digest.subscribe_button':      'Subscribe',
+    'digest.subscribe_success':     "You're on the list.",
+    'digest.subscribe_error':       'Something went wrong — try again.',
 
     // ── Search page ────────────────────────────────────────────────────────
     'search.title':           'Search',
@@ -148,8 +156,10 @@ export const translations = {
     'common.points':      '点赞',
     'common.comments':    '评论',
     'common.trending':    '↑ 趋势上升',
+    'common.new':         '新',
     'common.updated_daily':   '每日更新',
     'common.last_updated':    '最后更新',
+    'home.new_today':     '条新内容（24 小时内）',
 
     // ── Homepage hero ──────────────────────────────────────────────────────
     'home.tagline':       '在一个精选信息流中追踪新兴 AI Agent、开发者工具、开源项目和模型更新。',
@@ -217,6 +227,12 @@ export const translations = {
     'digest.top':             '前',
     'digest.item':            '条',
     'digest.items':           '条',
+    'digest.subscribe_title':       '通过邮件订阅周报',
+    'digest.subscribe_desc':        '每周一封邮件，只推送高价值内容。无垃圾邮件，随时退订。',
+    'digest.subscribe_placeholder': 'you@example.com',
+    'digest.subscribe_button':      '订阅',
+    'digest.subscribe_success':     '订阅成功。',
+    'digest.subscribe_error':       '出错了，请重试。',
 
     // ── Search page ────────────────────────────────────────────────────────
     'search.title':           '搜索',
