@@ -6,6 +6,11 @@ export const metadata: Metadata = {
   title: 'Privacy | AgentRadar',
   robots: { index: false, follow: false },
   alternates: { canonical: '/privacy' },
+  openGraph: {
+    type: 'website',
+    url: '/privacy',
+    title: 'Privacy | AgentRadar',
+  },
 }
 
 export default function PrivacyPage() {

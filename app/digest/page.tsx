@@ -27,6 +27,13 @@ export const metadata: Metadata = {
   description:
     'A ranked briefing of emerging agent frameworks, model updates, research, MCP tools, and developer workflows.',
   alternates: { canonical: '/digest' },
+  openGraph: {
+    type: 'website',
+    url: '/digest',
+    title: 'Weekly Digest — AgentRadar',
+    description:
+      'A ranked briefing of emerging agent frameworks, model updates, research, MCP tools, and developer workflows.',
+  },
 }
 
 // ── Helpers ────────────────────────────────────────────────────────────────────

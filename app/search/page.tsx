@@ -18,6 +18,12 @@ export const metadata: Metadata = {
   title: 'Search — AgentRadar',
   description: 'Search the AgentRadar corpus of AI-enriched tools, repos, and articles.',
   alternates: { canonical: '/search' },
+  openGraph: {
+    type: 'website',
+    url: '/search',
+    title: 'Search — AgentRadar',
+    description: 'Search the AgentRadar corpus of AI-enriched tools, repos, and articles.',
+  },
   robots: { index: false, follow: true },
 }
 

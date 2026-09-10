@@ -13,6 +13,12 @@ export const metadata: Metadata = {
   description: 'Daily pipeline health and run history for AgentRadar.',
   robots: { index: false, follow: false },
   alternates: { canonical: '/status' },
+  openGraph: {
+    type: 'website',
+    url: '/status',
+    title: 'Pipeline Status — AgentRadar',
+    description: 'Daily pipeline health and run history for AgentRadar.',
+  },
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
