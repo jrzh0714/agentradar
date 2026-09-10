@@ -1,7 +1,9 @@
 /**
  * /api/health — public data quality check endpoint.
  *
- * Returns a cached, side-effect-free readiness report with anomaly counts.
+ * Returns a cached, side-effect-free data-quality report with anomaly counts.
+ * A completed report is HTTP 200 even when it contains anomalies; HTTP 503 is
+ * reserved for an unavailable dependency or failed check.
  *
  * Auth: none required — public read-only endpoint.
  */
@@ -19,7 +21,7 @@ export async function GET(): Promise<NextResponse> {
   try {
     const report = await getCachedHealthReport()
     return NextResponse.json(report, {
-      status: report.healthy ? 200 : 503,
+      status: 200,
       headers: { 'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300' },
     })
   } catch {
