@@ -1,9 +1,10 @@
 import { z } from 'zod'
+import { HttpUrlSchema } from '@/lib/validation/url'
 
 export const HnHitSchema = z.object({
   objectID: z.string(),
   title: z.string(),
-  url: z.string().url().nullable(),
+  url: HttpUrlSchema.nullable(),
   author: z.string().nullable(),
   points: z.number().nullable(),
   num_comments: z.number().nullable(),

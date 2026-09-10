@@ -233,6 +233,7 @@ export function SearchControls({
             ref={inputRef}
             type="text"
             name="q"
+            aria-label="Search AgentRadar"
             defaultValue={q}
             placeholder={t('search.placeholder')}
             className={cn(
@@ -257,11 +258,12 @@ export function SearchControls({
       <div className="flex flex-wrap items-center gap-2">
 
         {/* Source — pill tabs (most frequently used, worth the visual weight) */}
-        <div className="flex items-center gap-0.5 rounded-lg border border-zinc-800 bg-zinc-900 p-0.5">
+        <div aria-label="Source" className="flex items-center gap-0.5 rounded-lg border border-zinc-800 bg-zinc-900 p-0.5" role="group">
           {(['all', 'github', 'hackernews', 'rss'] as const).map((s) => (
             <button
               key={s}
               type="button"
+              aria-pressed={source === s}
               onClick={() => navigate({ source: s })}
               className={cn(
                 'rounded-md px-2.5 py-1 font-mono text-xs transition-colors',
@@ -277,6 +279,7 @@ export function SearchControls({
 
         {/* Category */}
         <select
+          aria-label="Category"
           value={category}
           onChange={(e) => navigate({ category: e.target.value })}
           className={selectCls(!!category)}
@@ -289,6 +292,7 @@ export function SearchControls({
 
         {/* Maturity */}
         <select
+          aria-label="Maturity"
           value={maturity}
           onChange={(e) => navigate({ maturity: e.target.value })}
           className={selectCls(!!maturity)}
@@ -300,6 +304,7 @@ export function SearchControls({
 
         {/* Min relevance */}
         <select
+          aria-label="Minimum relevance"
           value={String(minScore)}
           onChange={(e) => navigate({ min_score: e.target.value })}
           className={selectCls(minScore > 0)}
@@ -311,6 +316,7 @@ export function SearchControls({
 
         {/* Date range */}
         <select
+          aria-label="Date range"
           value={dateRange}
           onChange={(e) => navigate({ date_range: e.target.value })}
           className={selectCls(dateRange !== 'all')}
@@ -322,6 +328,7 @@ export function SearchControls({
 
         {/* Sort */}
         <select
+          aria-label="Sort results"
           value={sort}
           onChange={(e) => navigate({ sort: e.target.value })}
           className={selectCls(sort !== 'ranking')}

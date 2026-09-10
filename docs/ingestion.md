@@ -120,7 +120,7 @@ Fetches configured feeds from `config/rss-feeds.ts` (or equivalent). Parses and 
 
 ## Enrichment
 
-`scripts/enrich-items.ts` calls the AI model (OpenAI gpt-4o-mini or Anthropic Claude) on items with `status = 'new'`. Outputs are validated with Zod before being written to the database. Enriched items receive `status = 'enriched'`.
+`scripts/enrich-items.ts` calls the configured AI model (OpenAI GPT-5.4 nano by default, or Anthropic Claude) on items with `status = 'new'`. Outputs are validated with Zod before being written to the database. Enriched items receive `status = 'enriched'`.
 
 ## Ranking
 

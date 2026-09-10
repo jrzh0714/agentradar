@@ -8,14 +8,28 @@
  *   npm run enrich -- --mock                # use mock provider (no API key required)
  *   npm run enrich -- --limit 5 --mock      # mock, 5 items, writes to DB
  *   npm run enrich -- --dry-run --mock      # mock + preview output, no DB writes
+ *   npm run enrich -- --dry-run --eval --limit 3  # real provider eval, no DB writes
  */
 import { config } from 'dotenv'
 
 // tsx sometimes injects empty strings for long API key values from .env.local,
 // so we load with override:true to correct those. We first snapshot any vars
 // the user explicitly set in the shell so we can restore them afterward —
-// shell env always wins for provider/model selection.
-const SHELL_PASSTHROUGH = ['AI_PROVIDER', 'AI_MODEL', 'ANTHROPIC_MODEL', 'OPENAI_MODEL'] as const
+// explicit shell values always win for provider, model, credentials, and budget.
+const SHELL_PASSTHROUGH = [
+  'AI_PROVIDER',
+  'AI_MODEL',
+  'ANTHROPIC_MODEL',
+  'OPENAI_MODEL',
+  'ANTHROPIC_API_KEY',
+  'OPENAI_API_KEY',
+  'OPENAI_BASE_URL',
+  'NEXT_PUBLIC_SUPABASE_URL',
+  'NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY',
+  'SUPABASE_SECRET_KEY',
+  'SUPABASE_SERVICE_ROLE_KEY',
+  'MAX_DAILY_AI_COST_USD',
+] as const
 const shellSnapshot = Object.fromEntries(
   SHELL_PASSTHROUGH.map((k) => [k, process.env[k]]),
 ) as Record<(typeof SHELL_PASSTHROUGH)[number], string | undefined>
@@ -34,16 +48,27 @@ if (!('WebSocket' in globalThis)) {
 
 import { createServerClient } from '@/lib/supabase/server'
 import { enrichItem } from '@/lib/ai/enrich'
-import { ProviderBillingError, activeModel } from '@/lib/ai/provider'
+import { ProviderRequestError, activeModel } from '@/lib/ai/provider'
+import { parseBoundedPositiveInt } from '@/lib/http/limits'
+import {
+  assertWithinDailyAiBudget,
+  estimateStandaloneEnrichmentCost,
+  parseDailyAiBudget,
+} from '@/lib/workflows/cost-estimation'
 import type { Item, ItemEnrichmentUpdate } from '@/lib/db/types'
 
 // ── CLI args ──────────────────────────────────────────────────────────────────
 
 const args = process.argv.slice(2)
 const dryRun = args.includes('--dry-run')
+const evalMode = args.includes('--eval')
 const mockMode = args.includes('--mock')
 const limitIdx = args.indexOf('--limit')
-const LIMIT = limitIdx !== -1 && args[limitIdx + 1] ? parseInt(args[limitIdx + 1], 10) : 10
+const requestedLimit = parseBoundedPositiveInt(
+  limitIdx !== -1 ? args[limitIdx + 1] : null,
+  { fallback: 10, max: 500 },
+)
+const LIMIT = evalMode ? Math.min(requestedLimit, 10) : requestedLimit
 const DELAY_MS = 500
 
 // --mock overrides AI_PROVIDER before any AI module reads it
@@ -51,7 +76,7 @@ if (mockMode) process.env.AI_PROVIDER = 'mock'
 
 // Real providers: skip AI calls during dry-run to avoid charges.
 // Mock: still call it (free, useful for output preview).
-const skipAiCalls = dryRun && !mockMode
+const skipAiCalls = dryRun && !mockMode && !evalMode
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -90,7 +115,11 @@ async function saveFailure(itemId: string, errorMessage: string): Promise<void> 
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 async function main() {
-  const provider = process.env.AI_PROVIDER ?? 'anthropic'
+  if (evalMode && !dryRun) {
+    throw new Error('--eval must be combined with --dry-run so model output cannot mutate the database')
+  }
+
+  const provider = process.env.AI_PROVIDER ?? 'openai'
   const model = activeModel()
 
   console.log(`\n🤖 AgentRadar — AI Enrichment`)
@@ -98,9 +127,17 @@ async function main() {
   console.log(`   Model    : ${model}`)
   console.log(`   Limit    : ${LIMIT}`)
   console.log(`   Dry-run  : ${dryRun}\n`)
+  if (evalMode) console.log('   Eval mode: real model calls enabled; database writes disabled\n')
 
   const items = await fetchPendingItems(LIMIT)
   console.log(`  Selected : ${items.length} item(s) pending enrichment\n`)
+
+  if (!skipAiCalls && !mockMode) {
+    const estimatedUsd = estimateStandaloneEnrichmentCost(items.length, model)
+    const maxDailyAiCostUsd = parseDailyAiBudget(process.env.MAX_DAILY_AI_COST_USD)
+    assertWithinDailyAiBudget(estimatedUsd, maxDailyAiCostUsd)
+    console.log(`  Cost cap : up to $${estimatedUsd.toFixed(4)} of $${maxDailyAiCostUsd.toFixed(2)}\n`)
+  }
 
   if (items.length === 0) {
     console.log('  Nothing to do — all items are already enriched.')
@@ -110,7 +147,7 @@ async function main() {
   let enriched = 0
   let failed = 0
   let skipped = 0
-  let billingError: ProviderBillingError | null = null
+  let providerError: ProviderRequestError | null = null
 
   for (let i = 0; i < items.length; i++) {
     const item = items[i]
@@ -149,8 +186,8 @@ async function main() {
         failed++
       }
     } catch (err) {
-      if (err instanceof ProviderBillingError) {
-        billingError = err
+      if (err instanceof ProviderRequestError) {
+        providerError = err
         break // stop batch — do not mark this item as failed
       }
 
@@ -167,16 +204,16 @@ async function main() {
     }
 
     // Delay between calls — skipped for mock (no cost) and after the last item
-    if (!mockMode && !billingError && i < items.length - 1) {
+    if (!mockMode && !providerError && i < items.length - 1) {
       await sleep(DELAY_MS)
     }
   }
 
-  // ── Billing error ───────────────────────────────────────────────────────────
-  if (billingError) {
-    console.error(`\n  ⚠  Batch stopped early — provider billing/quota error`)
-    console.error(`     ${billingError.message}`)
-    console.error(`     Top up your account and re-run — items were NOT marked as failed.`)
+  // ── Provider error ──────────────────────────────────────────────────────────
+  if (providerError) {
+    console.error(`\n  ⚠  Batch stopped early — provider request failed`)
+    console.error(`     ${providerError.message}`)
+    console.error(`     Resolve provider access or quota, then re-run; the item was not marked failed.`)
   }
 
   // ── Summary ─────────────────────────────────────────────────────────────────
@@ -192,7 +229,7 @@ async function main() {
   }
   console.log()
 
-  if (billingError) process.exit(1)
+  if (providerError) process.exit(1)
 }
 
 main().catch((err) => {

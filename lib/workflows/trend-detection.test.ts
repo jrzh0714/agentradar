@@ -3,16 +3,16 @@ import assert from 'node:assert/strict'
 import { isTrending, shouldSnapshot } from './trend-detection'
 
 describe('isTrending', () => {
-  it('returns true when delta >= 20', () => {
-    assert.equal(isTrending(80, 55), true)   // delta = 25
+  it('returns true when delta is above 1.5', () => {
+    assert.equal(isTrending(58, 55), true)
   })
 
-  it('returns true when delta is exactly 20', () => {
-    assert.equal(isTrending(75, 55), true)   // delta = 20
+  it('returns true when delta is exactly 1.5', () => {
+    assert.equal(isTrending(56.5, 55), true)
   })
 
-  it('returns false when delta is 19', () => {
-    assert.equal(isTrending(74, 55), false)  // delta = 19
+  it('returns false when delta is below 1.5', () => {
+    assert.equal(isTrending(56.4, 55), false)
   })
 
   it('returns false when delta is negative', () => {
@@ -33,21 +33,21 @@ describe('shouldSnapshot', () => {
     assert.equal(shouldSnapshot(null), true)
   })
 
-  it('returns true when last snapshot was 8 days ago', () => {
+  it('returns true when last snapshot was 4 days ago', () => {
     const d = new Date()
-    d.setDate(d.getDate() - 8)
+    d.setUTCDate(d.getUTCDate() - 4)
     assert.equal(shouldSnapshot(d.toISOString().split('T')[0]), true)
   })
 
-  it('returns true when last snapshot was exactly 7 days ago', () => {
+  it('returns true when last snapshot was exactly 3 days ago', () => {
     const d = new Date()
-    d.setDate(d.getDate() - 7)
+    d.setUTCDate(d.getUTCDate() - 3)
     assert.equal(shouldSnapshot(d.toISOString().split('T')[0]), true)
   })
 
-  it('returns false when last snapshot was 3 days ago', () => {
+  it('returns false when last snapshot was 2 days ago', () => {
     const d = new Date()
-    d.setDate(d.getDate() - 3)
+    d.setUTCDate(d.getUTCDate() - 2)
     assert.equal(shouldSnapshot(d.toISOString().split('T')[0]), false)
   })
 

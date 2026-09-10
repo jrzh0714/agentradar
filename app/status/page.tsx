@@ -6,10 +6,13 @@ import { ThemeToggle } from '@/components/ThemeToggle'
 import { getRecentPipelineRuns } from '@/lib/db/pipeline-runs'
 import { formatRelativeDate } from '@/lib/utils'
 import type { PipelineRun } from '@/lib/db/pipeline-runs'
+import { currentTimeMs } from '@/lib/server-time'
 
 export const metadata: Metadata = {
   title: 'Pipeline Status — AgentRadar',
   description: 'Daily pipeline health and run history for AgentRadar.',
+  robots: { index: false, follow: false },
+  alternates: { canonical: '/status' },
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -44,8 +47,12 @@ export default async function StatusPage() {
     ? Math.round((last7.filter((r) => r.success).length / last7.length) * 100)
     : null
 
-  const overallHealthy =
-    lastRun?.success !== false && (successRate === null || successRate >= 70)
+  const lastRunIsRecent = lastRun
+    ? currentTimeMs() - new Date(lastRun.ran_at).getTime() <= 36 * 60 * 60 * 1000
+    : false
+  const overallHealthy = Boolean(
+    lastRun && lastRun.success && lastRunIsRecent && successRate !== null && successRate >= 70,
+  )
 
   return (
     <div className="flex min-h-screen flex-col bg-zinc-950">
@@ -58,7 +65,7 @@ export default async function StatusPage() {
               AgentRadar
             </Link>
             <span className="rounded-full bg-zinc-800 px-2 py-0.5 font-mono text-xs text-zinc-500">
-              beta
+              v1.0
             </span>
           </div>
           <nav className="flex items-center gap-6 font-mono text-xs text-zinc-500">
@@ -136,7 +143,6 @@ export default async function StatusPage() {
                     <th className="px-4 py-3 font-medium">Ranked</th>
                     <th className="px-4 py-3 font-medium">Translated</th>
                     <th className="px-4 py-3 font-medium">Duration</th>
-                    <th className="px-4 py-3 font-medium">Error</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-zinc-800/60">
@@ -227,15 +233,6 @@ function RunRow({ run }: { run: PipelineRun }) {
       <td className="px-4 py-3 tabular-nums text-zinc-300">{run.ranked_count}</td>
       <td className="px-4 py-3 tabular-nums text-zinc-300">{run.translated_count}</td>
       <td className="px-4 py-3 tabular-nums text-zinc-400">{formatDuration(run.duration_ms)}</td>
-      <td className="max-w-[200px] px-4 py-3">
-        {run.error ? (
-          <span className="truncate text-red-400" title={run.error}>
-            {run.error.slice(0, 40)}{run.error.length > 40 ? '…' : ''}
-          </span>
-        ) : (
-          <span className="text-zinc-700">—</span>
-        )}
-      </td>
     </tr>
   )
 }

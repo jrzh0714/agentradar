@@ -16,11 +16,17 @@ Set `AI_PROVIDER` in `.env.local`:
 
 ```env
 AI_PROVIDER=openai
-OPENAI_MODEL=gpt-4o-mini   # optional — this is the default
+OPENAI_MODEL=gpt-5.4-nano-2026-03-17   # optional — pinned default
 OPENAI_API_KEY=sk-proj-...
 ```
 
-The OpenAI call uses `response_format: { type: "json_object" }` so the model always returns valid JSON without markdown fences. Default model is `gpt-4o-mini` — cheap, fast, sufficient for structured enrichment.
+The OpenAI call uses JSON mode and caps completion tokens. The pinned default is
+`gpt-5.4-nano-2026-03-17`, a high-volume model suited to classification,
+extraction, ranking, and short summaries. Run a small staging evaluation before
+changing snapshots.
+
+Use `npm run enrich -- --dry-run --eval --limit 3` to call the configured real
+model on pending items and validate output without writing to the database.
 
 ### Anthropic
 
@@ -112,7 +118,9 @@ RSS product/pricing announcements (Vercel, GitHub, etc.) default to 2–4 unless
 | **Provider-level** | Billing, quota, auth errors | Batch stops immediately. Items are **not** marked `failed`. Re-run after fixing the account. |
 | **Item-level** | Bad JSON, Zod validation failure | Retried once. If still invalid, item is marked `failed`. Other items continue. |
 
-Provider errors surface as `ProviderBillingError` in `lib/ai/provider.ts`. They propagate through `enrichItem()` and are caught in the script's main loop.
+Provider request errors surface as `ProviderRequestError` in `lib/ai/provider.ts`
+(`ProviderBillingError` is its billing-specific subtype). They propagate through
+`enrichItem()` and stop the batch without marking an item as bad data.
 
 ## Retry policy
 

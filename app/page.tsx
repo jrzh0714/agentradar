@@ -62,7 +62,7 @@ export default async function HomePage() {
               AgentRadar
             </span>
             <span className="rounded-full bg-zinc-800 px-2 py-0.5 font-mono text-xs text-zinc-500">
-              <T k="common.beta" />
+              <T k="common.version" />
             </span>
           </div>
           <nav className="flex items-center gap-3 sm:gap-6 font-mono text-xs text-zinc-500">

@@ -15,6 +15,8 @@ function extractJson(raw: string): string {
 // Character budgets — keeps API costs low while giving the model enough context.
 const DESC_LIMIT = 500
 const CONTENT_LIMIT = 4000
+const TITLE_LIMIT = 300
+const URL_LIMIT = 2048
 
 /** Build the user message from an item's fields, safely truncated. */
 function buildUserMessage(
@@ -32,8 +34,8 @@ function buildUserMessage(
   >,
 ): string {
   const lines: string[] = [
-    `Title: ${item.title}`,
-    `URL: ${item.url}`,
+    `Title: ${item.title.slice(0, TITLE_LIMIT)}`,
+    `URL: ${item.url.slice(0, URL_LIMIT)}`,
     `Source: ${item.source}`,
   ]
 

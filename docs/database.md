@@ -1,8 +1,8 @@
 # Database Schema
 
-AgentRadar uses Supabase Postgres. All tables live in the `public` schema with Row Level Security enabled.
-
-Migration file: `supabase/migrations/001_initial_schema.sql`
+AgentRadar uses Supabase Postgres. All tables live in the `public` schema. The
+complete schema is defined by every file in `supabase/migrations/`; the initial
+schema file alone is not sufficient.
 
 ---
 
@@ -36,7 +36,7 @@ The primary table. Every piece of content ingested from GitHub, Hacker News, or 
 | `ai_category` | text | e.g. `agent-framework`, `rag`, `tooling` |
 | `ai_tags` | text[] | Up to 5 lowercase tags |
 | `ai_audience` | text[] | e.g. `['ml-engineer', 'backend-dev']` |
-| `ai_maturity` | text | `experimental` \| `beta` \| `production-ready` |
+| `ai_maturity` | text | `experimental` \| `promising` \| `production-ready` \| `unknown` |
 | `ai_relevance_score` | numeric(4,3) | 0.000–1.000; how relevant to GenAI developers |
 | `ranking_score` | numeric(10,4) | Computed composite score; default 0 |
 | `status` | text | `'new'` → `'enriched'` or `'failed'` |
@@ -119,21 +119,27 @@ External sources
 
 ## Security
 
-- **RLS enabled** on all four tables.
-- `anon` role has **SELECT only** — no INSERT, UPDATE, or DELETE.
-- All writes go through the **service role key** (`SUPABASE_SERVICE_ROLE_KEY`), used exclusively in server-side scripts and API routes — never in client components.
-- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` is safe for the browser; it is subject to RLS.
+- RLS is enabled and forced on operational tables.
+- Direct table privileges are revoked from `public`, `anon`, and `authenticated`.
+- Public pages query explicit projections through the server-only Supabase client;
+  raw payloads, pipeline errors, and subscriber addresses are not Data API public.
+- All reads and writes use `SUPABASE_SECRET_KEY` (or the temporary legacy service
+  role fallback) exclusively in server modules, scripts, and protected routes.
+- `pipeline_locks` provides a durable lease for the daily refresh workflow.
 
 ---
 
 ## Running the Migration
 
-1. Open [Supabase Dashboard → SQL Editor](https://supabase.com/dashboard/project/imtslobvotyythfxztmj/sql/new)
-2. Click **New query**
-3. Paste the contents of `supabase/migrations/001_initial_schema.sql`
-4. Click **Run** (or `Ctrl+Enter`)
-5. Verify in **Table Editor** that `items`, `digests`, `digest_items`, and `rss_feeds` appear
-6. Check **Authentication → Policies** to confirm RLS policies are active
+1. Open the target project's Supabase SQL editor.
+2. Run every file in `supabase/migrations/` in lexical order.
+3. Verify that `items`, `digests`, `digest_items`, `rss_feeds`,
+   `digest_summaries`, `pipeline_runs`, `subscribers`, and `pipeline_locks` exist.
+4. Verify RLS and table grants with both an anonymous key and the server secret.
+
+The early migrations predate the CLI timestamp naming convention. Use the SQL
+editor unless you have explicitly reconciled those files with remote migration
+history; do not blindly mark migrations as applied.
 
 ---
 

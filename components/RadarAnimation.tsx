@@ -34,7 +34,7 @@ export function RadarAnimation() {
           ))}
 
           {/* Rotating sweep group — SMIL animation, no JS needed */}
-          <g>
+          <g className="motion-reduce:hidden">
             <animateTransform
               attributeName="transform"
               type="rotate"
@@ -57,7 +57,7 @@ export function RadarAnimation() {
           </g>
 
           {/* Blip dots — appear when sweep passes over them */}
-          <circle cx="85" cy="-95" r="2.5" fill="var(--radar-color)">
+          <circle className="motion-reduce:hidden" cx="85" cy="-95" r="2.5" fill="var(--radar-color)">
             <animate
               attributeName="opacity"
               values="0;0;0.9;0.4;0"
@@ -73,7 +73,7 @@ export function RadarAnimation() {
               repeatCount="indefinite"
             />
           </circle>
-          <circle cx="-135" cy="55" r="2" fill="var(--radar-color)">
+          <circle className="motion-reduce:hidden" cx="-135" cy="55" r="2" fill="var(--radar-color)">
             <animate
               attributeName="opacity"
               values="0;0;0.9;0.4;0"
@@ -83,7 +83,7 @@ export function RadarAnimation() {
               begin="2s"
             />
           </circle>
-          <circle cx="160" cy="35" r="3" fill="var(--radar-color)">
+          <circle className="motion-reduce:hidden" cx="160" cy="35" r="3" fill="var(--radar-color)">
             <animate
               attributeName="opacity"
               values="0;0;0.9;0.4;0"
@@ -93,7 +93,7 @@ export function RadarAnimation() {
               begin="4.8s"
             />
           </circle>
-          <circle cx="-60" cy="-175" r="2" fill="var(--radar-color)">
+          <circle className="motion-reduce:hidden" cx="-60" cy="-175" r="2" fill="var(--radar-color)">
             <animate
               attributeName="opacity"
               values="0;0;0.9;0.3;0"

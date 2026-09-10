@@ -4,21 +4,25 @@ import { useT } from '@/components/T'
 
 interface Props {
   count: number
+  shownCount: number
   q: string
 }
 
-export function SearchResultsLabel({ count, q }: Props) {
+export function SearchResultsLabel({ count, shownCount, q }: Props) {
   const t = useT()
+  const truncated = count > shownCount
   if (q) {
     return (
       <>
         {count} {t('search.results_for')} &quot;{q}&quot;
+        {truncated ? ` · ${t('search.showing_first')} ${shownCount}` : null}
       </>
     )
   }
   return (
     <>
       {count} {count !== 1 ? t('search.high_signal_pl') : t('search.high_signal')}
+      {truncated ? ` · ${t('search.showing_first')} ${shownCount}` : null}
     </>
   )
 }

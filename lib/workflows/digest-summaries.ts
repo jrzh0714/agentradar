@@ -1,5 +1,5 @@
 import { createServerClient } from '@/lib/supabase/server'
-import { callAi } from '@/lib/ai/provider'
+import { callAi, ProviderRequestError } from '@/lib/ai/provider'
 import { CATEGORIES } from '@/lib/ai/schemas'
 import { getCurrentMonday } from '@/lib/db/digest-summaries'
 import type { Item } from '@/lib/db/types'
@@ -8,6 +8,8 @@ const MIN_ITEMS_PER_CATEGORY = 3
 const ITEMS_PER_SUMMARY = 5
 const SUMMARY_MIN_LENGTH = 50
 const SUMMARY_MAX_LENGTH = 300
+const TITLE_INPUT_LIMIT = 300
+const DESCRIPTION_INPUT_LIMIT = 500
 
 function isMonday(): boolean {
   return new Date().getDay() === 1
@@ -18,7 +20,12 @@ async function generateCategorySummary(
   items: Array<Pick<Item, 'title' | 'ai_summary' | 'description'>>,
 ): Promise<string | null> {
   const itemLines = items
-    .map((item, i) => `${i + 1}. "${item.title}" — ${item.ai_summary ?? item.description ?? '(no description)'}`)
+    .map((item, i) => {
+      const title = item.title.slice(0, TITLE_INPUT_LIMIT)
+      const description = (item.ai_summary ?? item.description ?? '(no description)')
+        .slice(0, DESCRIPTION_INPUT_LIMIT)
+      return `${i + 1}. "${title}" — ${description}`
+    })
     .join('\n')
 
   const raw = await callAi({
@@ -92,6 +99,7 @@ export async function runDigestSummaries(): Promise<{ generated: number; skipped
         generated++
       }
     } catch (err) {
+      if (err instanceof ProviderRequestError) throw err
       console.error(`[digest-summaries] AI call failed for "${category}":`, err instanceof Error ? err.message : err)
       skipped++
     }

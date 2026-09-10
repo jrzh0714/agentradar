@@ -10,6 +10,7 @@
  * Auth: Bearer <CRON_SECRET> required.
  */
 import { type NextRequest, NextResponse } from 'next/server'
+import { parseBoundedPositiveInt } from '@/lib/http/limits'
 
 // Allow up to 5 minutes — 2,000 repos × 150ms delay = ~5 min.
 export const maxDuration = 300
@@ -61,7 +62,9 @@ async function handler(req: NextRequest): Promise<NextResponse> {
   // Fetch limit from query param (default: no cap)
   const url = new URL(req.url)
   const limitParam = url.searchParams.get('limit')
-  const limit = limitParam ? parseInt(limitParam, 10) : 0
+  const limit = limitParam
+    ? parseBoundedPositiveInt(limitParam, { fallback: 0, max: 5_000 })
+    : 0
 
   // Fetch all GitHub items
   let query = supabase

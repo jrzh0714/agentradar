@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Local Playwright capture utilities use CommonJS and are not shipped.
+    "scripts/capture-*.js",
   ]),
 ]);
 

@@ -28,7 +28,7 @@ export function SubscribeForm() {
 
   if (status === 'success') {
     return (
-      <p className="font-mono text-sm text-emerald-600 dark:text-emerald-400">
+      <p aria-live="polite" className="font-mono text-sm text-emerald-600 dark:text-emerald-400" role="status">
         <T k="digest.subscribe_success" />
       </p>
     )
@@ -38,6 +38,9 @@ export function SubscribeForm() {
     <form onSubmit={onSubmit} className="flex flex-wrap items-center gap-2">
       <input
         type="email"
+        name="email"
+        aria-label="Email address"
+        autoComplete="email"
         required
         value={email}
         onChange={(e) => setEmail(e.target.value)}
@@ -52,7 +55,7 @@ export function SubscribeForm() {
         {status === 'loading' ? '…' : <T k="digest.subscribe_button" />}
       </button>
       {status === 'error' && (
-        <span className="font-mono text-xs text-rose-600 dark:text-rose-400">
+        <span aria-live="polite" className="font-mono text-xs text-rose-600 dark:text-rose-400" role="alert">
           <T k="digest.subscribe_error" />
         </span>
       )}

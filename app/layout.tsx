@@ -4,6 +4,7 @@ import './globals.css'
 import { Analytics } from '@vercel/analytics/next'
 import { ThemeProvider } from '@/components/ThemeProvider'
 import { LanguageProvider } from '@/components/LanguageProvider'
+import { SITE_URL } from '@/lib/site'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -21,11 +22,25 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: 'AgentRadar — AI tool discovery for developers',
   description:
     'Track emerging GenAI tools, agent frameworks, GitHub projects, and developer workflows. AI-curated and ranked daily.',
   alternates: {
+    canonical: '/',
     types: { 'application/rss+xml': '/feed.xml' },
+  },
+  openGraph: {
+    type: 'website',
+    url: '/',
+    siteName: 'AgentRadar',
+    title: 'AgentRadar — AI tool discovery for developers',
+    description: 'Track emerging GenAI tools, agent frameworks, GitHub projects, and developer workflows.',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'AgentRadar — AI tool discovery for developers',
+    description: 'Track emerging GenAI tools, agent frameworks, GitHub projects, and developer workflows.',
   },
 }
 

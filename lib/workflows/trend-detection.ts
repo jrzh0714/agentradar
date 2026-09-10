@@ -28,9 +28,8 @@ export function shouldSnapshot(lastSnapshotDate: string | null): boolean {
 // ── DB phases ──────────────────────────────────────────────────────────────────
 
 /**
- * Copies ranking_score → ranking_score_7d_ago for items whose snapshot
- * is older than 7 days (or has never been taken).
- * Skips items snapshotted less than 7 days ago.
+ * Copies ranking_score into the legacy-named ranking_score_7d_ago column for
+ * items whose snapshot is at least three days old (or has never been taken).
  */
 export async function runTrendSnapshot(): Promise<{ snapshotted: number }> {
   const supabase = createServerClient()
@@ -76,8 +75,8 @@ export async function runTrendSnapshot(): Promise<{ snapshotted: number }> {
 }
 
 /**
- * Sets trending=true on items where ranking_score increased ≥ 20 points
- * since their 7-day snapshot. Clears trending=false on all others.
+ * Sets trending=true on items where ranking_score increased by at least 1.5
+ * points since their three-day snapshot. Clears trending=false on all others.
  * Runs every day after ranking.
  */
 export async function runTrendFlagUpdate(): Promise<{ trendingCount: number }> {

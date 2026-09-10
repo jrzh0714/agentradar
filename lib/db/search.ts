@@ -33,6 +33,11 @@ export interface SearchQuery {
   limit?: number
 }
 
+export interface SearchResult {
+  items: HomepageItem[]
+  total: number
+}
+
 // ── Column list ───────────────────────────────────────────────────────────────
 
 const SEARCH_SELECT = [
@@ -41,6 +46,7 @@ const SEARCH_SELECT = [
   'hn_points', 'hn_comments',
   'ai_summary', 'ai_why_it_matters', 'ai_category', 'ai_tags', 'ai_maturity',
   'ai_relevance_score', 'ranking_score', 'trending',
+  'ai_summary_zh', 'ai_why_it_matters_zh', 'created_at',
 ].join(', ')
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -65,7 +71,7 @@ function getDateCutoff(range: DateRange): string | null {
 
 // ── Main export ────────────────────────────────────────────────────────────────
 
-export async function searchItems(query: SearchQuery): Promise<HomepageItem[]> {
+export async function searchItems(query: SearchQuery): Promise<SearchResult> {
   const {
     q,
     source,
@@ -83,7 +89,7 @@ export async function searchItems(query: SearchQuery): Promise<HomepageItem[]> {
 
     let sb = supabase
       .from('items')
-      .select(SEARCH_SELECT)
+      .select(SEARCH_SELECT, { count: 'exact' })
       .eq('status', 'enriched')
 
     // ── Keyword filter ────────────────────────────────────────────────────────
@@ -143,15 +149,18 @@ export async function searchItems(query: SearchQuery): Promise<HomepageItem[]> {
               ? sb.order('hn_points', { ascending: false, nullsFirst: false })
               : sb.order('ranking_score', { ascending: false })
 
-    const { data, error } = await sorted.limit(limit)
+    const { data, error, count } = await sorted.limit(limit)
 
     if (error) {
       console.error('[search] query error:', error.message)
-      return []
+      return { items: [], total: 0 }
     }
-    return (data as unknown as HomepageItem[]) ?? []
+    return {
+      items: (data as unknown as HomepageItem[]) ?? [],
+      total: count ?? 0,
+    }
   } catch (err) {
     console.error('[search] unexpected error:', err)
-    return []
+    return { items: [], total: 0 }
   }
 }

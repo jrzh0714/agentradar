@@ -50,7 +50,7 @@ export function ItemCard({ item, compact = false, className }: ItemCardProps) {
               href={item.url}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Open source"
+              aria-label={`Open source for ${title}`}
               className="text-xs text-zinc-600 transition-colors hover:text-zinc-300"
             >
               ↗

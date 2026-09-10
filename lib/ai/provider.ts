@@ -6,13 +6,19 @@ import { CATEGORIES, MATURITY_VALUES } from '@/lib/ai/schemas'
 export type Provider = 'anthropic' | 'openai' | 'mock'
 
 /**
- * Thrown when the provider cannot process requests due to billing,
- * quota exhaustion, or account-level issues.
- * Callers should stop the batch rather than mark individual items as failed.
+ * Thrown when the provider cannot process a request. Callers should stop the
+ * batch rather than misclassify an account/network failure as bad item data.
  */
-export class ProviderBillingError extends Error {
+export class ProviderRequestError extends Error {
   constructor(provider: string, detail: string) {
-    super(`[${provider}] Billing/quota error — ${detail}`)
+    super(`[${provider}] Provider request failed — ${detail}`)
+    this.name = 'ProviderRequestError'
+  }
+}
+
+export class ProviderBillingError extends ProviderRequestError {
+  constructor(provider: string, detail: string) {
+    super(provider, `billing/quota error — ${detail}`)
     this.name = 'ProviderBillingError'
   }
 }
@@ -91,10 +97,10 @@ const ANTHROPIC_BILLING_PATTERNS = [
 ]
 
 async function callAnthropic(options: AiCallOptions): Promise<string> {
-  const client = getAnthropicClient()
   const model = process.env.ANTHROPIC_MODEL ?? process.env.AI_MODEL ?? 'claude-3-5-haiku-20241022'
 
   try {
+    const client = getAnthropicClient()
     const response = await client.messages.create({
       model,
       max_tokens: options.maxTokens ?? 1024,
@@ -109,7 +115,8 @@ async function callAnthropic(options: AiCallOptions): Promise<string> {
     if (ANTHROPIC_BILLING_PATTERNS.some((p) => msg.toLowerCase().includes(p.toLowerCase()))) {
       throw new ProviderBillingError('anthropic', msg)
     }
-    throw err
+    if (err instanceof ProviderRequestError) throw err
+    throw new ProviderRequestError('anthropic', msg)
   }
 }
 
@@ -135,17 +142,16 @@ const OPENAI_BILLING_PATTERNS = [
   'exceeded your current quota',
   'billing',
   'payment required',
-  'rate_limit_exceeded',
 ]
 
 async function callOpenAI(options: AiCallOptions): Promise<string> {
-  const client = getOpenAIClient()
-  const model = process.env.OPENAI_MODEL ?? 'gpt-4o-mini'
+  const model = process.env.OPENAI_MODEL ?? 'gpt-5.4-nano-2026-03-17'
 
   try {
+    const client = getOpenAIClient()
     const response = await client.chat.completions.create({
       model,
-      max_tokens: options.maxTokens ?? 600,
+      max_completion_tokens: options.maxTokens ?? 600,
       // json_object mode guarantees valid JSON — no markdown fences in output.
       // Requires the word "json" to appear in the prompt (it does).
       response_format: { type: 'json_object' },
@@ -162,23 +168,27 @@ async function callOpenAI(options: AiCallOptions): Promise<string> {
     if (OPENAI_BILLING_PATTERNS.some((p) => msg.toLowerCase().includes(p.toLowerCase()))) {
       throw new ProviderBillingError('openai', msg)
     }
-    throw err
+    if (err instanceof ProviderRequestError) throw err
+    throw new ProviderRequestError('openai', msg)
   }
 }
 
 /** Returns the model name that will be used for the current provider. */
 export function activeModel(): string {
-  const provider = (process.env.AI_PROVIDER ?? 'anthropic') as Provider
-  if (provider === 'openai') return process.env.OPENAI_MODEL ?? 'gpt-4o-mini'
+  const provider = (process.env.AI_PROVIDER ?? 'openai') as Provider
+  if (provider === 'openai') return process.env.OPENAI_MODEL ?? 'gpt-5.4-nano-2026-03-17'
   if (provider === 'anthropic')
     return process.env.ANTHROPIC_MODEL ?? process.env.AI_MODEL ?? 'claude-3-5-haiku-20241022'
-  return 'mock'
+  if (provider === 'mock') return 'mock'
+  throw new Error(
+    `Unsupported AI provider: "${provider}". Set AI_PROVIDER to anthropic, openai, or mock.`,
+  )
 }
 
 // ── Public API ────────────────────────────────────────────────────────────────
 
 export async function callAi(options: AiCallOptions): Promise<string> {
-  const provider = (process.env.AI_PROVIDER ?? 'anthropic') as Provider
+  const provider = (process.env.AI_PROVIDER ?? 'openai') as Provider
 
   switch (provider) {
     case 'mock':

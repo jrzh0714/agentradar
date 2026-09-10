@@ -12,9 +12,16 @@
  *   { success, ingestionCounts, titleFixedCount, enrichedCount, failedCount, rankedCount, durationMs }
  */
 import { type NextRequest, NextResponse } from 'next/server'
-import { runDailyRefresh, DEFAULT_ENRICH_LIMIT } from '@/lib/workflows/daily-refresh'
+import {
+  runDailyRefresh,
+  DEFAULT_ENRICH_LIMIT,
+  MAX_DAILY_ENRICH_LIMIT,
+} from '@/lib/workflows/daily-refresh'
+import { parseBoundedPositiveInt } from '@/lib/http/limits'
+import { acquirePipelineLease, releasePipelineLease } from '@/lib/db/pipeline-lock'
 
-// Allow up to 5 minutes — enriching 150 items sequentially takes ~3–4 min.
+// Allow up to 5 minutes. The default batch is deliberately conservative so
+// enrichment plus follow-on AI phases have time to finish before this ceiling.
 export const maxDuration = 300
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
@@ -36,17 +43,34 @@ async function handler(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const enrichLimit =
-    parseInt(process.env.DAILY_ENRICH_LIMIT ?? String(DEFAULT_ENRICH_LIMIT), 10) ||
-    DEFAULT_ENRICH_LIMIT
+  const enrichLimit = parseBoundedPositiveInt(process.env.DAILY_ENRICH_LIMIT, {
+    fallback: DEFAULT_ENRICH_LIMIT,
+    max: MAX_DAILY_ENRICH_LIMIT,
+  })
 
-  console.log(`[refresh/daily] Starting refresh — enrichLimit=${enrichLimit}`)
+  let lease
+  try {
+    lease = await acquirePipelineLease('daily-refresh')
+  } catch {
+    return NextResponse.json({ error: 'Unable to acquire pipeline lease' }, { status: 503 })
+  }
+  if (!lease) {
+    return NextResponse.json({ error: 'Daily refresh is already running' }, { status: 409 })
+  }
 
-  const result = await runDailyRefresh(enrichLimit)
+  try {
+    console.log(`[refresh/daily] Starting refresh — enrichLimit=${enrichLimit}`)
 
-  console.log('[refresh/daily] Completed:', JSON.stringify(result))
+    const result = await runDailyRefresh(enrichLimit)
 
-  return NextResponse.json(result, { status: result.success ? 200 : 500 })
+    console.log('[refresh/daily] Completed:', JSON.stringify(result))
+
+    return NextResponse.json(result, { status: result.success ? 200 : 500 })
+  } finally {
+    await releasePipelineLease(lease).catch((error) => {
+      console.error('[refresh/daily] Failed to release lease:', error instanceof Error ? error.message : error)
+    })
+  }
 }
 
 // GET  — called by Vercel Cron (which sends GET requests).

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { formatCount, formatRelativeDate } from '@/lib/utils'
 import { TranslatedText } from '@/components/TranslatedText'
@@ -38,39 +38,22 @@ export function TrendingSection({ items }: Props) {
   }, [items])
 
   const [activeSource, setActiveSource] = useState<SourceFilter>('all')
+  const selectedSource = availableSources.includes(activeSource) ? activeSource : 'all'
 
-  // If the active source disappears from available (edge case), reset to all
-  useEffect(() => {
-    if (!availableSources.includes(activeSource)) setActiveSource('all')
-  }, [activeSource, availableSources])
-
-  const filtered = activeSource === 'all'
+  const filtered = selectedSource === 'all'
     ? items
-    : items.filter((i) => i.source === activeSource)
+    : items.filter((i) => i.source === selectedSource)
 
-  // ── Source cycling via arrow keys ──────────────────────────────────────────
+  // ── Source cycling ─────────────────────────────────────────────────────────
 
-  const cycleSource = useCallback((dir: 1 | -1) => {
+  function cycleSource(dir: 1 | -1) {
     setActiveSource((cur) => {
-      const idx = availableSources.indexOf(cur)
+      const current = availableSources.includes(cur) ? cur : 'all'
+      const idx = availableSources.indexOf(current)
       const next = (idx + dir + availableSources.length) % availableSources.length
       return availableSources[next]
     })
-  }, [availableSources])
-
-  useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      const active = document.activeElement
-      const isInput = active instanceof HTMLInputElement
-        || active instanceof HTMLTextAreaElement
-        || active instanceof HTMLSelectElement
-      if (isInput) return
-      if (e.key === 'ArrowRight') { e.preventDefault(); cycleSource(1) }
-      if (e.key === 'ArrowLeft')  { e.preventDefault(); cycleSource(-1) }
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [cycleSource])
+  }
 
   // ── Render ─────────────────────────────────────────────────────────────────
 
@@ -101,7 +84,7 @@ export function TrendingSection({ items }: Props) {
           {availableSources.map((src) => {
             const cfg = SOURCE_CONFIG[src]
             const count = src === 'all' ? items.length : items.filter((i) => i.source === src).length
-            const isActive = activeSource === src
+            const isActive = selectedSource === src
             return (
               <button
                 key={src}
@@ -132,10 +115,6 @@ export function TrendingSection({ items }: Props) {
           →
         </button>
 
-        {/* Keyboard hint — hidden on mobile */}
-        <span className="ml-1 hidden font-mono text-[10px] text-zinc-700 sm:inline">
-          ← → keys
-        </span>
       </div>
 
       {/* ── Item list ────────────────────────────────────────────────────── */}

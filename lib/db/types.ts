@@ -1,5 +1,5 @@
 // ============================================================
-// Database types — mirrors supabase/migrations/001_initial_schema.sql
+// Database types — mirrors the cumulative schema in supabase/migrations/.
 // ============================================================
 
 export type ItemSource = 'github' | 'hackernews' | 'rss'

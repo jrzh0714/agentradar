@@ -88,7 +88,7 @@ If validation fails, the item is marked `status = 'failed'` and retried on the n
 
 ### Provider abstraction
 
-The AI layer (`lib/ai/provider.ts`) supports Anthropic and OpenAI interchangeably. `AI_PROVIDER=anthropic` (default) uses `claude-3-5-haiku-20241022`. `AI_PROVIDER=openai` uses `gpt-4o-mini`. A `mock` provider is available for local development without API keys.
+The AI layer (`lib/ai/provider.ts`) supports OpenAI and Anthropic interchangeably. `AI_PROVIDER=openai` (default) uses the pinned `gpt-5.4-nano-2026-03-17` snapshot; Anthropic remains configurable. A `mock` provider is available for local development without API keys.
 
 ---
 
@@ -214,6 +214,6 @@ The detail page's related items use a two-pass query: first, items from the same
 
 **Data quality under real conditions** — The fork artifact problem, the 1,000-row pagination bug, the null/empty title rendering failures, and the HN prefix display issue were all discovered during real QA passes — not anticipated in advance. Each was diagnosed, root-caused, and fixed with a durable solution (not a one-time patch). The title quality work in particular grew into a standalone module with its own test suite after the initial fix proved insufficient for the empty-string case.
 
-**Next.js Server Components architecture** — All data fetching is server-side. The client boundary is a single component (`SearchControls`). The `SUPABASE_SERVICE_ROLE_KEY` never touches the browser.
+**Next.js Server Components architecture** — All database fetching is server-side, with small client islands for interaction. The Supabase secret key never touches the browser.
 
 **Defensive engineering** — Every DB query has a try/catch returning a safe default. AI output is validated before any DB write. The UI has fallbacks for every nullable field. The result is that no combination of bad data in the DB produces a broken or empty page.

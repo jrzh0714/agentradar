@@ -17,6 +17,8 @@ import { T } from '@/components/T'
 export const metadata: Metadata = {
   title: 'Search — AgentRadar',
   description: 'Search the AgentRadar corpus of AI-enriched tools, repos, and articles.',
+  alternates: { canonical: '/search' },
+  robots: { index: false, follow: true },
 }
 
 // ── Param parsers ─────────────────────────────────────────────────────────────
@@ -39,7 +41,7 @@ function parseDateRange(raw: string | string[] | undefined): DateRange {
 }
 
 function parseString(raw: string | string[] | undefined): string {
-  return typeof raw === 'string' ? raw.trim() : ''
+  return typeof raw === 'string' ? raw.trim().slice(0, 120) : ''
 }
 
 function parseFloat_(raw: string | string[] | undefined): number {
@@ -64,7 +66,9 @@ export default async function SearchPage({
   const dateRange = parseDateRange(params.date_range)
   const sort      = parseSort(params.sort)
 
-  const results = await searchItems({ q, source, category, maturity, minScore, dateRange, sort })
+  const { items: results, total } = await searchItems({
+    q, source, category, maturity, minScore, dateRange, sort,
+  })
 
   return (
     <div className="flex min-h-screen flex-col bg-zinc-950">
@@ -76,7 +80,7 @@ export default async function SearchPage({
               AgentRadar
             </Link>
             <span className="rounded-full bg-zinc-800 px-2 py-0.5 font-mono text-xs text-zinc-500">
-              <T k="common.beta" />
+              <T k="common.version" />
             </span>
           </div>
           <nav className="flex items-center gap-3 sm:gap-6 font-mono text-xs text-zinc-500">
@@ -122,7 +126,7 @@ export default async function SearchPage({
         {/* ── Result count ────────────────────────────────────────────────── */}
         <div className="mt-6 mb-4 flex items-center gap-2 border-b border-zinc-800 pb-4">
           <span className="font-mono text-xs text-zinc-500">
-            <SearchResultsLabel count={results.length} q={q} />
+            <SearchResultsLabel count={total} shownCount={results.length} q={q} />
           </span>
           {results.length > 0 && (
             <span className="font-mono text-xs text-zinc-700">

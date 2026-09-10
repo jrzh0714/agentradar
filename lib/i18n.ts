@@ -14,7 +14,7 @@ export const translations = {
     'nav.back_home':      '← home',
 
     // ── Common ─────────────────────────────────────────────────────────────
-    'common.beta':        'beta',
+    'common.version':     'v1.0',
     'common.today':       'today',
     'common.see_all':     'See all',
     'common.view_source': 'View source',
@@ -96,11 +96,13 @@ export const translations = {
     'digest.top':             'top',
     'digest.item':            'item',
     'digest.items':           'items',
-    'digest.subscribe_title':       'Get this digest by email',
-    'digest.subscribe_desc':        'One email a week with the highest-signal items. No spam, unsubscribe anytime.',
+    'digest.subscribe_title':       'Join the digest waitlist',
+    'digest.subscribe_desc':        'Email delivery is not active yet. Your address is stored only to measure interest; no messages are sent today.',
+    'digest.waitlist_closed_title': 'Digest email waitlist is closed',
+    'digest.waitlist_closed_desc':  'Email collection is disabled. Follow the RSS feed for updates.',
     'digest.subscribe_placeholder': 'you@example.com',
     'digest.subscribe_button':      'Subscribe',
-    'digest.subscribe_success':     "You're on the list.",
+    'digest.subscribe_success':     "You're on the waitlist.",
     'digest.subscribe_error':       'Something went wrong — try again.',
 
     // ── Search page ────────────────────────────────────────────────────────
@@ -109,6 +111,7 @@ export const translations = {
     'search.placeholder':     "Search AgentRadar… try 'claude', 'mcp', 'rag'",
     'search.button':          'Search',
     'search.results_for':     'results for',
+    'search.showing_first':   'showing first',
     'search.high_signal':     'high-signal item',
     'search.high_signal_pl':  'high-signal items',
     'search.sorted_by':       'sorted by',
@@ -145,7 +148,7 @@ export const translations = {
     'nav.back_home':      '← 首页',
 
     // ── Common ─────────────────────────────────────────────────────────────
-    'common.beta':        'beta',
+    'common.version':     'v1.0',
     'common.today':       '今天',
     'common.see_all':     '查看全部',
     'common.view_source': '查看原文',
@@ -227,11 +230,13 @@ export const translations = {
     'digest.top':             '前',
     'digest.item':            '条',
     'digest.items':           '条',
-    'digest.subscribe_title':       '通过邮件订阅周报',
-    'digest.subscribe_desc':        '每周一封邮件，只推送高价值内容。无垃圾邮件，随时退订。',
+    'digest.subscribe_title':       '加入周报候补名单',
+    'digest.subscribe_desc':        '邮件发送功能尚未启用。您的邮箱目前仅用于衡量需求，不会收到任何邮件。',
+    'digest.waitlist_closed_title': '周报邮件候补名单暂未开放',
+    'digest.waitlist_closed_desc':  '邮箱收集功能目前已关闭。您可以通过 RSS 订阅更新。',
     'digest.subscribe_placeholder': 'you@example.com',
     'digest.subscribe_button':      '订阅',
-    'digest.subscribe_success':     '订阅成功。',
+    'digest.subscribe_success':     '已加入候补名单。',
     'digest.subscribe_error':       '出错了，请重试。',
 
     // ── Search page ────────────────────────────────────────────────────────
@@ -240,6 +245,7 @@ export const translations = {
     'search.placeholder':     '搜索 AgentRadar… 试试 "claude"、"mcp"、"rag"',
     'search.button':          '搜索',
     'search.results_for':     '条结果，关键词',
+    'search.showing_first':   '仅显示前',
     'search.high_signal':     '条高价值内容',
     'search.high_signal_pl':  '条高价值内容',
     'search.sorted_by':       '排序方式',

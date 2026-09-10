@@ -5,6 +5,7 @@
 import { createServerClient } from '@/lib/supabase/server'
 import type { Item } from '@/lib/db/types'
 import type { HomepageItem } from '@/lib/db/homepage'
+import { cache } from 'react'
 
 // ── DetailItem type ────────────────────────────────────────────────────────────
 // Superset of HomepageItem — includes all fields needed for the detail page.
@@ -60,11 +61,12 @@ const RELATED_SELECT = [
   'hn_points', 'hn_comments',
   'ai_summary', 'ai_summary_zh', 'ai_why_it_matters', 'ai_why_it_matters_zh',
   'ai_category', 'ai_tags', 'ai_maturity', 'ai_relevance_score', 'ranking_score', 'trending',
+  'created_at',
 ].join(', ')
 
 // ── getItemById ────────────────────────────────────────────────────────────────
 
-export async function getItemById(id: string): Promise<DetailItem | null> {
+export const getItemById = cache(async function getItemById(id: string): Promise<DetailItem | null> {
   try {
     const supabase = createServerClient()
     const { data, error } = await supabase
@@ -78,7 +80,7 @@ export async function getItemById(id: string): Promise<DetailItem | null> {
   } catch {
     return null
   }
-}
+})
 
 // ── getRelatedItems ────────────────────────────────────────────────────────────
 //

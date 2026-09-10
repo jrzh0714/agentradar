@@ -1,27 +1,30 @@
 {
   "name": "agentradar",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "engines": {
+    "node": ">=22"
+  },
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "npx tsx --test lib/ranking/score.test.ts lib/ingestion/title.test.ts lib/workflows/cost-estimation.test.ts lib/workflows/trend-detection.test.ts lib/workflows/data-quality.test.ts",
-    "health": "curl -s https://agentradar-nine.vercel.app/api/health | npx --yes json",
-    "estimate": "curl -s -H \"Authorization: Bearer $CRON_SECRET\" https://agentradar-nine.vercel.app/api/pipeline/estimate | npx --yes json",
-    "refresh:stars": "npx tsx scripts/refresh-github-stars.ts",
-    "translate": "npx tsx scripts/translate-items.ts",
-    "cleanup:github": "npx tsx scripts/cleanup-github-artifacts.ts",
-    "cleanup:titles": "npx tsx scripts/cleanup-titles.ts",
-    "ingest:github": "npx tsx scripts/ingest-github.ts",
-    "ingest:hn": "npx tsx scripts/ingest-hn.ts",
-    "ingest:rss": "npx tsx scripts/ingest-rss.ts",
-    "ingest:all": "npx tsx scripts/ingest-all.ts",
-    "fix:rss-feeds": "npx tsx scripts/fix-rss-feeds.ts",
-    "enrich": "npx tsx scripts/enrich-items.ts",
-    "rank": "npx tsx scripts/rank-items.ts"
+    "test": "tsx --conditions=react-server --test app/api/subscribe/route.test.ts lib/ai/provider.test.ts lib/ranking/score.test.ts lib/ingestion/title.test.ts lib/validation/url.test.ts lib/http/limits.test.ts lib/workflows/cost-estimation.test.ts lib/workflows/trend-detection.test.ts lib/workflows/data-quality.test.ts",
+    "health": "curl -fsS ${SITE_URL:-https://agentradarlive.vercel.app}/api/health",
+    "estimate": "curl -fsS -H \"Authorization: Bearer $CRON_SECRET\" ${SITE_URL:-https://agentradarlive.vercel.app}/api/pipeline/estimate",
+    "refresh:stars": "tsx --conditions=react-server scripts/refresh-github-stars.ts",
+    "translate": "tsx --conditions=react-server scripts/translate-items.ts",
+    "cleanup:github": "tsx --conditions=react-server scripts/cleanup-github-artifacts.ts",
+    "cleanup:titles": "tsx --conditions=react-server scripts/cleanup-titles.ts",
+    "ingest:github": "tsx --conditions=react-server scripts/ingest-github.ts",
+    "ingest:hn": "tsx --conditions=react-server scripts/ingest-hn.ts",
+    "ingest:rss": "tsx --conditions=react-server scripts/ingest-rss.ts",
+    "ingest:all": "tsx --conditions=react-server scripts/ingest-all.ts",
+    "fix:rss-feeds": "tsx --conditions=react-server scripts/fix-rss-feeds.ts",
+    "enrich": "tsx --conditions=react-server scripts/enrich-items.ts",
+    "rank": "tsx --conditions=react-server scripts/rank-items.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.52.0",
@@ -32,13 +35,13 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.14.0",
-    "next": "16.2.6",
+    "next": "^16.3.4",
     "next-themes": "^0.4.6",
     "openai": "^6.37.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "rss-parser": "^3.13.0",
-    "shadcn": "^4.7.0",
+    "server-only": "^0.0.1",
     "tailwind-merge": "^3.6.0",
     "tw-animate-css": "^1.4.0",
     "zod": "^3.24.2"
@@ -51,10 +54,12 @@
     "@types/ws": "^8.18.1",
     "dotenv": "^17.4.2",
     "eslint": "^9",
-    "eslint-config-next": "16.2.6",
+    "eslint-config-next": "^16.3.4",
     "playwright": "^1.60.0",
+    "shadcn": "^4.21.0",
     "tailwindcss": "^4",
+    "tsx": "^4.23.13",
     "typescript": "^5",
-    "ws": "^8.20.0"
+    "ws": "^8.21.0"
   }
 }

@@ -1,11 +1,12 @@
 import { z } from 'zod'
+import { HttpUrlSchema } from '@/lib/validation/url'
 
 export const GithubRepoSchema = z.object({
   id: z.number(),
   full_name: z.string(),
   name: z.string(),
   description: z.string().nullable(),
-  html_url: z.string().url(),
+  html_url: HttpUrlSchema,
   stargazers_count: z.number(),
   forks_count: z.number().default(0),
   language: z.string().nullable(),

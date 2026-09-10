@@ -5,14 +5,14 @@
  * not yet been translated. Uses the same callAi() provider as enrichment,
  * so AI_PROVIDER controls which model runs the translations.
  *
- * Cost model (GPT-4o-mini):
- *   - ~245 tokens input per item (system prompt + English text)
- *   - ~200 tokens output per item (Chinese text)
- *   - ~$0.0002 per item  →  2,000-item corpus ≈ $0.40 one-time
- *   - 30 new items/day × $0.0002 ≈ $0.006/day ≈ $0.18/month ongoing
+ * Cost depends on the configured provider and model. The OpenAI default is the
+ * pinned gpt-5.4-nano-2026-03-17 snapshot. Each call includes this fixed system
+ * prompt plus the two short source fields, with completion output capped at 400
+ * tokens; use current provider pricing when estimating a batch.
  */
 import { createServerClient } from '@/lib/supabase/server'
-import { callAi } from '@/lib/ai/provider'
+import { callAi, ProviderRequestError } from '@/lib/ai/provider'
+import { MAX_TRANSLATION_ITEMS } from '@/lib/workflows/cost-estimation'
 
 const TRANSLATION_SYSTEM_PROMPT = `You are a precise technical translator. Translate the given English AI tool descriptions into natural, professional Simplified Chinese (简体中文) for developers.
 
@@ -23,7 +23,7 @@ Rules:
 - Return ONLY valid JSON, no markdown fences:
 {"summary_zh":"<translated summary>","why_it_matters_zh":"<translated why it matters>"}`
 
-const BATCH_SIZE = 30
+const BATCH_SIZE = 20
 
 /**
  * Delay between translation calls.
@@ -76,7 +76,8 @@ async function translateItem(
       summary_zh: parsed.summary_zh.trim(),
       why_it_matters_zh: parsed.why_it_matters_zh?.trim() ?? '',
     }
-  } catch {
+  } catch (error) {
+    if (error instanceof ProviderRequestError) throw error
     return null
   }
 }
@@ -100,7 +101,10 @@ export async function runTranslation(
 ): Promise<TranslationRunResult> {
   // Clamp to LOCAL_MAX_ITEMS when running against local Ollama to prevent
   // sustained GPU load that makes the machine unresponsive.
-  const effectiveLimit = isLocalOllama ? Math.min(limit, LOCAL_MAX_ITEMS) : limit
+  const cloudBoundedLimit = Math.min(limit, MAX_TRANSLATION_ITEMS)
+  const effectiveLimit = isLocalOllama
+    ? Math.min(cloudBoundedLimit, LOCAL_MAX_ITEMS)
+    : cloudBoundedLimit
   if (isLocalOllama && limit > LOCAL_MAX_ITEMS) {
     console.log(
       `[translation] Local Ollama detected — clamping limit from ${limit} → ${LOCAL_MAX_ITEMS} (thermal safety). Re-run to continue the backlog.`,

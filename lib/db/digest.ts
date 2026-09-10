@@ -102,11 +102,9 @@ export async function getDigestSections(): Promise<DigestSection[]> {
   const seen = new Set<string>()
   const sections: DigestSection[] = []
 
-  for (const def of SECTION_DEFINITIONS) {
-    let candidates: HomepageItem[] = []
-
+  const candidatesBySection = await Promise.all(SECTION_DEFINITIONS.map(async (def) => {
     try {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('items')
         .select(DIGEST_SELECT)
         .eq('status', 'enriched')
@@ -116,14 +114,17 @@ export async function getDigestSections(): Promise<DigestSection[]> {
         .order('ranking_score', { ascending: false })
         .limit(FETCH_PER_SECTION)
 
-      candidates = (data as unknown as HomepageItem[]) ?? []
+      if (error) throw new Error(error.message)
+      return (data as unknown as HomepageItem[]) ?? []
     } catch {
-      candidates = []
+      return []
     }
+  }))
 
+  for (const [index, def] of SECTION_DEFINITIONS.entries()) {
     // In-memory cross-section dedup
     const items: HomepageItem[] = []
-    for (const item of candidates) {
+    for (const item of candidatesBySection[index]) {
       if (items.length >= ITEMS_PER_SECTION) break
       if (!seen.has(item.id)) {
         seen.add(item.id)

@@ -16,6 +16,7 @@ import { T } from '@/components/T'
 import { getDisplayTitle, getTitlePrefix } from '@/lib/ingestion/title'
 import { getDigestSections, ITEMS_PER_SECTION } from '@/lib/db/digest'
 import { getDigestSummariesForWeek, getCurrentMonday } from '@/lib/db/digest-summaries'
+import { isWaitlistEnabled } from '@/lib/waitlist'
 import type { DigestSection } from '@/lib/db/digest'
 import type { HomepageItem } from '@/lib/db/homepage'
 
@@ -25,6 +26,7 @@ export const metadata: Metadata = {
   title: 'Weekly Digest — AgentRadar',
   description:
     'A ranked briefing of emerging agent frameworks, model updates, research, MCP tools, and developer workflows.',
+  alternates: { canonical: '/digest' },
 }
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
@@ -43,8 +45,11 @@ function weekLabel(): string {
 // ── Page ───────────────────────────────────────────────────────────────────────
 
 export default async function DigestPage() {
-  const sections = await getDigestSections()
-  const summaries = await getDigestSummariesForWeek(getCurrentMonday())
+  const waitlistEnabled = isWaitlistEnabled()
+  const [sections, summaries] = await Promise.all([
+    getDigestSections(),
+    getDigestSummariesForWeek(getCurrentMonday()),
+  ])
   const visibleSections = sections.filter((s) => s.items.length > 0)
   const totalItems = visibleSections.reduce((n, s) => n + s.items.length, 0)
 
@@ -59,7 +64,7 @@ export default async function DigestPage() {
               AgentRadar
             </Link>
             <span className="rounded-full bg-zinc-800 px-2 py-0.5 font-mono text-xs text-zinc-500">
-              <T k="common.beta" />
+              <T k="common.version" />
             </span>
           </div>
           <nav className="flex items-center gap-3 sm:gap-6 font-mono text-xs text-zinc-500">
@@ -119,18 +124,24 @@ export default async function DigestPage() {
         <section className="border-b border-zinc-800 py-8">
           <div className="rounded-lg border-l-2 border-indigo-600 bg-zinc-900/60 px-6 py-5">
             <p className="mb-1 font-mono text-sm font-semibold text-zinc-200">
-              <T k="digest.subscribe_title" />
+              <T k={waitlistEnabled ? 'digest.subscribe_title' : 'digest.waitlist_closed_title'} />
             </p>
             <p className="mb-4 text-xs leading-relaxed text-zinc-500">
-              <T k="digest.subscribe_desc" />
+              <T k={waitlistEnabled ? 'digest.subscribe_desc' : 'digest.waitlist_closed_desc'} />
             </p>
             <div className="flex flex-wrap items-center gap-4">
-              <SubscribeForm />
+              {waitlistEnabled && <SubscribeForm />}
               <a
                 href="/feed.xml"
                 className="font-mono text-xs text-zinc-600 underline underline-offset-2 transition-colors hover:text-zinc-300"
               >
                 RSS
+              </a>
+              <a
+                href="/privacy"
+                className="font-mono text-xs text-zinc-600 underline underline-offset-2 transition-colors hover:text-zinc-300"
+              >
+                Privacy
               </a>
             </div>
           </div>

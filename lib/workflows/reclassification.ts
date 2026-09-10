@@ -1,9 +1,9 @@
 import { createServerClient } from '@/lib/supabase/server'
 import { enrichItem } from '@/lib/ai/enrich'
-import { ProviderBillingError } from '@/lib/ai/provider'
+import { ProviderRequestError } from '@/lib/ai/provider'
+import { MAX_RECLASSIFICATION_ITEMS } from '@/lib/workflows/cost-estimation'
 import type { Item } from '@/lib/db/types'
 
-const RECLASSIFY_LIMIT = 20
 const ENRICH_DELAY_MS = 500
 
 function sleep(ms: number): Promise<void> {
@@ -13,7 +13,7 @@ function sleep(ms: number): Promise<void> {
 /**
  * Re-enriches items with low relevance scores or 'Other' category.
  * Uses the same enrichItem() pipeline — updates category, tags, summary, and score.
- * Limit 20 per run to control AI costs.
+ * Uses the shared conservative per-run cap to control latency and AI costs.
  */
 export async function runReclassification(): Promise<{ reclassified: number; failed: number }> {
   const supabase = createServerClient()
@@ -24,7 +24,7 @@ export async function runReclassification(): Promise<{ reclassified: number; fai
     .eq('status', 'enriched')
     .or('ai_relevance_score.lt.0.5,ai_category.eq.Other')
     .order('created_at', { ascending: true })
-    .limit(RECLASSIFY_LIMIT)
+    .limit(MAX_RECLASSIFICATION_ITEMS)
 
   if (error) {
     console.error('[reclassification] Fetch failed:', error.message)
@@ -62,10 +62,7 @@ export async function runReclassification(): Promise<{ reclassified: number; fai
         failed++
       }
     } catch (err) {
-      if (err instanceof ProviderBillingError) {
-        console.error('[reclassification] Billing error — stopping batch')
-        break
-      }
+      if (err instanceof ProviderRequestError) throw err
       const msg = err instanceof Error ? err.message : String(err)
       console.error(`[reclassification] Error for item ${item.id}:`, msg)
       try {

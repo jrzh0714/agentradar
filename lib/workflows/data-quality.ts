@@ -54,7 +54,9 @@ async function postSlackAlert(report: HealthReport): Promise<void> {
   }
 }
 
-export async function runDataQualityCheck(): Promise<HealthReport> {
+export async function runDataQualityCheck(
+  { notify = true }: { notify?: boolean } = {},
+): Promise<HealthReport> {
   const supabase = createServerClient()
   const stuckCutoff = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString()
 
@@ -65,13 +67,19 @@ export async function runDataQualityCheck(): Promise<HealthReport> {
     supabase.from('items').select('*', { count: 'exact', head: true }).eq('status', 'enriched').is('ai_category', null),
   ])
 
+  const coreError = [stuckNewRes, failedRes, unrankedRes, missingCatRes]
+    .map((result) => result.error)
+    .find(Boolean)
+  if (coreError) throw new Error(`Data quality query failed: ${coreError.message}`)
+
   const categoryChecks = await Promise.all(
     CATEGORIES.map(async (category) => {
-      const { count } = await supabase
+      const { count, error } = await supabase
         .from('items')
         .select('*', { count: 'exact', head: true })
         .eq('status', 'enriched')
         .eq('ai_category', category)
+      if (error) throw new Error(`Category health query failed: ${error.message}`)
       return { category, count: count ?? 0 }
     }),
   )
@@ -85,6 +93,6 @@ export async function runDataQualityCheck(): Promise<HealthReport> {
   }
 
   const report = deriveHealthReport(anomalies)
-  if (!report.healthy) await postSlackAlert(report)
+  if (!report.healthy && notify) await postSlackAlert(report)
   return report
 }

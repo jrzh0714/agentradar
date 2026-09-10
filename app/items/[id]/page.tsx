@@ -32,6 +32,13 @@ export async function generateMetadata({
   return {
     title: `${getDisplayTitle(item)} — AgentRadar`,
     description: item.ai_summary?.trim() || item.description?.trim() || undefined,
+    alternates: { canonical: `/items/${id}` },
+    openGraph: {
+      type: 'article',
+      url: `/items/${id}`,
+      title: getDisplayTitle(item),
+      description: item.ai_summary?.trim() || item.description?.trim() || undefined,
+    },
   }
 }
 
@@ -66,7 +73,7 @@ export default async function ItemDetailPage({
               AgentRadar
             </Link>
             <span className="rounded-full bg-zinc-800 px-2 py-0.5 font-mono text-xs text-zinc-500">
-              <T k="common.beta" />
+              <T k="common.version" />
             </span>
           </div>
           <nav className="flex items-center gap-3 sm:gap-6 font-mono text-xs text-zinc-500">

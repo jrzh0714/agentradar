@@ -54,7 +54,7 @@ AgentRadar continuously ingests items from GitHub, Hacker News, and technical bl
 - **Chinese localization** — full UI translation plus AI-generated Chinese summaries for every item, with a one-click language toggle persisted to localStorage
 - **ISR caching** — homepage, digest, and item detail pages use `revalidate = 300` (5-minute Vercel edge cache), delivering sub-100ms TTFB for most requests
 - **"New today" signal** — items ingested in the last 24h get a NEW badge, and the homepage hero shows a live "+N new today" counter, so returning visitors can see the daily delta at a glance
-- **Digest email signup** — a signup form on `/digest` captures interest in a weekly email digest (delivery not yet built — this is a demand probe before investing in send infrastructure)
+- **Optional digest waitlist** — the future signup flow is preserved but disabled by default; `/digest` points readers to RSS until collection is explicitly enabled
 - **RSS feed** — `/feed.xml` mirrors the weekly digest sections for feed readers, auto-discoverable via a `<link>` tag
 - **Web analytics** — Vercel Web Analytics tracks page views and visitor counts to measure return-visit behavior
 - **Title quality pipeline** — `normalizeTitle`, `deriveTitleFromUrl`, `deriveTitleFromDescription`, and `getDisplayTitle` resolve blank, null, or placeholder titles at render time; HN "Show HN / Ask HN / Tell HN" prefixes are surfaced as badges without mutating stored titles; a `cleanup-titles` script fixes DB rows retroactively
@@ -118,7 +118,7 @@ graph TD
 | Framework | Next.js 16 (App Router, TypeScript strict) |
 | Styling | Tailwind CSS + shadcn/ui |
 | Database | Supabase (Postgres, service-role server-side) |
-| AI enrichment | OpenAI API (`gpt-4o-mini`) or Anthropic API (`claude-3-5-haiku`) |
+| AI enrichment | OpenAI API (`gpt-5.4-nano`) or Anthropic API (`claude-3-5-haiku`) |
 | Validation | Zod — all external API responses and AI output |
 | Deployment | Vercel (ISR edge caching, Cron jobs) |
 | Runtime scripts | `tsx` (Node.js, no build step) |
@@ -190,7 +190,7 @@ The enrichment prompt passes the item's title, URL, and description to the confi
 - **Fixed category enum** — the LLM chooses from 13 predefined categories, preventing category sprawl and enabling reliable filtering
 - **Relevance score 1–10** — the LLM rates AI/developer relevance; scores below 5 receive a ranking penalty, below 4 a severe penalty
 - **Zod validation before any DB write** — invalid AI responses are logged and the item is marked `failed`, never silently discarded
-- **Provider-agnostic** — `AI_PROVIDER=anthropic` or `AI_PROVIDER=openai`; defaults to Anthropic with `claude-3-5-haiku-20241022`
+- **Provider-agnostic** — `AI_PROVIDER=openai`, `anthropic`, or `mock`; defaults to the pinned `gpt-5.4-nano-2026-03-17` snapshot
 - **Structured output** — both providers are called with JSON mode / structured output to reduce parsing errors
 
 ---
@@ -247,10 +247,10 @@ All external data is validated before touching the database:
 
 ### Prerequisites
 
-- Node.js 20+
+- Node.js 22+
 - A Supabase project (free tier works)
 - OpenAI or Anthropic API key
-- GitHub personal access token (for Search API rate limits)
+- A dedicated, least-privilege GitHub token (for Search API rate limits)
 
 ### Steps
 
@@ -274,25 +274,29 @@ Create `.env.local` with:
 # Supabase
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
-SUPABASE_SERVICE_ROLE_KEY=eyJ...
+SUPABASE_SECRET_KEY=sb_secret_...
 
 # AI provider (choose one)
-AI_PROVIDER=anthropic               # or: openai
+AI_PROVIDER=openai                  # or: anthropic, mock
 ANTHROPIC_API_KEY=sk-ant-...        # if using anthropic
 OPENAI_API_KEY=sk-...               # if using openai
 
 # GitHub ingestion
 GITHUB_TOKEN=ghp_...
+
+# Email waitlist (server-only; leave false until privacy and operations review)
+WAITLIST_ENABLED=false
 ```
 
 Optional:
 ```env
-OPENAI_MODEL=gpt-4o-mini            # default: gpt-4o-mini
+OPENAI_MODEL=gpt-5.4-nano-2026-03-17 # default; pin for repeatable output
 AI_MODEL=claude-3-5-haiku-20241022  # default for anthropic
 
 # Daily refresh (Vercel Cron)
 CRON_SECRET=                        # required — protects /api/refresh/daily
-DAILY_ENRICH_LIMIT=150              # optional — max items enriched per cron run
+DAILY_ENRICH_LIMIT=30               # optional — max items enriched per cron run (hard cap 50)
+MAX_DAILY_AI_COST_USD=1.00          # cap the conservative full-run AI estimate
 ```
 
 ---
@@ -323,6 +327,7 @@ npm run enrich               # process up to 10 items
 npm run enrich -- --limit 50 # process up to 50 items
 npm run enrich -- --dry-run  # preview without writing
 npm run enrich -- --mock     # mock LLM (no API key required)
+npm run enrich -- --dry-run --eval --limit 3 # real-model quality check, no DB writes
 
 # Ranking — recompute ranking_score for all enriched items
 npm run rank                 # full corpus
@@ -350,8 +355,13 @@ npm run rank
 1. Push to GitHub
 2. Import into Vercel — framework preset: Next.js
 3. Add all env vars from the table above in Vercel project settings
-4. Run `supabase/migrations/` in order against your Supabase project (SQL editor or CLI)
+4. Prepare the database as described below
 5. Deploy
+
+For a **new, empty project**, run every file in `supabase/migrations/` in lexical
+order. For an **existing project**, back it up, inventory the schema and recorded
+migration history, reconcile the legacy migration filenames, and apply only the
+missing changes. Do not rerun every migration against an existing database.
 
 Run ingestion and enrichment scripts locally pointing at the production Supabase URL to seed the database before going live.
 
@@ -376,10 +386,13 @@ AgentRadar includes a protected API route that runs the full pipeline on a sched
 
 Vercel Cron calls `GET /api/refresh/daily` at **08:00 UTC every day**. The route:
 1. Ingests from GitHub, HN, and RSS concurrently
-2. Enriches up to `DAILY_ENRICH_LIMIT` new items (default: 150)
-3. Recomputes ranking scores for the full enriched corpus
-4. Fixes blank / placeholder titles on newly ingested items before enrichment
-5. Returns a JSON summary: `{ success, ingestionCounts, titleFixedCount, enrichedCount, failedCount, rankedCount, durationMs }`
+2. Fixes blank or placeholder titles
+3. Conservatively estimates enrichment retries, reclassification, translation,
+   and digest summaries, then aborts before paid AI work if the total exceeds
+   `MAX_DAILY_AI_COST_USD`
+4. Enriches up to `DAILY_ENRICH_LIMIT` new items (default: 30; hard cap: 50)
+5. Reclassifies, ranks, updates trends, translates, and generates digest summaries
+6. Returns a structured run summary and records it for `/status`
 
 ### Setup
 
@@ -403,23 +416,35 @@ curl -X POST http://localhost:3000/api/refresh/daily \
 
 ### Cost estimate
 
-At `claude-3-5-haiku` / `gpt-4o-mini` rates, enriching 150 items costs ≈ $0.15–$0.30/day. Reduce `DAILY_ENRICH_LIMIT` in Vercel env vars to lower this.
+Use `npm run estimate` before a paid run. Model pricing changes, so verify the
+configured per-item rate and your OpenAI Platform balance before release. Reduce
+`DAILY_ENRICH_LIMIT` or `MAX_DAILY_AI_COST_USD` to constrain exposure.
 
 ---
 
 ## Known limitations
 
 - **HN corpus depth** — HN ingestion pulls recent AI-relevant stories filtered by minimum points. Corpus depth grows over time as the daily cron accumulates runs.
-- **Enrichment cost** — each item costs ~1–2 API calls. At `gpt-4o-mini` / `claude-3-5-haiku` rates this is roughly $0.001 per item. A corpus of 2,000 items costs ~$2 to enrich from scratch.
+- **AI quota is account-wide** — eligible shared OpenAI traffic receives complimentary daily tokens, but overages are billed normally and another project can consume the same allowance. The dollar preflight remains enabled as a backstop.
 - **Star count lag** — GitHub `github_stars` is captured at ingestion time and not refreshed unless the item is re-ingested.
 - **Category quality** — the AI categorizes items from a fixed 13-value enum. Some items are miscategorized (e.g., a repo with an MCP server but primarily an AR framework landing in `AI Infrastructure`).
 - **No authentication** — all data is public read-only. No user accounts, saved searches, or personalization.
+- **Digest email is disabled by default** — `WAITLIST_ENABLED=false` hides the form and makes the signup API fail closed. Keep collection and delivery off until double opt-in, unsubscribe handling, retention, deletion, abuse controls, and a reviewed privacy contact are in place.
+
+---
+
+## Release status
+
+The local worktree contains a `v1.0.0` release candidate; it is not yet an official
+public release. Promotion still requires every operational gate in
+[docs/release-checklist.md](docs/release-checklist.md), especially credential rotation,
+database migration reconciliation, RLS verification, and API billing controls.
 
 ---
 
 ## Future improvements
 
-- [ ] Send weekly digest emails to `subscribers` table signups (form ships first as a demand probe; delivery TBD based on signup rate)
+- [ ] Complete the privacy and operations gates, then explicitly enable waitlist collection and evaluate weekly digest delivery
 - [ ] Re-enrichment job for items where `github_stars` has changed significantly
 - [ ] Embedding-based semantic search (pgvector) as an alternative to keyword `ilike`
 - [ ] RSS feed management UI — add/remove feeds without code changes
@@ -435,17 +460,17 @@ agentradar/
 ├── app/                    # Next.js App Router pages
 │   ├── page.tsx            # Homepage (ISR)
 │   ├── search/             # Search page + SearchControls client component
-│   ├── digest/             # Weekly digest (ISR) + email signup form
+│   ├── digest/             # Weekly digest (ISR) + optional waitlist
 │   ├── items/[id]/         # Item detail (ISR) + not-found
 │   ├── feed.xml/           # RSS feed of the weekly digest
-│   └── api/subscribe/      # Digest signup endpoint — writes to subscribers table
+│   └── api/subscribe/      # Default-off waitlist endpoint
 ├── components/
 │   ├── ItemCard.tsx        # Card used on homepage, search, detail related
 │   ├── ItemSection.tsx     # Section wrapper with heading + grid
 │   ├── TrendingSection.tsx # Trending Now strip
 │   ├── LanguageToggle.tsx  # EN/ZH switcher
 │   ├── TranslatedText.tsx  # Renders EN or ZH content based on language context
-│   ├── SubscribeForm.tsx   # Digest email signup form (client)
+│   ├── SubscribeForm.tsx   # Opt-in digest waitlist form (client)
 │   └── ui/                 # SourceBadge, CategoryBadge, ScorePill, MaturityBadge, NewBadge, TrendingBadge
 ├── config/
 │   ├── github-queries.ts   # Search queries + ingestion blocklist
@@ -468,4 +493,4 @@ agentradar/
 
 ## License
 
-MIT
+[MIT](LICENSE)

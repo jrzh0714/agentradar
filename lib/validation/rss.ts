@@ -1,8 +1,9 @@
 import { z } from 'zod'
+import { HttpUrlSchema } from '@/lib/validation/url'
 
 export const RssItemSchema = z.object({
   title: z.string(),
-  link: z.string().url(),
+  link: HttpUrlSchema,
   contentSnippet: z.string().optional(),
   content: z.string().optional(),
   isoDate: z.string().optional(),

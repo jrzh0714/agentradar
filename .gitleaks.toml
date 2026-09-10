@@ -1,0 +1,10 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Supabase publishable keys are intentionally browser-safe"
+regexes = ['''^sb_publishable_[A-Za-z0-9_-]+$''']
+paths = [
+  '''(^|/)(node_modules|\.next)/''',
+  '''(^|/)\.env($|\.local$|\..*\.local$)''',
+]

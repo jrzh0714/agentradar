@@ -1,8 +1,32 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useSyncExternalStore } from 'react'
 
 export type Language = 'en' | 'zh'
+
+const STORAGE_KEY = 'ar-lang'
+const listeners = new Set<() => void>()
+
+function getLanguageSnapshot(): Language {
+  return localStorage.getItem(STORAGE_KEY) === 'zh' ? 'zh' : 'en'
+}
+
+function getServerLanguageSnapshot(): Language {
+  return 'en'
+}
+
+function subscribeToLanguage(onStoreChange: () => void): () => void {
+  function onStorage(event: StorageEvent) {
+    if (event.key === STORAGE_KEY) onStoreChange()
+  }
+
+  listeners.add(onStoreChange)
+  window.addEventListener('storage', onStorage)
+  return () => {
+    listeners.delete(onStoreChange)
+    window.removeEventListener('storage', onStorage)
+  }
+}
 
 const LanguageContext = createContext<{
   lang: Language
@@ -10,16 +34,19 @@ const LanguageContext = createContext<{
 }>({ lang: 'en', setLang: () => {} })
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLangState] = useState<Language>('en')
+  const lang = useSyncExternalStore(
+    subscribeToLanguage,
+    getLanguageSnapshot,
+    getServerLanguageSnapshot,
+  )
 
   useEffect(() => {
-    const stored = localStorage.getItem('ar-lang') as Language | null
-    if (stored === 'zh') setLangState('zh')
-  }, [])
+    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en'
+  }, [lang])
 
   function setLang(l: Language) {
-    setLangState(l)
-    localStorage.setItem('ar-lang', l)
+    localStorage.setItem(STORAGE_KEY, l)
+    listeners.forEach((listener) => listener())
   }
 
   return (

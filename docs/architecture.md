@@ -111,7 +111,7 @@ Two clients, never mixed:
 
 | File | Client | Key used | Used in |
 |---|---|---|---|
-| `server.ts` | `createServerClient()` | `SUPABASE_SERVICE_ROLE_KEY` | Server Components, scripts |
+| `server.ts` | `createServerClient()` | `SUPABASE_SECRET_KEY` (legacy service-role fallback) | Server Components, scripts |
 | `client.ts` | `createBrowserClient()` | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Browser only |
 
 `createBrowserClient()` is not used anywhere in the current application — all data fetching is server-side. It is provided for future use (e.g., real-time subscriptions, auth).
@@ -159,7 +159,7 @@ Shared pipeline logic consumed by the API route.
 
 | File | Contents |
 |---|---|
-| `daily-refresh.ts` | `runDailyRefresh(enrichLimit)` — orchestrates `runIngestion` → `runTitleCleanup` → `runEnrichment` → `runRanking`. Always resolves; never throws. Returns `RefreshResult` with per-phase counts. |
+| `daily-refresh.ts` | Orchestrates ingestion, title cleanup, cost guard, enrichment, classification, ranking, trends, translation, summaries, and health checks. Always resolves with a structured `RefreshResult`. |
 
 `runDailyRefresh` contains no CLI side-effects (no dotenv, no ws polyfill) — safe to import directly in a Next.js API route.
 
@@ -172,7 +172,9 @@ Pure functions, no I/O.
 | `score.ts` | `computeRankingScore`, component functions, `WEIGHTS`, `SOURCE_QUALITY` |
 | `score.test.ts` | 10 unit tests |
 
-**Test suite:** `npm run test` runs 54 tests total — 10 ranking tests and 44 title quality tests (`lib/ingestion/title.test.ts`). Both use Node.js built-in `node:test` with no external test framework.
+**Test suite:** `npm test` runs the Node.js `node:test` suites for ranking,
+ingestion title quality, URL validation, HTTP limits, cost estimation, trend
+detection, and data-quality behavior.
 
 ### `lib/ai/`
 
@@ -197,21 +199,23 @@ Zod schemas for external API responses:
 ### Routing
 
 ```
-/                  app/page.tsx              (force-dynamic Server Component)
+/                  app/page.tsx              (ISR, revalidate=300)
 /search            app/search/page.tsx       (force-dynamic Server Component)
-/digest            app/digest/page.tsx       (force-dynamic Server Component)
-/items/[id]        app/items/[id]/page.tsx   (force-dynamic Server Component)
+/digest            app/digest/page.tsx       (ISR, revalidate=300)
+/items/[id]        app/items/[id]/page.tsx   (ISR, revalidate=300)
                    app/items/[id]/not-found.tsx
 /api/refresh/daily app/api/refresh/daily/route.ts  (GET + POST, maxDuration=300)
 ```
 
-All data pages are `force-dynamic` — they read from live DB data and must not be statically cached. When the daily cron is active, switching to `revalidate = 3600` (hourly ISR) is a straightforward future optimisation.
+Homepage, digest, and item detail pages use five-minute ISR. Search stays dynamic
+because its URL-parameter combinations are unbounded.
 
 `/api/refresh/daily` requires `Authorization: Bearer <CRON_SECRET>`. Vercel Cron attaches this header automatically. Manual `GET` or `POST` requests with the correct header are also accepted (useful for local testing and forced refreshes).
 
 ### Client component surface
 
-Only one client component exists in the application: `app/search/SearchControls.tsx`.
+Client components are kept to interactive islands: search controls, language and
+theme controls, the digest waitlist, trending filters, and scroll-to-top behavior.
 
 It handles URL-param driven filter state. The approach uses `useRouter().push()` wrapped in `useTransition()` — this avoids the Next.js `useSearchParams()` requirement to wrap the component in a `<Suspense>` boundary.
 
@@ -273,7 +277,7 @@ Next.js:
      min_score, date_range, sort) — unknown values replaced with defaults
   3. call searchItems({ q, source, category, maturity, minRelevance,
                         dateRange, sort, limit: 60 })
-     └── createServerClient() [SUPABASE_SERVICE_ROLE_KEY]
+     └── createServerClient() [SUPABASE_SECRET_KEY]
      └── .from('items').select(...)
          .eq('status', 'enriched')
          .or('title.ilike.%agent%,...,ai_tags.cs.{agent},...')  ← keyword
@@ -317,11 +321,13 @@ runEnrichment() / scripts/enrich-items.ts
    d. Validate with EnrichmentSchema (Zod)
    e. On success: upsert enrichment fields, status = 'enriched'
    f. On validation failure: status = 'failed', log error
-   g. On ProviderBillingError: abort entire batch
+   g. On ProviderRequestError: abort entire batch
 3. Log summary
 ```
 
-The `ProviderBillingError` abort is important: billing/quota errors affect the entire account, not just one item. Continuing after such an error wastes retries and can incur costs.
+The `ProviderRequestError` abort is important: authentication, availability,
+billing, and quota failures affect the provider request path, not the source item.
+Continuing after such an error wastes retries and can incur costs.
 
 ---
 
@@ -345,14 +351,16 @@ The `maxStars` value is corpus-global, not batch-local. This ensures the GitHub 
 
 | Asset | Where used | How protected |
 |---|---|---|
-| `SUPABASE_SERVICE_ROLE_KEY` | `lib/supabase/server.ts` only | Never imported in `app/` or `components/` |
+| `SUPABASE_SECRET_KEY` | `lib/supabase/server.ts` only | Never imported in client components; legacy service-role fallback supported |
 | `OPENAI_API_KEY` / `ANTHROPIC_API_KEY` | `lib/ai/provider.ts` only | Never imported in `app/` |
 | `GITHUB_TOKEN` | `lib/ingestion/github.ts` only | Script-only, never in web app |
 | `CRON_SECRET` | `app/api/refresh/daily/route.ts` only | Compared against `Authorization: Bearer` header; route returns 401 if missing or mismatched; never sent to client |
 | `NEXT_PUBLIC_SUPABASE_URL` | Both client and server | Safe to expose — just the project URL |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | `lib/supabase/client.ts` only | Publishable key, subject to RLS |
 
-**Row-level security:** The service-role key bypasses RLS. The `items` table is currently read-only from the web app, so this is safe. If a browser client is introduced in the future, RLS policies should restrict it to `SELECT` only.
+**Row-level security:** Server-only tables have forced RLS and public role grants
+are revoked. Browser clients have no direct table access today. Any future browser
+data access must introduce narrowly scoped policies and explicit public views.
 
 ---
 
@@ -364,4 +372,6 @@ The `maxStars` value is corpus-global, not batch-local. This ensures the GitHub 
 
 **In-memory deduplication** — Cross-section dedup on the homepage and digest is done in-memory in the Server Component, not in SQL. This is correct: SQL-side dedup across sections would require complex CTEs or multiple roundtrips. The in-memory approach is simple, readable, and fast for the quantities involved (< 100 candidates fetched total).
 
-**`force-dynamic` on all pages** — All four data pages could use `revalidate = 3600` (hourly ISR) since data only changes when the cron runs (08:00 UTC) or when scripts are run manually. `force-dynamic` was chosen to guarantee freshness and simplify reasoning during development. Switching to ISR is a straightforward future optimisation now that the cron schedule is predictable.
+**Selective caching** — Homepage, digest, and item detail routes use five-minute
+ISR because their data changes in pipeline batches. Search and status remain
+dynamic so filters and operational state are fresh.

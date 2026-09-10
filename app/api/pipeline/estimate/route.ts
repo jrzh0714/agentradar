@@ -11,7 +11,8 @@
  */
 import { type NextRequest, NextResponse } from 'next/server'
 import { estimatePipelineCost } from '@/lib/workflows/cost-estimation'
-import { DEFAULT_ENRICH_LIMIT } from '@/lib/workflows/daily-refresh'
+import { DEFAULT_ENRICH_LIMIT, MAX_DAILY_ENRICH_LIMIT } from '@/lib/workflows/daily-refresh'
+import { parseBoundedPositiveInt } from '@/lib/http/limits'
 
 export const dynamic = 'force-dynamic'
 
@@ -35,10 +36,14 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   }
 
   const limitParam = req.nextUrl.searchParams.get('limit')
-  const enrichLimit =
-    (limitParam ? parseInt(limitParam, 10) : null) ||
-    parseInt(process.env.DAILY_ENRICH_LIMIT ?? String(DEFAULT_ENRICH_LIMIT), 10) ||
-    DEFAULT_ENRICH_LIMIT
+  const defaultLimit = parseBoundedPositiveInt(process.env.DAILY_ENRICH_LIMIT, {
+    fallback: DEFAULT_ENRICH_LIMIT,
+    max: MAX_DAILY_ENRICH_LIMIT,
+  })
+  const enrichLimit = parseBoundedPositiveInt(limitParam, {
+    fallback: defaultLimit,
+    max: MAX_DAILY_ENRICH_LIMIT,
+  })
 
   try {
     const estimate = await estimatePipelineCost(enrichLimit)

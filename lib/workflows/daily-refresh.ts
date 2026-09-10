@@ -10,12 +10,17 @@ import { fetchHnItems } from '@/lib/ingestion/hn'
 import { fetchRssItems } from '@/lib/ingestion/rss'
 import { upsertItems } from '@/lib/db/items'
 import { enrichItem } from '@/lib/ai/enrich'
-import { ProviderBillingError } from '@/lib/ai/provider'
+import { ProviderRequestError } from '@/lib/ai/provider'
 import { computeRankingScore } from '@/lib/ranking/score'
 import { normalizeTitle, deriveTitleFromUrl, deriveTitleFromDescription } from '@/lib/ingestion/title'
 import { createServerClient } from '@/lib/supabase/server'
 import type { Item, ItemEnrichmentUpdate } from '@/lib/db/types'
-import { estimatePipelineCost } from '@/lib/workflows/cost-estimation'
+import {
+  assertWithinDailyAiBudget,
+  estimatePipelineCost,
+  MAX_TRANSLATION_ITEMS,
+  parseDailyAiBudget,
+} from '@/lib/workflows/cost-estimation'
 import { runTrendSnapshot, runTrendFlagUpdate } from '@/lib/workflows/trend-detection'
 import { runReclassification } from '@/lib/workflows/reclassification'
 import { runDataQualityCheck } from '@/lib/workflows/data-quality'
@@ -27,7 +32,8 @@ import { logPipelineRun } from '@/lib/db/pipeline-runs'
 // ── Constants ─────────────────────────────────────────────────────────────────
 
 /** Default cap on items enriched per run — keeps AI costs predictable. */
-export const DEFAULT_ENRICH_LIMIT = 150
+export const DEFAULT_ENRICH_LIMIT = 30
+export const MAX_DAILY_ENRICH_LIMIT = 50
 
 /** Delay between enrichment calls (ms) — avoids hammering the AI provider. */
 const ENRICH_DELAY_MS = 500
@@ -60,7 +66,7 @@ export interface RefreshResult {
   anomaliesFound: number
   estimatedCost: CostEstimate | null
   durationMs: number
-  /** Set when the run terminated early due to a billing/quota error. */
+  /** Set when the run terminated early due to a fatal or provider-level error. */
   error?: string
 }
 
@@ -200,14 +206,14 @@ function sleep(ms: number): Promise<void> {
 interface EnrichmentResult {
   enriched: number
   failed: number
-  billingAbort: boolean
+  providerAbortMessage: string | null
 }
 
 async function runEnrichment(limit: number): Promise<EnrichmentResult> {
   const items = await fetchPendingItems(limit)
   let enriched = 0
   let failed = 0
-  let billingAbort = false
+  let providerAbortMessage: string | null = null
 
   for (let i = 0; i < items.length; i++) {
     const item = items[i]
@@ -222,9 +228,9 @@ async function runEnrichment(limit: number): Promise<EnrichmentResult> {
         failed++
       }
     } catch (err) {
-      if (err instanceof ProviderBillingError) {
-        billingAbort = true
-        break // stop — billing errors affect the whole account, not just one item
+      if (err instanceof ProviderRequestError) {
+        providerAbortMessage = err.message
+        break // provider-level failures affect the batch, not just one item
       }
       const msg = err instanceof Error ? err.message : String(err)
       console.error(`[daily-refresh] Enrichment error for item ${item.id}:`, msg)
@@ -236,7 +242,7 @@ async function runEnrichment(limit: number): Promise<EnrichmentResult> {
     if (i < items.length - 1) await sleep(ENRICH_DELAY_MS)
   }
 
-  return { enriched, failed, billingAbort }
+  return { enriched, failed, providerAbortMessage }
 }
 
 // ── Phase 3: Ranking ──────────────────────────────────────────────────────────
@@ -305,17 +311,18 @@ async function runRanking(): Promise<number> {
 // ── Main export ───────────────────────────────────────────────────────────────
 
 /**
- * Run the full daily refresh pipeline (10 phases):
- *   0. Cost estimate — pre-ingestion snapshot
+ * Run the full daily refresh pipeline (11 phases):
  *   1. Ingest from GitHub, HN, and RSS (concurrent)
  *   2. Title cleanup — fix blank/placeholder titles before enrichment
- *   3. Trend snapshot (weekly — skips items snapshotted < 7 days ago)
- *   4. Enrichment — sequential with rate-limit delay, capped at limit
- *   5. Re-classification — re-categorize items post-enrichment
- *   6. Ranking — paginated fetch, concurrent writes
- *   7. Trend flag update (post-ranking)
- *   8. Digest summaries (Mondays only)
- *   9. Data quality check (always runs)
+ *   3. Cost guard — fail closed before paid AI work
+ *   4. Trend snapshot (every three days — skips newer snapshots)
+ *   5. Enrichment — sequential with rate-limit delay, capped at limit
+ *   6. Re-classification — re-categorize items post-enrichment
+ *   7. Ranking — paginated fetch, concurrent writes
+ *   8. Trend flag update (post-ranking)
+ *   9. Translation — Simplified Chinese
+ *  10. Digest summaries (Mondays only)
+ *  11. Data quality check (always runs)
  *
  * Always resolves — never throws. Any fatal error is captured in `result.error`.
  */
@@ -323,63 +330,77 @@ export async function runDailyRefresh(
   enrichLimit: number = DEFAULT_ENRICH_LIMIT,
 ): Promise<RefreshResult> {
   const start = Date.now()
+  let ingestionCounts: IngestionCounts = { github: 0, hn: 0, rss: 0 }
+  let titleFixedCount = 0
+  let estimatedCost: CostEstimate | null = null
 
   try {
-    // 0. Cost estimate — pre-ingestion snapshot
-    const estimatedCost = await estimatePipelineCost(enrichLimit).catch((err) => {
-      console.warn('[daily-refresh] Cost estimation failed:', err instanceof Error ? err.message : err)
-      return null
-    })
-
     // 1. Ingestion
-    const ingestionCounts = await runIngestion()
+    ingestionCounts = await runIngestion()
 
     // 2. Title cleanup
-    const titleFixedCount = await runTitleCleanup()
+    titleFixedCount = await runTitleCleanup()
 
-    // 3. Trend snapshot (weekly — skips items snapshotted < 7 days ago)
+    // 3. Cost guard — include items just ingested and fail before paid AI work.
+    estimatedCost = await estimatePipelineCost(enrichLimit)
+    const maxDailyAiCostUsd = parseDailyAiBudget(process.env.MAX_DAILY_AI_COST_USD)
+    assertWithinDailyAiBudget(estimatedCost.estimatedUsd, maxDailyAiCostUsd)
+
+    // 4. Trend snapshot (every three days — skips newer snapshots)
     await runTrendSnapshot().catch((err) =>
       console.error('[daily-refresh] Trend snapshot error:', err instanceof Error ? err.message : err),
     )
 
-    // 4. Enrichment
-    const { enriched, failed, billingAbort } = await runEnrichment(enrichLimit)
+    // 5. Enrichment
+    const { enriched, failed, providerAbortMessage } = await runEnrichment(enrichLimit)
 
-    // 5. Re-classification
-    const { reclassified } = await runReclassification().catch((err) => {
-      console.error('[daily-refresh] Reclassification error:', err instanceof Error ? err.message : err)
-      return { reclassified: 0, failed: 0 }
-    })
+    if (providerAbortMessage) {
+      const providerFailureResult: RefreshResult = {
+        success: false,
+        ingestionCounts,
+        titleFixedCount,
+        enrichedCount: enriched,
+        failedCount: failed,
+        reclassifiedCount: 0,
+        rankedCount: 0,
+        trendingCount: 0,
+        translatedCount: 0,
+        digestSummariesGenerated: 0,
+        anomaliesFound: 0,
+        estimatedCost,
+        durationMs: Date.now() - start,
+        error: providerAbortMessage,
+      }
+      await logPipelineRun(providerFailureResult)
+      return providerFailureResult
+    }
 
-    // 6. Ranking
+    // 6. Re-classification
+    const { reclassified } = await runReclassification()
+
+    // 7. Ranking
     const rankedCount = await runRanking()
 
-    // 7. Trend flag update (post-ranking)
+    // 8. Trend flag update (post-ranking)
     const { trendingCount } = await runTrendFlagUpdate().catch((err) => {
       console.error('[daily-refresh] Trend flag update error:', err instanceof Error ? err.message : err)
       return { trendingCount: 0 }
     })
 
-    // 8. Translation — Simplified Chinese (top-ranked untranslated items)
-    const { translated: translatedCount } = await runTranslation(50).catch((err) => {
-      console.error('[daily-refresh] Translation error:', err instanceof Error ? err.message : err)
-      return { translated: 0, failed: 0, skipped: 0 }
-    })
+    // 9. Translation — Simplified Chinese (top-ranked untranslated items)
+    const { translated: translatedCount } = await runTranslation(MAX_TRANSLATION_ITEMS)
 
-    // 9. Digest summaries (Mondays only)
-    const { generated: digestSummariesGenerated } = await runDigestSummaries().catch((err) => {
-      console.error('[daily-refresh] Digest summaries error:', err instanceof Error ? err.message : err)
-      return { generated: 0, skipped: 0 }
-    })
+    // 10. Digest summaries (Mondays only)
+    const { generated: digestSummariesGenerated } = await runDigestSummaries()
 
-    // 10. Data quality check (always runs)
+    // 11. Data quality check (always runs)
     const healthReport = await runDataQualityCheck().catch((err) => {
       console.error('[daily-refresh] Data quality check error:', err instanceof Error ? err.message : err)
       return null
     })
 
     const successResult: RefreshResult = {
-      success: !billingAbort,
+      success: true,
       ingestionCounts,
       titleFixedCount,
       enrichedCount: enriched,
@@ -397,9 +418,6 @@ export async function runDailyRefresh(
         : 0,
       estimatedCost,
       durationMs: Date.now() - start,
-      ...(billingAbort
-        ? { error: 'Enrichment aborted — provider billing/quota error.' }
-        : {}),
     }
     await logPipelineRun(successResult)
     return successResult
@@ -408,8 +426,8 @@ export async function runDailyRefresh(
     console.error('[daily-refresh] Fatal error:', error)
     const failResult: RefreshResult = {
       success: false,
-      ingestionCounts: { github: 0, hn: 0, rss: 0 },
-      titleFixedCount: 0,
+      ingestionCounts,
+      titleFixedCount,
       enrichedCount: 0,
       failedCount: 0,
       reclassifiedCount: 0,
@@ -418,7 +436,7 @@ export async function runDailyRefresh(
       translatedCount: 0,
       digestSummariesGenerated: 0,
       anomaliesFound: 0,
-      estimatedCost: null,
+      estimatedCost,
       durationMs: Date.now() - start,
       error,
     }

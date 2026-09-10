@@ -24,9 +24,17 @@ This guide covers deploying AgentRadar to Vercel with a Supabase backend.
 
 ### Run migrations
 
-Once the project is created, open the SQL editor (Database → SQL Editor) and run the contents of `supabase/migrations/001_initial_schema.sql`.
+For a **new, empty project**, open the SQL editor (Database → SQL Editor) and
+run every file in `supabase/migrations/` in lexical order.
 
-This creates the `items` and `rss_feeds` tables and their indexes.
+For an **existing project**, first back up the database and inventory both its
+schema and recorded migration history. Reconcile the legacy migration filenames
+with what is already present, then apply only missing changes in staging before
+production. Do not rerun every migration against an existing database, and do
+not assume `supabase db push` will discover legacy files before reconciliation.
+
+The final hardening migration revokes direct Data API access from public roles,
+protects operational tables with RLS, and creates the pipeline lease table.
 
 ### Collect credentials
 
@@ -36,7 +44,7 @@ From Project Settings → API:
 |---|---|
 | `NEXT_PUBLIC_SUPABASE_URL` | Project URL (e.g. `https://abcdef.supabase.co`) |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Publishable key (`sb_publishable_...`) |
-| `SUPABASE_SERVICE_ROLE_KEY` | Service role key — treat like a password |
+| `SUPABASE_SECRET_KEY` | Secret key — treat like a password; legacy projects may temporarily use `SUPABASE_SERVICE_ROLE_KEY` |
 
 ---
 
@@ -56,16 +64,30 @@ In Vercel project settings → Environment Variables, add all of the following f
 ```
 NEXT_PUBLIC_SUPABASE_URL
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
-SUPABASE_SERVICE_ROLE_KEY
+SUPABASE_SECRET_KEY
+SITE_URL                  (canonical production origin)
 AI_PROVIDER                (anthropic or openai)
 ANTHROPIC_API_KEY          (if AI_PROVIDER=anthropic)
 OPENAI_API_KEY             (if AI_PROVIDER=openai)
-GITHUB_TOKEN               (not needed for the web app — only for ingestion scripts)
+GITHUB_TOKEN               (required for scheduled GitHub ingestion and star refresh)
+WAITLIST_ENABLED            (optional; defaults off—keep false until privacy and operations review)
 CRON_SECRET                (required — protects /api/refresh/daily)
-DAILY_ENRICH_LIMIT         (optional — max items enriched per cron run, default 150)
+DAILY_ENRICH_LIMIT         (optional — max items enriched per cron run, default 30; hard cap 50)
+MAX_DAILY_AI_COST_USD      (optional — defaults to 1.00; caps the conservative full-run AI estimate)
 ```
 
-> **Note:** `GITHUB_TOKEN` is only used by the ingestion scripts and is not needed for the deployed web application. You only need it when running `npm run ingest:github` locally or from a CI environment.
+> **Note:** `GITHUB_TOKEN` is server-only. It is required in production because
+> the daily refresh and weekly star refresh call GitHub from deployed routes.
+
+### Waitlist safety gate
+
+Email collection is disabled unless the server-only `WAITLIST_ENABLED` value is
+exactly `true` (ignoring case and surrounding whitespace). With the variable
+missing, empty, or false, `/digest` hides the form and `/api/subscribe` returns
+`503` without reading or storing the request body. Leave it false until the
+privacy notice, private contact, retention and deletion procedure, abuse
+controls, double opt-in, and unsubscribe handling are reviewed. Redeploy after
+changing the variable.
 
 ### Deploy
 
@@ -84,8 +106,9 @@ npm run ingest:all
 # Enrich with AI — start with a small batch to verify costs
 npm run enrich -- --limit 20
 
-# Once satisfied, enrich the full batch
-npm run enrich -- --limit 500
+# Once satisfied, intentionally raise the one-run budget for a larger batch.
+# The CLI still hard-caps a single invocation at 500 items.
+MAX_DAILY_AI_COST_USD=3 npm run enrich -- --limit 500
 
 # Compute ranking scores
 npm run rank
@@ -93,7 +116,24 @@ npm run rank
 
 After this, the homepage should show enriched, ranked items.
 
-**Cost estimate:** At OpenAI `gpt-4o-mini` rates, enriching 500 items costs approximately $0.50–$1.00. Anthropic `claude-3-5-haiku` is similar. Run `npm run enrich -- --dry-run` to preview which items will be processed before committing to a batch.
+Run the authenticated `/api/pipeline/estimate` endpoint before committing to a
+batch, compare it with current provider pricing, and confirm complimentary-token
+enrollment for the production API project.
+
+### Complimentary OpenAI tokens
+
+For an eligible OpenAI organization, enable sharing of API inputs and outputs
+for the exact project whose key is stored in `OPENAI_API_KEY`. The pinned default
+model, `gpt-5.4-nano-2026-03-17`, is in the high-volume complimentary-token
+group. The benefit applies automatically only while the project is enrolled and
+the API account has a positive balance.
+
+The allowance is shared across eligible models and organization traffic, resets
+at 00:00 UTC, and a request that crosses the remaining allowance is billed in
+full. AgentRadar cannot observe traffic from other projects, so keep
+`MAX_DAILY_AI_COST_USD` enabled and verify usage grouped by service tier in the
+OpenAI Usage dashboard after the first run. Only public source content is sent
+to the model; subscriber addresses are not part of AI prompts.
 
 ---
 
@@ -107,9 +147,14 @@ AgentRadar ships with a production-ready daily refresh pipeline that runs automa
 
 1. Ingests from GitHub, HN, and RSS concurrently
 2. Fixes blank / placeholder titles on newly ingested items (before enrichment)
-3. Enriches up to `DAILY_ENRICH_LIMIT` new items (default: 150) with the configured AI provider
-4. Recomputes `ranking_score` for the entire enriched corpus
-5. Returns a JSON summary — viewable in Vercel Function logs
+3. Estimates all paid AI phases, including worst-case enrichment retries, and
+   aborts if the total exceeds `MAX_DAILY_AI_COST_USD`
+4. Enriches up to `DAILY_ENRICH_LIMIT` new items (default: 30; hard cap: 50) with the configured AI provider
+5. Reclassifies, ranks, updates trends, translates, and generates digest summaries
+6. Returns a JSON summary — viewable in Vercel Function logs
+
+A database-backed lease rejects overlapping refreshes, including concurrent
+manual and scheduled requests.
 
 ### Setup
 
@@ -126,7 +171,8 @@ In Vercel project settings → Environment Variables, add:
 | Variable | Value | Environment |
 |---|---|---|
 | `CRON_SECRET` | `<generated secret>` | Production, Preview |
-| `DAILY_ENRICH_LIMIT` | `150` (or lower) | Production |
+| `DAILY_ENRICH_LIMIT` | `30` (or lower) | Production |
+| `MAX_DAILY_AI_COST_USD` | `1.00` (or lower) | Production |
 
 Vercel automatically attaches `Authorization: Bearer <CRON_SECRET>` to every cron request, so the route rejects any unauthorized calls.
 
@@ -174,13 +220,12 @@ A successful response looks like:
 
 ### Cost estimate
 
-| Items enriched | Model | Estimated cost |
-|---|---|---|
-| 50 | claude-3-5-haiku | ~$0.05 |
-| 150 | claude-3-5-haiku | ~$0.15–$0.30 |
-| 150 | gpt-4o-mini | ~$0.15–$0.25 |
-
-Adjust `DAILY_ENRICH_LIMIT` in Vercel env vars to control cost. Items that remain unenriched on one run will be picked up on the next.
+Call `/api/pipeline/estimate` with the cron bearer token or use `npm run estimate`.
+Unknown models fail closed until conservative enrichment, translation, and
+summary rates are added to `MODEL_RATES`. The daily refresh includes the maximum
+reclassification, translation, and digest-summary phases in its estimate and
+fails closed when the total exceeds `MAX_DAILY_AI_COST_USD`.
+Pricing changes over time; review the configured rate before changing models.
 
 ### Failure handling
 
@@ -189,7 +234,9 @@ Adjust `DAILY_ENRICH_LIMIT` in Vercel env vars to control cost. Items that remai
 | One item fails validation | Marked `status='failed'`, retried on next run |
 | Billing/quota error | Enrichment stops early; `success: false` in response; items not marked failed |
 | Ingestion source unreachable | That source returns 0 items; other sources continue |
-| Function timeout | Increase `DAILY_ENRICH_LIMIT` cautiously or reduce it; 150 items ≈ 3–4 min |
+| Cost estimate above limit | No paid AI phase runs; raise the budget only after reviewing the estimate |
+| Concurrent refresh | Returns `409`; wait for the active lease to expire or complete |
+| Function timeout | Reduce `DAILY_ENRICH_LIMIT` and review function logs |
 
 ### Manual pipeline (no cron)
 
@@ -253,7 +300,7 @@ npm run rank
 |---|---|---|---|
 | `NEXT_PUBLIC_SUPABASE_URL` | ✅ | ✅ (use staging project) | Use `.env.local` |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | ✅ | ✅ | Use `.env.local` |
-| `SUPABASE_SERVICE_ROLE_KEY` | ✅ | ✅ | Use `.env.local` |
+| `SUPABASE_SECRET_KEY` | ✅ | ✅ | Use `.env.local` |
 | `AI_PROVIDER` | ✅ | Optional | Use `.env.local` |
 | `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` | ✅ | Optional | Use `.env.local` |
 
@@ -268,7 +315,8 @@ For Preview deployments, you can point to a separate staging Supabase project to
 - [ ] An item detail page loads (`/items/[any-valid-id]`)
 - [ ] Digest page shows 6 sections
 - [ ] `/items/00000000-0000-0000-0000-000000000000` shows the not-found page
-- [ ] No `SUPABASE_SERVICE_ROLE_KEY`, `OPENAI_API_KEY`, or `CRON_SECRET` in browser DevTools network responses or page source
+- [ ] No `SUPABASE_SECRET_KEY`, legacy service role key, `OPENAI_API_KEY`, or `CRON_SECRET` in browser responses or page source
+- [ ] `anon` and `authenticated` cannot read server-only tables or raw item payload columns through the Supabase Data API
 - [ ] Vercel Function logs show no errors on page load
 - [ ] `GET /api/refresh/daily` without auth header returns `401 Unauthorized`
 - [ ] Vercel dashboard → Settings → Cron Jobs shows the daily schedule
@@ -278,13 +326,14 @@ For Preview deployments, you can point to a separate staging Supabase project to
 
 ## 8. Monitoring
 
-Vercel provides built-in logs at **Project → Functions → Logs**. Since all pages are `force-dynamic` Server Components, each page load appears as a function invocation.
+Vercel provides built-in logs at **Project → Functions → Logs**. Public content
+pages use ISR, while search and operational endpoints remain dynamic.
 
 Common errors to watch for:
 
 | Error | Likely cause |
 |---|---|
-| `Missing Supabase server env vars` | `SUPABASE_SERVICE_ROLE_KEY` not set in Vercel |
+| `Missing Supabase server env vars` | `SUPABASE_SECRET_KEY` (or the legacy service role key) is not set in Vercel |
 | `getTopPicks returned []` (empty homepage) | No enriched items in DB — run the pipeline |
 | Function timeout | Supabase query taking too long — check DB indexes |
 
@@ -298,7 +347,7 @@ cp .env.example .env.local   # fill in your keys
 npm run dev                  # http://localhost:3000
 ```
 
-The dev server uses `force-dynamic` pages, so it queries Supabase on every request — the same as production.
+The dev server bypasses production ISR behavior and may query Supabase more often than production.
 
 To develop without making real AI calls:
 

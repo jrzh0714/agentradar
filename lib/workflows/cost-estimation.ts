@@ -1,45 +1,71 @@
 import { createServerClient } from '@/lib/supabase/server'
 import { activeModel } from '@/lib/ai/provider'
+import { CATEGORIES } from '@/lib/ai/schemas'
 
-export const MODEL_RATES: Record<string, number> = {
-  'gpt-4o-mini': 0.0002,
-  'gpt-4o': 0.002,
-  'claude-3-5-haiku-20241022': 0.0002,
-  'claude-3-5-sonnet-20241022': 0.003,
-  'mock': 0,
+export interface ModelCostRates {
+  /** Worst-case enrichment cost, including its one validation retry. */
+  enrichmentItemUsd: number
+  translationItemUsd: number
+  digestSummaryUsd: number
 }
 
 /**
- * Translation cost per item (Simplified Chinese).
- *
- * Based on GPT-4o-mini rates ($0.15/1M input, $0.60/1M output):
- *   ~245 input tokens (system prompt + English text) → $0.037 / 1000 items
- *   ~200 output tokens (Chinese text)               → $0.120 / 1000 items
- *   Total ≈ $0.0002/item  →  $0.40 for 2,000-item corpus
- *
- * Monthly ongoing (30 new items/day):
- *   30 × $0.0002 × 30 days ≈ $0.18/month
+ * Conservative standard-rate exposure for the bounded prompts in this repo.
+ * These deliberately round above the current list-price calculation so the
+ * guard stays useful when outputs reach their token cap. Revisit on any model,
+ * prompt-size, retry-policy, or provider-pricing change.
  */
-export const TRANSLATION_RATE_PER_ITEM = 0.0002
+export const MODEL_RATES: Record<string, ModelCostRates> = {
+  'gpt-5.4-nano': {
+    enrichmentItemUsd: 0.005,
+    translationItemUsd: 0.0008,
+    digestSummaryUsd: 0.001,
+  },
+  'gpt-5.4-nano-2026-03-17': {
+    enrichmentItemUsd: 0.005,
+    translationItemUsd: 0.0008,
+    digestSummaryUsd: 0.001,
+  },
+  'gpt-4o-mini': {
+    enrichmentItemUsd: 0.004,
+    translationItemUsd: 0.0005,
+    digestSummaryUsd: 0.0008,
+  },
+  'gpt-4o-mini-2024-07-18': {
+    enrichmentItemUsd: 0.004,
+    translationItemUsd: 0.0005,
+    digestSummaryUsd: 0.0008,
+  },
+  'gpt-4o': {
+    enrichmentItemUsd: 0.05,
+    translationItemUsd: 0.005,
+    digestSummaryUsd: 0.01,
+  },
+  'claude-3-5-haiku-20241022': {
+    enrichmentItemUsd: 0.02,
+    translationItemUsd: 0.002,
+    digestSummaryUsd: 0.004,
+  },
+  'claude-3-5-sonnet-20241022': {
+    enrichmentItemUsd: 0.08,
+    translationItemUsd: 0.008,
+    digestSummaryUsd: 0.015,
+  },
+  mock: {
+    enrichmentItemUsd: 0,
+    translationItemUsd: 0,
+    digestSummaryUsd: 0,
+  },
+}
+
+export const MAX_RECLASSIFICATION_ITEMS = 10
+export const MAX_TRANSLATION_ITEMS = 20
+export const MAX_DIGEST_SUMMARIES = CATEGORIES.length
+export const DEFAULT_MAX_DAILY_AI_COST_USD = 1
 
 /**
- * Full operational cost breakdown (monthly, approximate).
- *
- * | Service           | Cost/month | Notes                                       |
- * |-------------------|-----------|---------------------------------------------|
- * | Vercel Pro        | $20.00    | Required for Cron Jobs                      |
- * | Supabase          |  $0.00    | Free tier (≤500MB DB, ≤2GB bandwidth)       |
- * | AI enrichment     |  $0.18    | 30 items/day × $0.0002 × 30 days           |
- * | AI translation ZH |  $0.18    | 30 items/day × $0.0002 × 30 days           |
- * | AI digest summ.   |  $0.26    | 13 categories × 4 Mondays × $0.005/call    |
- * | AI reclassify     |  $0.10    | ~500 items/month × $0.0002                  |
- * | GitHub API        |  $0.00    | Authenticated; 5,000 req/hour               |
- * | Star refresh      |  $0.00    | GitHub API only                             |
- * |-------------------|-----------|---------------------------------------------|
- * | TOTAL             | ~$20.72   | Dominated by Vercel Pro                     |
- *
- * Without Vercel Pro (manual pipeline triggers): ~$0.72/month
- * One-time translation of 2,000-item corpus: ~$0.40
+ * Re-check rates whenever a model changes. Unknown models fail closed instead
+ * of silently inheriting another model's estimate.
  */
 
 export interface CostEstimate {
@@ -47,22 +73,78 @@ export interface CostEstimate {
   willProcess: number
   ratePerItem: number
   estimatedUsd: number
+  breakdown: {
+    enrichmentUsd: number
+    reclassificationUsd: number
+    translationUsd: number
+    digestSummariesUsd: number
+  }
+  assumptions: {
+    reclassificationItems: number
+    translationItems: number
+    digestSummaryCalls: number
+  }
   model: string
   provider: string
 }
 
-/** Pure — exported for unit tests. */
+function roundUpUsd(value: number): number {
+  return Math.ceil(value * 10_000) / 10_000
+}
+
+/** Pure worst-case estimate for every paid phase in one refresh run. */
 export function computeCostEstimate(
   pendingItems: number,
   enrichLimit: number,
-  ratePerItem: number,
-): Pick<CostEstimate, 'pendingItems' | 'willProcess' | 'ratePerItem' | 'estimatedUsd'> {
+  rates: ModelCostRates,
+): Omit<CostEstimate, 'model' | 'provider'> {
   const willProcess = Math.min(pendingItems, enrichLimit)
+  const breakdown = {
+    enrichmentUsd: roundUpUsd(willProcess * rates.enrichmentItemUsd),
+    reclassificationUsd: roundUpUsd(MAX_RECLASSIFICATION_ITEMS * rates.enrichmentItemUsd),
+    translationUsd: roundUpUsd(MAX_TRANSLATION_ITEMS * rates.translationItemUsd),
+    digestSummariesUsd: roundUpUsd(MAX_DIGEST_SUMMARIES * rates.digestSummaryUsd),
+  }
+  const estimatedUsd = Object.values(breakdown)
+    .reduce((sum, value) => sum + Math.round(value * 10_000), 0) / 10_000
+
   return {
     pendingItems,
     willProcess,
-    ratePerItem,
-    estimatedUsd: Math.round(willProcess * ratePerItem * 10000) / 10000,
+    ratePerItem: rates.enrichmentItemUsd,
+    estimatedUsd,
+    breakdown,
+    assumptions: {
+      reclassificationItems: MAX_RECLASSIFICATION_ITEMS,
+      translationItems: MAX_TRANSLATION_ITEMS,
+      digestSummaryCalls: MAX_DIGEST_SUMMARIES,
+    },
+  }
+}
+
+/** Pure conservative estimate for the standalone enrichment script. */
+export function estimateStandaloneEnrichmentCost(itemCount: number, model: string): number {
+  const rates = MODEL_RATES[model]
+  if (!rates) throw new Error(`No cost rate configured for AI model "${model}"`)
+  return roundUpUsd(itemCount * rates.enrichmentItemUsd)
+}
+
+/** Parse a positive USD budget. Missing uses the default; invalid values fail closed. */
+export function parseDailyAiBudget(raw: string | undefined): number {
+  if (!raw?.trim()) return DEFAULT_MAX_DAILY_AI_COST_USD
+  const parsed = Number(raw)
+  if (!Number.isFinite(parsed) || parsed <= 0) {
+    throw new Error('MAX_DAILY_AI_COST_USD must be a positive number')
+  }
+  return parsed
+}
+
+/** Fail closed before any paid AI phase if its estimate exceeds the run budget. */
+export function assertWithinDailyAiBudget(estimatedUsd: number, maxUsd: number): void {
+  if (estimatedUsd > maxUsd) {
+    throw new Error(
+      `Estimated AI cost $${estimatedUsd.toFixed(4)} exceeds the $${maxUsd.toFixed(2)} daily limit`,
+    )
   }
 }
 
@@ -78,10 +160,13 @@ export async function estimatePipelineCost(enrichLimit: number): Promise<CostEst
   const pendingItems = count ?? 0
   const model = activeModel()
   const provider = process.env.AI_PROVIDER ?? 'openai'
-  const ratePerItem = MODEL_RATES[model] ?? MODEL_RATES['gpt-4o-mini']
+  const rates = MODEL_RATES[model]
+  if (rates === undefined) {
+    throw new Error(`No cost rate configured for AI model "${model}"`)
+  }
 
   return {
-    ...computeCostEstimate(pendingItems, enrichLimit, ratePerItem),
+    ...computeCostEstimate(pendingItems, enrichLimit, rates),
     model,
     provider,
   }

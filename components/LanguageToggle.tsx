@@ -1,15 +1,9 @@
 'use client'
 
 import { useLanguage } from '@/components/LanguageProvider'
-import { useEffect, useState } from 'react'
 
 export function LanguageToggle() {
   const { lang, setLang } = useLanguage()
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => setMounted(true), [])
-
-  if (!mounted) return <div className="h-7 w-12" />
 
   return (
     <button

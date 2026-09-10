@@ -6,10 +6,9 @@
  */
 import { getDigestSections } from '@/lib/db/digest'
 import { getDisplayTitle } from '@/lib/ingestion/title'
+import { SITE_URL } from '@/lib/site'
 
 export const revalidate = 3600
-
-const SITE_URL = 'https://agentradarlive.vercel.app'
 
 function escapeXml(s: string): string {
   return s
@@ -54,6 +53,9 @@ ${items}
 </rss>`
 
   return new Response(xml, {
-    headers: { 'Content-Type': 'application/rss+xml; charset=utf-8' },
+    headers: {
+      'Content-Type': 'application/rss+xml; charset=utf-8',
+      'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+    },
   })
 }
