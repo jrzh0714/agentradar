@@ -2,6 +2,7 @@
  * Pipeline run log — read/write helpers for the pipeline_runs table.
  */
 import { createServerClient } from '@/lib/supabase/server'
+import { sanitizeProviderErrorDetail } from '@/lib/ai/provider'
 import type { RefreshResult } from '@/lib/workflows/daily-refresh'
 
 export interface PipelineRun {
@@ -40,7 +41,7 @@ export async function logPipelineRun(result: RefreshResult): Promise<void> {
       digest_summaries_generated: result.digestSummariesGenerated,
       anomalies_found:            result.anomaliesFound,
       duration_ms:                result.durationMs,
-      error:                      result.error ?? null,
+      error:                      result.error ? sanitizeProviderErrorDetail(result.error) : null,
       estimated_cost:             result.estimatedCost ?? null,
     })
     if (error) throw new Error(error.message)

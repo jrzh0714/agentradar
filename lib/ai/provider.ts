@@ -5,13 +5,25 @@ import { CATEGORIES, MATURITY_VALUES } from '@/lib/ai/schemas'
 // Extend this union when adding a new provider.
 export type Provider = 'anthropic' | 'openai' | 'mock'
 
+const SECRET_PATTERNS = [
+  /\bsk-(?:proj-)?[A-Za-z0-9_-]{8,}\b/g,
+  /\b(?:ghp_|github_pat_|sb_secret_)[A-Za-z0-9_-]{8,}\b/g,
+]
+
+/** Remove credentials and control characters before errors reach logs or the database. */
+export function sanitizeProviderErrorDetail(detail: string): string {
+  let sanitized = detail
+  for (const pattern of SECRET_PATTERNS) sanitized = sanitized.replace(pattern, '[REDACTED]')
+  return sanitized.replace(/[\r\n\t]+/g, ' ').replace(/\s{2,}/g, ' ').trim().slice(0, 500)
+}
+
 /**
  * Thrown when the provider cannot process a request. Callers should stop the
  * batch rather than misclassify an account/network failure as bad item data.
  */
 export class ProviderRequestError extends Error {
   constructor(provider: string, detail: string) {
-    super(`[${provider}] Provider request failed — ${detail}`)
+    super(`[${provider}] Provider request failed — ${sanitizeProviderErrorDetail(detail)}`)
     this.name = 'ProviderRequestError'
   }
 }
@@ -83,8 +95,9 @@ let _anthropic: Anthropic | null = null
 
 function getAnthropicClient(): Anthropic {
   if (!_anthropic) {
-    const apiKey = process.env.ANTHROPIC_API_KEY
+    const apiKey = process.env.ANTHROPIC_API_KEY?.trim()
     if (!apiKey) throw new Error('Missing ANTHROPIC_API_KEY')
+    if (/\s/.test(apiKey)) throw new Error('ANTHROPIC_API_KEY contains whitespace')
     _anthropic = new Anthropic({ apiKey })
   }
   return _anthropic
@@ -126,8 +139,9 @@ let _openai: OpenAI | null = null
 let _openaiBaseURL: string | undefined
 
 function getOpenAIClient(): OpenAI {
-  const apiKey = process.env.OPENAI_API_KEY
+  const apiKey = process.env.OPENAI_API_KEY?.trim()
   if (!apiKey) throw new Error('Missing OPENAI_API_KEY')
+  if (/\s/.test(apiKey)) throw new Error('OPENAI_API_KEY contains whitespace')
   const baseURL = process.env.OPENAI_BASE_URL
   // Re-create client if base URL changed (e.g. switching between cloud and Ollama)
   if (!_openai || baseURL !== _openaiBaseURL) {

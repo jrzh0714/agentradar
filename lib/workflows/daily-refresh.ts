@@ -10,7 +10,7 @@ import { fetchHnItems } from '@/lib/ingestion/hn'
 import { fetchRssItems } from '@/lib/ingestion/rss'
 import { upsertItems } from '@/lib/db/items'
 import { enrichItem } from '@/lib/ai/enrich'
-import { ProviderRequestError } from '@/lib/ai/provider'
+import { ProviderRequestError, sanitizeProviderErrorDetail } from '@/lib/ai/provider'
 import { computeRankingScore } from '@/lib/ranking/score'
 import { normalizeTitle, deriveTitleFromUrl, deriveTitleFromDescription } from '@/lib/ingestion/title'
 import { createServerClient } from '@/lib/supabase/server'
@@ -422,7 +422,7 @@ export async function runDailyRefresh(
     await logPipelineRun(successResult)
     return successResult
   } catch (err) {
-    const error = err instanceof Error ? err.message : String(err)
+    const error = sanitizeProviderErrorDetail(err instanceof Error ? err.message : String(err))
     console.error('[daily-refresh] Fatal error:', error)
     const failResult: RefreshResult = {
       success: false,
