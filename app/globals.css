@@ -84,6 +84,9 @@
 }
 
 .dark {
+  /* Small muted copy must remain readable against zinc-950 (WCAG AA). */
+  --color-zinc-500: #9f9fa9;
+  --color-zinc-600: #8b8b95;
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);

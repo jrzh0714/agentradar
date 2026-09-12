@@ -11,3 +11,10 @@ function resolveSiteUrl(raw: string | undefined): string {
 }
 
 export const SITE_URL = resolveSiteUrl(process.env.SITE_URL)
+
+export const SOCIAL_IMAGE = {
+  url: `${SITE_URL}/opengraph-image`,
+  width: 1200,
+  height: 630,
+  alt: 'AgentRadar — AI tool discovery for developers',
+}

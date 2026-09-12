@@ -7,6 +7,7 @@ import { getRecentPipelineRuns } from '@/lib/db/pipeline-runs'
 import { formatRelativeDate } from '@/lib/utils'
 import type { PipelineRun } from '@/lib/db/pipeline-runs'
 import { currentTimeMs } from '@/lib/server-time'
+import { SOCIAL_IMAGE } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: 'Pipeline Status — AgentRadar',
@@ -18,6 +19,13 @@ export const metadata: Metadata = {
     url: '/status',
     title: 'Pipeline Status — AgentRadar',
     description: 'Daily pipeline health and run history for AgentRadar.',
+    images: [SOCIAL_IMAGE],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Pipeline Status — AgentRadar',
+    description: 'Daily pipeline health and run history for AgentRadar.',
+    images: [SOCIAL_IMAGE],
   },
 }
 

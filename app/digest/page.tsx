@@ -19,6 +19,7 @@ import { getDigestSummariesForWeek, getCurrentMonday } from '@/lib/db/digest-sum
 import { isWaitlistEnabled } from '@/lib/waitlist'
 import type { DigestSection } from '@/lib/db/digest'
 import type { HomepageItem } from '@/lib/db/homepage'
+import { SOCIAL_IMAGE } from '@/lib/site'
 
 // ── Metadata ───────────────────────────────────────────────────────────────────
 
@@ -33,6 +34,14 @@ export const metadata: Metadata = {
     title: 'Weekly Digest — AgentRadar',
     description:
       'A ranked briefing of emerging agent frameworks, model updates, research, MCP tools, and developer workflows.',
+    images: [SOCIAL_IMAGE],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Weekly Digest — AgentRadar',
+    description:
+      'A ranked briefing of emerging agent frameworks, model updates, research, MCP tools, and developer workflows.',
+    images: [SOCIAL_IMAGE],
   },
 }
 
@@ -162,7 +171,7 @@ export default async function DigestPage() {
           <ol className="space-y-1.5">
             {visibleSections.map((s, i) => (
               <li key={s.slug} className="flex items-baseline gap-3">
-                <span className="w-5 shrink-0 font-mono text-xs tabular-nums text-zinc-700">
+                <span className="w-5 shrink-0 font-mono text-xs tabular-nums text-zinc-700 dark:text-zinc-600">
                   {String(i + 1).padStart(2, '0')}
                 </span>
                 <a
@@ -171,7 +180,7 @@ export default async function DigestPage() {
                 >
                   {s.title}
                 </a>
-                <span className="font-mono text-xs text-zinc-700">
+                <span className="font-mono text-xs text-zinc-700 dark:text-zinc-600">
                   {s.items.length} <T k={s.items.length !== 1 ? 'digest.items' : 'digest.item'} />
                 </span>
               </li>
@@ -199,7 +208,7 @@ export default async function DigestPage() {
             <span className="font-mono text-xs text-zinc-600">
               <T k="footer.built_with" />
             </span>
-            <div className="flex items-center gap-4 font-mono text-xs text-zinc-700">
+            <div className="flex items-center gap-4 font-mono text-xs text-zinc-700 dark:text-zinc-600">
               <Link href="/" className="transition-colors hover:text-zinc-400">
                 <T k="nav.back_feed" />
               </Link>
@@ -230,11 +239,11 @@ function DigestSectionBlock({
       {/* Section header */}
       <div className="mb-6">
         <div className="mb-1 flex items-center gap-3">
-          <span className="font-mono text-xs tabular-nums text-zinc-700">
+          <span className="font-mono text-xs tabular-nums text-zinc-700 dark:text-zinc-600">
             {String(index + 1).padStart(2, '0')}
           </span>
           <h2 className="font-mono text-lg font-bold text-zinc-100">{section.title}</h2>
-          <span className="font-mono text-xs text-zinc-700">
+          <span className="font-mono text-xs text-zinc-700 dark:text-zinc-600">
             <T k="digest.top" /> {Math.min(section.items.length, ITEMS_PER_SECTION)}
           </span>
         </div>
@@ -275,7 +284,7 @@ function DigestRow({ item, rank }: { item: HomepageItem; rank: number }) {
     <div className="group py-4">
       {/* Top row: rank · source · category · score · date · external */}
       <div className="mb-1.5 flex flex-wrap items-center gap-2">
-        <span className="w-5 shrink-0 font-mono text-xs tabular-nums text-zinc-700">{rank}.</span>
+        <span className="w-5 shrink-0 font-mono text-xs tabular-nums text-zinc-700 dark:text-zinc-600">{rank}.</span>
         <SourceBadge source={item.source} />
         {item.ai_category && <CategoryBadge category={item.ai_category} />}
         {prefix && <HnPrefixBadge prefix={prefix} />}
@@ -290,7 +299,7 @@ function DigestRow({ item, rank }: { item: HomepageItem; rank: number }) {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Open source"
-            className="font-mono text-xs text-zinc-700 transition-colors hover:text-zinc-300"
+            className="inline-flex h-6 w-6 shrink-0 items-center justify-center font-mono text-xs text-zinc-600 transition-colors hover:text-zinc-300"
           >
             ↗
           </a>
@@ -320,7 +329,7 @@ function DigestRow({ item, rank }: { item: HomepageItem; rank: number }) {
 
         {/* GitHub signals inline */}
         {item.github_stars != null && (
-          <p className="mt-1 font-mono text-xs text-zinc-700">
+          <p className="mt-1 font-mono text-xs text-zinc-700 dark:text-zinc-600">
             ⭐ {item.github_stars.toLocaleString()} <T k="common.stars" />
             {item.github_forks != null && item.github_forks > 0 && (
               <span className="ml-2">· {item.github_forks.toLocaleString()} <T k="common.forks" /></span>
@@ -333,7 +342,7 @@ function DigestRow({ item, rank }: { item: HomepageItem; rank: number }) {
 
         {/* HN signals inline */}
         {item.hn_points != null && (
-          <p className="mt-1 font-mono text-xs text-zinc-700">
+          <p className="mt-1 font-mono text-xs text-zinc-700 dark:text-zinc-600">
             ▲ {item.hn_points} <T k="common.points" />
             {item.hn_comments != null && item.hn_comments > 0 && (
               <span className="ml-2">· {item.hn_comments} <T k="common.comments" /></span>

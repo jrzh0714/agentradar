@@ -11,6 +11,7 @@ import type { DateRange, SearchSort } from '@/lib/db/search'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { LanguageToggle } from '@/components/LanguageToggle'
 import { T } from '@/components/T'
+import { SOCIAL_IMAGE } from '@/lib/site'
 
 // ── Metadata ──────────────────────────────────────────────────────────────────
 
@@ -23,6 +24,13 @@ export const metadata: Metadata = {
     url: '/search',
     title: 'Search — AgentRadar',
     description: 'Search the AgentRadar corpus of AI-enriched tools, repos, and articles.',
+    images: [SOCIAL_IMAGE],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Search — AgentRadar',
+    description: 'Search the AgentRadar corpus of AI-enriched tools, repos, and articles.',
+    images: [SOCIAL_IMAGE],
   },
   robots: { index: false, follow: true },
 }
@@ -135,7 +143,7 @@ export default async function SearchPage({
             <SearchResultsLabel count={total} shownCount={results.length} q={q} />
           </span>
           {results.length > 0 && (
-            <span className="font-mono text-xs text-zinc-700">
+            <span className="font-mono text-xs text-zinc-700 dark:text-zinc-600">
               <SortedByLabel sort={sort} />
             </span>
           )}
@@ -163,7 +171,7 @@ export default async function SearchPage({
       {/* ── Footer ─────────────────────────────────────────────────────────── */}
       <footer className="border-t border-zinc-800 py-6">
         <div className="mx-auto max-w-6xl px-6">
-          <span className="font-mono text-xs text-zinc-700">
+          <span className="font-mono text-xs text-zinc-700 dark:text-zinc-600">
             <T k="footer.built_with" />
           </span>
         </div>

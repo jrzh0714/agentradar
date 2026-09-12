@@ -301,7 +301,7 @@ export default async function HomePage() {
             <span className="font-mono text-xs text-zinc-600">
               <T k="footer.built_with" />
             </span>
-            <div className="flex flex-wrap items-center gap-3 font-mono text-xs text-zinc-700">
+            <div className="flex flex-wrap items-center gap-3 font-mono text-xs text-zinc-700 dark:text-zinc-600">
               <span>{formatCount(stats.total)} <T k="home.items_indexed" /></span>
               <span>·</span>
               <span><T k="home.ai_enriched_ranked" /></span>

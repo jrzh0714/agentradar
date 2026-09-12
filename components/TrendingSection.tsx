@@ -177,7 +177,7 @@ function TrendingRow({ item, rank }: { item: HomepageItem; rank: number }) {
         )}
 
         {/* Signals + external link */}
-        <div className="mt-1 flex items-center gap-3 font-mono text-[10px] text-zinc-700">
+        <div className="mt-1 flex items-center gap-3 font-mono text-[10px] text-zinc-600">
           {item.github_stars != null && (
             <span>★ {formatCount(item.github_stars)}</span>
           )}
@@ -189,7 +189,7 @@ function TrendingRow({ item, rank }: { item: HomepageItem; rank: number }) {
               href={item.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="ml-auto text-zinc-700 transition-colors hover:text-zinc-300"
+              className="ml-auto inline-flex h-6 w-6 shrink-0 items-center justify-center text-zinc-600 transition-colors hover:text-zinc-300"
               aria-label="Open source"
             >
               ↗

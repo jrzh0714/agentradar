@@ -11,7 +11,7 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --conditions=react-server --test app/api/subscribe/route.test.ts lib/ai/provider.test.ts lib/ranking/score.test.ts lib/ingestion/title.test.ts lib/validation/url.test.ts lib/http/limits.test.ts lib/workflows/cost-estimation.test.ts lib/workflows/trend-detection.test.ts lib/workflows/data-quality.test.ts",
+    "test": "tsx --conditions=react-server --test app/api/subscribe/route.test.ts lib/ai/enrich.test.ts lib/ai/provider.test.ts lib/backup/release-backup.test.ts lib/db/pagination.test.ts lib/ranking/score.test.ts lib/ingestion/title.test.ts lib/validation/url.test.ts lib/http/limits.test.ts lib/workflows/cost-estimation.test.ts lib/workflows/trend-detection.test.ts lib/workflows/data-quality.test.ts",
     "health": "curl -fsS ${SITE_URL:-https://agentradarlive.vercel.app}/api/health",
     "estimate": "curl -fsS -H \"Authorization: Bearer $CRON_SECRET\" ${SITE_URL:-https://agentradarlive.vercel.app}/api/pipeline/estimate",
     "refresh:stars": "tsx --conditions=react-server scripts/refresh-github-stars.ts",
@@ -24,7 +24,8 @@
     "ingest:all": "tsx --conditions=react-server scripts/ingest-all.ts",
     "fix:rss-feeds": "tsx --conditions=react-server scripts/fix-rss-feeds.ts",
     "enrich": "tsx --conditions=react-server scripts/enrich-items.ts",
-    "rank": "tsx --conditions=react-server scripts/rank-items.ts"
+    "rank": "tsx --conditions=react-server scripts/rank-items.ts",
+    "backup:release": "tsx --conditions=react-server scripts/backup-release.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.52.0",

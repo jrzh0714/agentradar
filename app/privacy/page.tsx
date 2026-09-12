@@ -1,15 +1,25 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { isWaitlistEnabled } from '@/lib/waitlist'
+import { SOCIAL_IMAGE } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: 'Privacy | AgentRadar',
+  description: 'How AgentRadar handles waitlist data and aggregate analytics.',
   robots: { index: false, follow: false },
   alternates: { canonical: '/privacy' },
   openGraph: {
     type: 'website',
     url: '/privacy',
     title: 'Privacy | AgentRadar',
+    description: 'How AgentRadar handles waitlist data and aggregate analytics.',
+    images: [SOCIAL_IMAGE],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Privacy | AgentRadar',
+    description: 'How AgentRadar handles waitlist data and aggregate analytics.',
+    images: [SOCIAL_IMAGE],
   },
 }
 

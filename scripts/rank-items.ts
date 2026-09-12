@@ -22,6 +22,7 @@ if (!('WebSocket' in globalThis)) {
 
 import { createServerClient } from '@/lib/supabase/server'
 import { computeRankingScore } from '@/lib/ranking/score'
+import { orderItemsForStablePagination } from '@/lib/db/pagination'
 import type { Item } from '@/lib/db/types'
 
 // ── CLI args ──────────────────────────────────────────────────────────────────
@@ -66,13 +67,12 @@ async function fetchAllEnrichedItems(hardLimit: number, batchSize: number): Prom
     const to = from + effectiveBatch - 1
 
     batchNum++
-    const { data, error } = await supabase
+    const query = supabase
       .from('items')
       .select('*')
       .eq('status', 'enriched')
       .not('ai_relevance_score', 'is', null)
-      .order('created_at', { ascending: true })
-      .range(from, to)
+    const { data, error } = await orderItemsForStablePagination(query).range(from, to)
 
     if (error) throw new Error(`Batch ${batchNum} fetch failed: ${error.message}`)
 

@@ -51,7 +51,7 @@ export function ItemCard({ item, compact = false, className }: ItemCardProps) {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`Open source for ${title}`}
-              className="text-xs text-zinc-600 transition-colors hover:text-zinc-300"
+              className="inline-flex h-6 w-6 shrink-0 items-center justify-center text-xs text-zinc-600 transition-colors hover:text-zinc-300"
             >
               ↗
             </a>
@@ -123,7 +123,7 @@ export function ItemCard({ item, compact = false, className }: ItemCardProps) {
             <span>⭐</span>
             <span className="tabular-nums">{formatCount(item.github_stars)}</span>
             {item.github_forks != null && item.github_forks > 0 && (
-              <span className="text-zinc-700">· {formatCount(item.github_forks)} forks</span>
+              <span className="text-zinc-700 dark:text-zinc-600">· {formatCount(item.github_forks)} forks</span>
             )}
           </span>
         )}
@@ -134,7 +134,7 @@ export function ItemCard({ item, compact = false, className }: ItemCardProps) {
             <span className="text-orange-600">▲</span>
             <span className="tabular-nums">{item.hn_points}</span>
             {item.hn_comments != null && item.hn_comments > 0 && (
-              <span className="text-zinc-700">· {item.hn_comments} comments</span>
+              <span className="text-zinc-700 dark:text-zinc-600">· {item.hn_comments} comments</span>
             )}
           </span>
         )}
