@@ -99,6 +99,7 @@ export async function enrichItem(item: Item): Promise<EnrichResult | EnrichFailu
       ai_relevance_score: Math.round((data.relevance_score / 10) * 1000) / 1000, // 3 decimal places
       ranking_score:      0, // set in Phase 3B
       status:             'enriched',
+      error_message:      null,
     }
 
     return { success: true, update }

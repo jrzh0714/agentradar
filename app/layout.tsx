@@ -4,7 +4,7 @@ import './globals.css'
 import { Analytics } from '@vercel/analytics/next'
 import { ThemeProvider } from '@/components/ThemeProvider'
 import { LanguageProvider } from '@/components/LanguageProvider'
-import { SITE_URL } from '@/lib/site'
+import { SITE_URL, SOCIAL_IMAGE } from '@/lib/site'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -36,11 +36,13 @@ export const metadata: Metadata = {
     siteName: 'AgentRadar',
     title: 'AgentRadar — AI tool discovery for developers',
     description: 'Track emerging GenAI tools, agent frameworks, GitHub projects, and developer workflows.',
+    images: [SOCIAL_IMAGE],
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: 'AgentRadar — AI tool discovery for developers',
     description: 'Track emerging GenAI tools, agent frameworks, GitHub projects, and developer workflows.',
+    images: [SOCIAL_IMAGE],
   },
 }
 

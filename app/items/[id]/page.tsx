@@ -18,6 +18,8 @@ import { ThemeToggle } from '@/components/ThemeToggle'
 import { LanguageToggle } from '@/components/LanguageToggle'
 import { TranslatedText } from '@/components/TranslatedText'
 import { T } from '@/components/T'
+import { SOCIAL_IMAGE } from '@/lib/site'
+import type { Metadata } from 'next'
 
 // ── Metadata ───────────────────────────────────────────────────────────────────
 
@@ -25,19 +27,29 @@ export async function generateMetadata({
   params,
 }: {
   params: Promise<{ id: string }>
-}) {
+}): Promise<Metadata> {
   const { id } = await params
   const item = await getItemById(id)
   if (!item) return { title: 'Not found — AgentRadar' }
+  const title = getDisplayTitle(item)
+  const description = item.ai_summary?.trim() || item.description?.trim() || undefined
+
   return {
-    title: `${getDisplayTitle(item)} — AgentRadar`,
-    description: item.ai_summary?.trim() || item.description?.trim() || undefined,
+    title: `${title} — AgentRadar`,
+    description,
     alternates: { canonical: `/items/${id}` },
     openGraph: {
       type: 'article',
       url: `/items/${id}`,
-      title: getDisplayTitle(item),
-      description: item.ai_summary?.trim() || item.description?.trim() || undefined,
+      title,
+      description,
+      images: [SOCIAL_IMAGE],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [SOCIAL_IMAGE],
     },
   }
 }
@@ -305,7 +317,7 @@ export default async function ItemDetailPage({
             </span>
             <Link
               href="/"
-              className="font-mono text-xs text-zinc-700 transition-colors hover:text-zinc-400"
+              className="font-mono text-xs text-zinc-700 transition-colors hover:text-zinc-400 dark:text-zinc-600"
             >
               <T k="nav.back_feed" />
             </Link>

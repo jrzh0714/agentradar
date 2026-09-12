@@ -92,6 +92,7 @@ export interface ItemEnrichmentUpdate {
   ai_relevance_score: number
   ranking_score: number
   status: 'enriched'
+  error_message: null
   updated_at?: string
 }
 

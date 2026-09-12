@@ -15,6 +15,8 @@ Notable changes are documented here using
 - Restricted URL validation, request-size limits, signup throttling, and accessibility improvements.
 - Partial feed indexes plus trigram/GIN search indexes for corpus growth.
 - Exact search totals with an explicit first-page indicator.
+- Private, paginated release backups with integrity manifests and recursive credential redaction.
+- A generated social sharing image with route-specific Open Graph and Twitter metadata.
 
 ### Changed
 
@@ -22,8 +24,11 @@ Notable changes are documented here using
 - Server-only database access prefers Supabase secret keys and removes direct Data API access for public roles.
 - Public status and health endpoints no longer expose raw pipeline errors or trigger alert spam.
 - Product version is now `1.0.0`; digest signup language accurately describes the current waitlist.
+- Item detail pages are included in the sitemap, and ranking pagination now uses a stable tie-break.
+- Theme controls render consistently during hydration, with stronger dark-mode contrast and larger external-link targets.
 
 ### Security
 
 - Added RLS and privilege hardening for operational tables and prevented public access to raw ingestion payloads.
 - Removed a credential from the local Git remote URL. The exposed credential must still be revoked by its owner.
+- Successful enrichment retries now clear stale provider error text.

@@ -1,34 +1,71 @@
 # Database backup and restore
 
-Supabase Free projects do not include managed backups. Before the v1 production
-migration, AgentRadar created a local logical snapshot at
-`.release-backups/20260909/`. The directory is ignored by Git and must remain
-private. It contains gzip-compressed NDJSON for every table touched by the
-release migration plus a row-count manifest.
+Supabase Free projects do not include managed backups. AgentRadar's release
+backup command creates a local logical snapshot under `.release-backups/`. The
+directory is ignored by Git and must remain private because it can contain raw
+ingestion data and subscriber addresses.
+
+Before a release migration, disable Vercel cron and other database writers, then
+run:
+
+```bash
+npm run backup:release -- --label YYYYMMDD-before-v1
+```
+
+The command requires `SUPABASE_SECRET_KEY` (or the legacy server-only
+`SUPABASE_SERVICE_ROLE_KEY`) and `SUPABASE_URL` (with
+`NEXT_PUBLIC_SUPABASE_URL` accepted because the project URL is not a secret).
+It never reads a browser publishable key. Output directories are created with
+mode `0700`, files with mode `0600`, and an existing snapshot is never
+overwritten. Reads are ordered and paginated; `--page-size` accepts 1-1000 and
+defaults to 500. High-confidence credential shapes are recursively redacted
+from every exported JSON value. Broader heuristics are additionally applied to
+`items.error_message` and `pipeline_runs.error`; benign `sk-*` URL slugs and
+ordinary "bearer" prose elsewhere are preserved.
+
+Treat snapshots made by older ad-hoc procedures as untrusted until their full
+decompressed contents have passed a credential scan.
 
 ## Verify the snapshot
 
 1. Keep the directory mode at `0700` and each file at `0600`.
-2. Compare `manifest.json` with the recorded SHA-256:
-   `46ec896b3ec1f5f3c1f4e83b1e790b98942559ffb4dd68b8424e8bc4ef07e513`.
-3. Decompress each `*.ndjson.gz` file and confirm every line parses as JSON and
-   the line count matches the manifest before relying on the snapshot.
-
-The v1 snapshot contains 6,498 `items`, 120 `pipeline_runs`, 6 `rss_feeds`, and
-zero rows in `digests`, `digest_items`, and `digest_summaries`. The
-`subscribers` and `pipeline_locks` tables did not exist before the migration.
+2. From inside the snapshot directory, verify the manifest checksum with
+   `shasum -a 256 -c manifest.sha256`.
+3. For every `*.ndjson.gz` file, compare its compressed byte size and SHA-256
+   with `manifest.json`. Decompress it and confirm every line parses as JSON,
+   its line count matches `rows`, and its decoded byte count matches
+   `uncompressedBytes`.
+4. Review each file's `redactedFields` count. It counts string fields redacted
+   at any nesting depth. A nonzero count is expected when historical content
+   contained credentials; the original secret is not recoverable from this
+   logical snapshot.
 
 ## Restore procedure
 
-1. Disable Vercel cron jobs and do not trigger manual refreshes.
-2. Create a fresh Supabase project or empty recovery database.
+1. Keep Vercel cron jobs disabled and do not trigger manual refreshes.
+2. Create a disposable, fresh Supabase project or empty recovery database.
 3. Apply the committed files in `supabase/migrations/` in lexical order to
    recreate the schema. For an existing target, inventory it first and apply
    only missing changes.
-4. Load tables in dependency order: `rss_feeds`, `items`, `digests`,
-   `digest_items`, `digest_summaries`, then `pipeline_runs`. Decode each gzip
-   file as NDJSON and upsert rows in batches with a server-only Supabase secret
-   key. Never use the browser publishable key for restoration.
+4. Decode each gzip file as NDJSON and upsert rows in bounded batches with a
+   server-only Supabase secret key. Never use the browser publishable key for
+   restoration. Load in this order and use the stated conflict target:
+
+   - `rss_feeds`: `.upsert(rows, { onConflict: 'url' })`. Migration `001`
+     seeds the same URLs with fresh UUIDs, so a default primary-key upsert is
+     unsafe. Keep the archived `id` values in each row; conflict resolution on
+     the unique URL updates the seeded row to the archived identity.
+   - `items`: `.upsert(rows, { onConflict: 'id' })`.
+   - `digests`: `.upsert(rows, { onConflict: 'id' })`.
+   - `digest_items`:
+     `.upsert(rows, { onConflict: 'digest_id,item_id' })`.
+   - `digest_summaries`: `.upsert(rows, { onConflict: 'id' })`.
+   - `pipeline_runs`: `.upsert(rows, { onConflict: 'id' })`.
+   - `subscribers`: `.upsert(rows, { onConflict: 'id' })`; handle this file as
+     personal data and restore it only when the target has equivalent controls.
+
+   Do not restore `pipeline_locks`. They are transient leases and must start
+   empty in the recovery database.
 5. Compare restored row counts with `manifest.json`, verify primary/foreign-key
    constraints, then run the RLS and Data API negative probes in the release
    checklist.
