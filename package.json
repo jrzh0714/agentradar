@@ -49,18 +49,18 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
+    "@types/node": "^26",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/ws": "^8.18.1",
     "dotenv": "^17.4.2",
-    "eslint": "^9",
+    "eslint": "^10",
     "eslint-config-next": "^16.3.4",
-    "playwright": "^1.60.0",
+    "playwright": "^1.63.0",
     "shadcn": "^4.21.0",
     "tailwindcss": "^4",
     "tsx": "^4.23.13",
-    "typescript": "^5",
-    "ws": "^8.21.0"
+    "typescript": "^7",
+    "ws": "^8.21.3"
   }
 }
