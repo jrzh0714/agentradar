@@ -98,6 +98,7 @@ export interface TranslationRunResult {
  */
 export async function runTranslation(
   limit = BATCH_SIZE,
+  checkLease: () => Promise<void> = async () => {},
 ): Promise<TranslationRunResult> {
   // Clamp to LOCAL_MAX_ITEMS when running against local Ollama to prevent
   // sustained GPU load that makes the machine unresponsive.
@@ -142,7 +143,10 @@ export async function runTranslation(
       continue
     }
 
+    await checkLease()
     const result = await translateItem(item.ai_summary, item.ai_why_it_matters)
+    // Do not save a response if ownership expired during the provider request.
+    await checkLease()
 
     if (!result) {
       console.warn(`[translation] Failed for item ${item.id}`)

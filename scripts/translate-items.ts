@@ -18,11 +18,14 @@ if (!('WebSocket' in globalThis)) {
 
 import { createServerClient } from '@/lib/supabase/server'
 import { runTranslation } from '@/lib/workflows/translation'
+import { acquirePipelineLease, releasePipelineLease, renewPipelineLease } from '@/lib/db/pipeline-lock'
+import { parseBoundedPositiveInt } from '@/lib/http/limits'
+import { MAX_TRANSLATION_ITEMS } from '@/lib/workflows/cost-estimation'
 
 const args = process.argv.slice(2)
 const dryRun = args.includes('--dry-run')
 const limitIdx = args.indexOf('--limit')
-const limit = limitIdx !== -1 && args[limitIdx + 1] ? parseInt(args[limitIdx + 1], 10) : 30
+const limit = parseBoundedPositiveInt(limitIdx === -1 ? undefined : args[limitIdx + 1], { fallback: 30, max: MAX_TRANSLATION_ITEMS })
 
 async function main() {
   console.log('\n🌐 AgentRadar — Simplified Chinese Translation')
@@ -49,12 +52,19 @@ async function main() {
     return
   }
 
-  const result = await runTranslation(limit)
-
-  console.log(`  Translated : ${result.translated}`)
-  console.log(`  Failed     : ${result.failed}`)
-  console.log(`  Skipped    : ${result.skipped}`)
-  console.log()
+  const lease = await acquirePipelineLease('daily-refresh')
+  if (!lease) throw new Error('Daily refresh is already running; refusing concurrent translation')
+  try {
+    const result = await runTranslation(limit, () => renewPipelineLease(lease))
+    console.log(`  Translated : ${result.translated}`)
+    console.log(`  Failed     : ${result.failed}`)
+    console.log(`  Skipped    : ${result.skipped}`)
+    console.log()
+  } finally {
+    await releasePipelineLease(lease).catch((error) => {
+      console.error('Failed to release translation lease:', error instanceof Error ? error.message : error)
+    })
+  }
 }
 
 main().catch((err) => {
