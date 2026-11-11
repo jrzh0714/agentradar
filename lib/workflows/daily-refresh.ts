@@ -14,6 +14,7 @@ import { ProviderRequestError, sanitizeProviderErrorDetail } from '@/lib/ai/prov
 import { computeRankingScore } from '@/lib/ranking/score'
 import { normalizeTitle, deriveTitleFromUrl, deriveTitleFromDescription } from '@/lib/ingestion/title'
 import { createServerClient } from '@/lib/supabase/server'
+import { orderItemsForStablePagination } from '@/lib/db/pagination'
 import type { Item, ItemEnrichmentUpdate } from '@/lib/db/types'
 import {
   assertWithinDailyAiBudget,
@@ -174,12 +175,11 @@ async function runTitleCleanup(): Promise<number> {
 
 async function fetchPendingItems(limit: number): Promise<Item[]> {
   const supabase = createServerClient()
-  const { data, error } = await supabase
+  const query = supabase
     .from('items')
     .select('*')
     .or('status.eq.new,ai_summary.is.null')
-    .order('created_at', { ascending: true })
-    .limit(limit)
+  const { data, error } = await orderItemsForStablePagination(query).limit(limit)
   if (error) throw new Error(`Failed to fetch pending items: ${error.message}`)
   return (data ?? []) as Item[]
 }
@@ -258,13 +258,12 @@ async function fetchAllEnrichedItems(): Promise<Item[]> {
 
   while (true) {
     const to = from + RANK_BATCH_SIZE - 1
-    const { data, error } = await supabase
+    const query = supabase
       .from('items')
       .select('*')
       .eq('status', 'enriched')
       .not('ai_relevance_score', 'is', null)
-      .order('created_at', { ascending: true })
-      .range(from, to)
+    const { data, error } = await orderItemsForStablePagination(query).range(from, to)
 
     if (error) throw new Error(`Ranking fetch failed: ${error.message}`)
     const rows = (data ?? []) as Item[]

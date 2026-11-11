@@ -106,12 +106,48 @@ RSS product/pricing announcements (Vercel, GitHub, etc.) default to 2–4 unless
 ## Cost controls
 
 - Default batch: 10 items per run (`--limit N` to change).
+- `MAX_DAILY_AI_COST_USD` is a conservative preflight ceiling for each run.
+  Despite the variable name, it does not aggregate spending across repeated
+  runs or enforce the provider's daily complimentary-token quota. Verify actual
+  organization usage before running repeated batches.
 - Input per item is capped: description at 500 chars, raw content at 4 000 chars.
 - 500 ms delay between real-provider calls to stay within rate limits.
 - No delay between mock calls.
-- `max_tokens` per response: 600 (the structured output is short).
+- Each enrichment attempt caps output at 512 tokens; validation may trigger one retry.
+
+## Concurrent workers
+
+Writing CLI runs acquire the same `daily-refresh` lease as the scheduled refresh
+before selecting items. A second worker refuses to start while that lease is
+active. The CLI renews the lease before each AI call and before saving its
+result; expired ownership or an unavailable lease check stops the batch and
+leaves the item retryable. Normal completion and provider failures release the
+lease. A killed process can leave a lease until its ten-minute expiry.
+
+Dry-runs do not acquire a lease or write rows. An eval dry-run can still consume
+provider tokens. Mock mode without `--dry-run` writes to the configured database;
+point it at a disposable development database.
 
 ## Provider-level vs item-level failures
+
+Run `npm run check:connections` before recovery. It verifies real database item
+access, public GitHub repository-search access, and sends a model-metadata GET
+for the configured OpenAI model. It does
+not generate a completion or establish billing/complimentary-token eligibility.
+The command fails with a nonzero exit code when access fails, without echoing
+credentials or upstream response bodies.
+
+A `401` authentication rejection requires replacing the key in the affected
+environment. Updating `.env.local` alone does not update Vercel Production.
+After restoring Vercel login, replace only the affected production variable
+and redeploy. Do not download the full production environment for this task.
+The application recreates its cached OpenAI client if the key changes.
+
+After access is restored, run a three-item eval without database writes, check
+actual account sharing/usage and budget, then use a small lease-protected live
+batch and rank it. Confirm a successful production refresh and a truthful
+freshness label before increasing batch sizes. An authentication fix does not
+by itself clear the historical enrichment backlog.
 
 | Failure type | Cause | Behaviour |
 |---|---|---|

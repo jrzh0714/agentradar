@@ -8,14 +8,14 @@ import { CategoryBadge } from '@/components/ui/CategoryBadge'
 import { ScorePill } from '@/components/ui/ScorePill'
 import { HnPrefixBadge } from '@/components/ui/HnPrefixBadge'
 import { formatRelativeDate } from '@/lib/utils'
-import { ThemeToggle } from '@/components/ThemeToggle'
-import { LanguageToggle } from '@/components/LanguageToggle'
+import { SiteHeader } from '@/components/SiteHeader'
 import { SubscribeForm } from '@/components/SubscribeForm'
 import { TranslatedText } from '@/components/TranslatedText'
 import { T } from '@/components/T'
 import { getDisplayTitle, getTitlePrefix } from '@/lib/ingestion/title'
 import { getDigestSections, ITEMS_PER_SECTION } from '@/lib/db/digest'
-import { getDigestSummariesForWeek, getCurrentMonday } from '@/lib/db/digest-summaries'
+import { recentWindow } from '@/lib/product/content-policy'
+import { RefreshNotice } from '@/components/RefreshNotice'
 import { isWaitlistEnabled } from '@/lib/waitlist'
 import type { DigestSection } from '@/lib/db/digest'
 import type { HomepageItem } from '@/lib/db/homepage'
@@ -24,48 +24,36 @@ import { SOCIAL_IMAGE } from '@/lib/site'
 // ── Metadata ───────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: 'Weekly Digest — AgentRadar',
+  title: 'Past Seven Days — AgentRadar',
   description:
-    'A ranked briefing of emerging agent frameworks, model updates, research, MCP tools, and developer workflows.',
+    'A rolling seven-day selection by source publication or repository activity, with AI-assisted summaries and original sources.',
   alternates: { canonical: '/digest' },
   openGraph: {
     type: 'website',
     url: '/digest',
-    title: 'Weekly Digest — AgentRadar',
+    title: 'Past Seven Days — AgentRadar',
     description:
-      'A ranked briefing of emerging agent frameworks, model updates, research, MCP tools, and developer workflows.',
+      'Tools and articles with source publication or repository activity in the past seven days.',
     images: [SOCIAL_IMAGE],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Weekly Digest — AgentRadar',
+    title: 'Past Seven Days — AgentRadar',
     description:
-      'A ranked briefing of emerging agent frameworks, model updates, research, MCP tools, and developer workflows.',
+      'Tools and articles with source publication or repository activity in the past seven days.',
     images: [SOCIAL_IMAGE],
   },
 }
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 
-/** Returns a human-readable "Week of May 12, 2026" label. */
-function weekLabel(): string {
-  const now = new Date()
-  // Roll back to the most recent Monday
-  const day = now.getDay() // 0 = Sun
-  const diff = day === 0 ? 6 : day - 1
-  const monday = new Date(now)
-  monday.setDate(now.getDate() - diff)
-  return monday.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
-}
-
 // ── Page ───────────────────────────────────────────────────────────────────────
 
 export default async function DigestPage() {
   const waitlistEnabled = isWaitlistEnabled()
-  const [sections, summaries] = await Promise.all([
-    getDigestSections(),
-    getDigestSummariesForWeek(getCurrentMonday()),
-  ])
+  const now = new Date()
+  const window = recentWindow(now)
+  const sections = await getDigestSections(now)
   const visibleSections = sections.filter((s) => s.items.length > 0)
   const totalItems = visibleSections.reduce((n, s) => n + s.items.length, 0)
 
@@ -73,37 +61,16 @@ export default async function DigestPage() {
     <div className="flex min-h-screen flex-col bg-zinc-950">
 
       {/* ── Header ─────────────────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-50 border-b border-zinc-800/60 bg-zinc-950/75 backdrop-blur-md">
-        <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="font-mono text-sm font-bold tracking-tight text-zinc-100 transition-colors hover:text-zinc-200 dark:hover:text-white">
-              AgentRadar
-            </Link>
-            <span className="rounded-full bg-zinc-800 px-2 py-0.5 font-mono text-xs text-zinc-500">
-              <T k="common.version" />
-            </span>
-          </div>
-          <nav className="flex items-center gap-3 sm:gap-6 font-mono text-xs text-zinc-500">
-            <Link href="/" className="hidden sm:inline transition-colors hover:text-zinc-200">
-              <T k="nav.home" />
-            </Link>
-            <Link href="/search" className="transition-colors hover:text-zinc-200">
-              <T k="nav.search" />
-            </Link>
-            <LanguageToggle />
-            <ThemeToggle />
-          </nav>
-        </div>
-      </header>
+      <SiteHeader active="weekly" />
 
       <main className="mx-auto w-full max-w-4xl flex-1 px-6">
 
         {/* ── Digest masthead ─────────────────────────────────────────────── */}
         <section className="border-b border-zinc-800 py-12">
           <p className="mb-3 font-mono text-xs uppercase tracking-widest text-zinc-600">
-            <T k="digest.week_of" /> {weekLabel()}
+            <T k="digest.week_of" /> {window.since.slice(0, 10)} – {window.until.slice(0, 10)} UTC
           </p>
-          <h1 className="mb-4 font-mono text-3xl font-bold tracking-tight text-zinc-100 sm:text-4xl" style={{ whiteSpace: 'pre-line' }}>
+          <h1 className="mb-4 text-3xl font-semibold tracking-tight text-zinc-100 sm:text-4xl" style={{ whiteSpace: 'pre-line' }}>
             <T k="digest.title" />
           </h1>
           <p className="mb-6 max-w-2xl text-sm leading-relaxed text-zinc-400">
@@ -124,7 +91,15 @@ export default async function DigestPage() {
           </div>
         </section>
 
-        {/* ── Static summary ──────────────────────────────────────────────── */}
+        <div className="pt-5"><RefreshNotice /></div>
+        {totalItems === 0 && (
+          <section className="rounded-xl border border-zinc-800 p-6">
+            <p className="text-zinc-300"><T k="digest.no_recent" /></p>
+            <Link href="/search" className="mt-3 inline-block text-sm underline"><T k="home.find_tool" /></Link>
+          </section>
+        )}
+
+        {/* ── Selection disclosure ────────────────────────────────────────── */}
         <section className="border-b border-zinc-800 py-8">
           <div className="rounded-lg border border-zinc-800 bg-zinc-900/60 px-6 py-5">
             <p className="mb-1 font-mono text-xs uppercase tracking-widest text-zinc-600">
@@ -195,7 +170,7 @@ export default async function DigestPage() {
               key={section.slug}
               section={section}
               index={sectionIndex}
-              summary={summaries.get(section.title) ?? null}
+              summary={null}
             />
           ))}
         </div>

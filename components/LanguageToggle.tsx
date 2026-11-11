@@ -8,7 +8,7 @@ export function LanguageToggle() {
   return (
     <button
       onClick={() => setLang(lang === 'en' ? 'zh' : 'en')}
-      className="flex h-7 items-center gap-1 rounded-md border border-zinc-700 px-2 font-mono text-[10px] text-zinc-400 transition-colors hover:border-zinc-500 hover:text-zinc-200"
+      className="flex min-h-10 items-center gap-1 rounded-lg border border-zinc-700 px-2.5 font-mono text-xs text-zinc-400 transition-colors hover:border-zinc-500 hover:text-zinc-200"
       aria-label={lang === 'en' ? 'Switch to Chinese' : '切换到英文'}
     >
       {lang === 'en' ? (

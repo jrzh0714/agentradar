@@ -5,6 +5,17 @@ Notable changes are documented here using
 
 ## [Unreleased]
 
+### Changed
+
+- Refresh the interface with shared navigation, homepage search and topic shortcuts, readable card typography, and larger mobile controls in both color themes.
+- Recreate cached OpenAI clients after key rotation, classify rejected authentication, and redact masked credentials from diagnostics.
+- Add a read-only `check:connections` command for database and model-access checks without completion tokens.
+- Base public freshness on completed refresh runs and show delayed or unconfirmed states.
+- Replace unsupported trending claims with recommendations and restrict rolling digest selections to seven days.
+- Lead the homepage with three briefs; keep navigation and source actions accessible on mobile.
+- Explain AI estimates, distinguish repository activity from publication, and support copying brief permalinks.
+- Add search pagination, complete section collections, and separate load errors from zero matches.
+
 ## [1.0.0] - 2026-09-09
 
 ### Added

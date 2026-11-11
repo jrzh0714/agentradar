@@ -6,6 +6,31 @@ export interface PipelineLease {
   ownerToken: string
 }
 
+export class PipelineLeaseLostError extends Error {
+  constructor() {
+    super('Pipeline lease expired or changed owners; stopping work')
+    this.name = 'PipelineLeaseLostError'
+  }
+}
+
+/** Renew only an unexpired lease still owned by this worker. Never reclaim it. */
+export async function renewPipelineLease(
+  lease: PipelineLease,
+  ttlMs = 10 * 60 * 1_000,
+  supabase = createServerClient(),
+): Promise<void> {
+  const now = new Date()
+  const { data, error } = await supabase
+    .from('pipeline_locks')
+    .update({ expires_at: new Date(now.getTime() + ttlMs).toISOString() })
+    .eq('name', lease.name)
+    .eq('owner_token', lease.ownerToken)
+    .gt('expires_at', now.toISOString())
+    .select('name')
+  if (error) throw new Error(`Pipeline lease renewal failed: ${error.message}`)
+  if (data?.length !== 1) throw new PipelineLeaseLostError()
+}
+
 export async function acquirePipelineLease(
   name: string,
   ttlMs = 10 * 60 * 1_000,

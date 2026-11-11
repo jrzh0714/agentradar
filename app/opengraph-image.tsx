@@ -38,7 +38,7 @@ export default function OpenGraphImage() {
           />
           AgentRadar
           <span style={{ color: '#71717a', display: 'flex', fontSize: 20, marginLeft: 20 }}>
-            AI signal, ranked daily
+            Tools, context, and sources
           </span>
         </div>
 

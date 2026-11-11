@@ -4,7 +4,7 @@ import { useRef, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { useT } from '@/components/T'
-import type { DateRange, SearchSort } from '@/lib/db/search'
+import type { DateRange, SearchCollection, SearchSort } from '@/lib/db/search'
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -67,6 +67,7 @@ export interface SearchControlsProps {
   minScore: number
   dateRange: DateRange
   sort: SearchSort
+  collection?: SearchCollection
 }
 
 // ── Chip sub-component ────────────────────────────────────────────────────────
@@ -115,6 +116,7 @@ export function SearchControls({
   minScore,
   dateRange,
   sort,
+  collection,
 }: SearchControlsProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
@@ -131,6 +133,7 @@ export function SearchControls({
       min_score: String(minScore),
       date_range: dateRange,
       sort,
+      collection: collection ?? '',
       ...overrides,
     }
     const params = new URLSearchParams()
@@ -141,6 +144,7 @@ export function SearchControls({
     if (merged.min_score && merged.min_score !== '0') params.set('min_score', merged.min_score)
     if (merged.date_range && merged.date_range !== 'all') params.set('date_range', merged.date_range)
     if (merged.sort && merged.sort !== 'ranking')    params.set('sort', merged.sort)
+    if (merged.collection)                          params.set('collection', merged.collection)
     const qs = params.toString()
     return qs ? `/search?${qs}` : '/search'
   }
@@ -157,6 +161,13 @@ export function SearchControls({
   // ── Active chips ────────────────────────────────────────────────────────────
 
   const chips: { label: string; onRemove: () => void }[] = []
+
+  if (collection) {
+    chips.push({
+      label: collection === 'news' ? 'AI News & Research' : 'Agent & MCP Tools',
+      onRemove: () => navigate({ collection: '' }),
+    })
+  }
 
   if (q) {
     chips.push({
@@ -353,6 +364,7 @@ export function SearchControls({
                 min_score: '0',
                 date_range: 'all',
                 sort: 'ranking',
+                collection: '',
               })
             }
             className="ml-auto font-mono text-xs text-zinc-600 underline-offset-2 hover:text-zinc-400 hover:underline"

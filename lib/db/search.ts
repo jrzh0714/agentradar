@@ -15,6 +15,15 @@ import type { HomepageItem } from '@/lib/db/homepage'
 export type DateRange = 'all' | '1d' | '7d' | '30d' | '90d'
 
 export type SearchSort = 'ranking' | 'newest' | 'relevance' | 'stars' | 'discussed'
+export type SearchCollection = 'news' | 'agents'
+
+export const SEARCH_PAGE_SIZE = 60
+
+export function parseSearchPage(raw: unknown): number {
+  if (typeof raw !== 'string' && typeof raw !== 'number') return 1
+  const value = Number(raw)
+  return Number.isSafeInteger(value) && value >= 1 && value <= 100_000 ? value : 1
+}
 
 export interface SearchQuery {
   /** Free-text keyword (searches title, description, ai_summary, ai_why_it_matters, ai_category, source, and array columns). */
@@ -31,11 +40,15 @@ export interface SearchQuery {
   dateRange?: DateRange
   sort?: SearchSort
   limit?: number
+  page?: number
+  collection?: SearchCollection
 }
 
 export interface SearchResult {
   items: HomepageItem[]
   total: number
+  /** A load failure must not be presented as a successful zero-match query. */
+  unavailable: boolean
 }
 
 // ── Column list ───────────────────────────────────────────────────────────────
@@ -71,7 +84,10 @@ function getDateCutoff(range: DateRange): string | null {
 
 // ── Main export ────────────────────────────────────────────────────────────────
 
-export async function searchItems(query: SearchQuery): Promise<SearchResult> {
+export async function searchItems(
+  query: SearchQuery,
+  supabaseClient?: ReturnType<typeof createServerClient>,
+): Promise<SearchResult> {
   const {
     q,
     source,
@@ -80,17 +96,32 @@ export async function searchItems(query: SearchQuery): Promise<SearchResult> {
     minScore,
     dateRange = 'all',
     sort = 'ranking',
-    limit = 60,
+    limit = SEARCH_PAGE_SIZE,
+    page = 1,
+    collection,
   } = query
 
   try {
-    const supabase = createServerClient()
+    const supabase = supabaseClient ?? createServerClient()
     const term = q ? sanitizeTerm(q) : ''
+    const pageSize = Number.isInteger(limit) && limit > 0 ? Math.min(limit, SEARCH_PAGE_SIZE) : SEARCH_PAGE_SIZE
+    const offset = (parseSearchPage(page) - 1) * pageSize
 
     let sb = supabase
       .from('items')
       .select(SEARCH_SELECT, { count: 'exact' })
       .eq('status', 'enriched')
+
+    // Match the full homepage sections rather than narrowing View all to a
+    // single category that excludes most of the section's candidates.
+    if (collection === 'news') {
+      sb = sb.in('source', ['rss', 'hackernews'])
+        .in('ai_category', ['Research', 'Product Updates', 'AI Infrastructure', 'LLM Frameworks', 'Open Source Models'])
+        .gte('ai_relevance_score', 0.6)
+    } else if (collection === 'agents') {
+      sb = sb.in('ai_category', ['AI Agents', 'MCP / Tool Use', 'Code Agents', 'Workflow Automation'])
+        .gte('ai_relevance_score', 0.6)
+    }
 
     // ── Keyword filter ────────────────────────────────────────────────────────
     if (term) {
@@ -149,18 +180,21 @@ export async function searchItems(query: SearchQuery): Promise<SearchResult> {
               ? sb.order('hn_points', { ascending: false, nullsFirst: false })
               : sb.order('ranking_score', { ascending: false })
 
-    const { data, error, count } = await sorted.limit(limit)
+    const { data, error, count } = await sorted
+      .order('id', { ascending: true })
+      .range(offset, offset + pageSize - 1)
 
     if (error) {
       console.error('[search] query error:', error.message)
-      return { items: [], total: 0 }
+      return { items: [], total: 0, unavailable: true }
     }
     return {
       items: (data as unknown as HomepageItem[]) ?? [],
       total: count ?? 0,
+      unavailable: false,
     }
   } catch (err) {
     console.error('[search] unexpected error:', err)
-    return { items: [], total: 0 }
+    return { items: [], total: 0, unavailable: true }
   }
 }

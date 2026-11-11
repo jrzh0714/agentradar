@@ -4,6 +4,7 @@
 import { createServerClient } from '@/lib/supabase/server'
 import { sanitizeProviderErrorDetail } from '@/lib/ai/provider'
 import type { RefreshResult } from '@/lib/workflows/daily-refresh'
+import { refreshState } from '@/lib/product/content-policy'
 
 export interface PipelineRun {
   id: string
@@ -22,6 +23,24 @@ export interface PipelineRun {
   duration_ms: number
   error: string | null
   estimated_cost: unknown | null
+}
+
+/** Public freshness uses completed runs, never a generic item updated_at. */
+export async function getPublicRefreshStatus() {
+  try {
+    const sb = createServerClient()
+    const [latest, completed] = await Promise.all([
+      sb.from('pipeline_runs').select('success, failed_count').order('ran_at', { ascending: false }).limit(1),
+      sb.from('pipeline_runs').select('ran_at').eq('success', true).eq('failed_count', 0).order('ran_at', { ascending: false }).limit(1),
+    ])
+    if (latest.error || completed.error) throw new Error('Freshness query unavailable')
+    const lastCompletedAt = completed.data?.[0]?.ran_at ?? null
+    const run = latest.data?.[0]
+    const latestSucceeded = run ? run.success && run.failed_count === 0 : null
+    return { lastCompletedAt, state: refreshState(lastCompletedAt, latestSucceeded) }
+  } catch {
+    return { lastCompletedAt: null, state: 'unknown' as const }
+  }
 }
 
 /** Persist a RefreshResult to the pipeline_runs table. Best-effort — never throws. */

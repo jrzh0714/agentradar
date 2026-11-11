@@ -1,28 +1,32 @@
 'use client'
 
 import { useT } from '@/components/T'
+import { TranslatedText } from '@/components/TranslatedText'
 
 interface Props {
   count: number
   shownCount: number
   q: string
+  offset?: number
 }
 
-export function SearchResultsLabel({ count, shownCount, q }: Props) {
+export function SearchResultsLabel({ count, shownCount, q, offset = 0 }: Props) {
   const t = useT()
-  const truncated = count > shownCount
+  const range = shownCount > 0 && (offset > 0 || count > shownCount)
+    ? <TranslatedText as="span" en={` · showing ${offset + 1}–${offset + shownCount}`} zh={` · 显示第 ${offset + 1}–${offset + shownCount} 条`} />
+    : null
   if (q) {
     return (
       <>
         {count} {t('search.results_for')} &quot;{q}&quot;
-        {truncated ? ` · ${t('search.showing_first')} ${shownCount}` : null}
+        {range}
       </>
     )
   }
   return (
     <>
       {count} {count !== 1 ? t('search.high_signal_pl') : t('search.high_signal')}
-      {truncated ? ` · ${t('search.showing_first')} ${shownCount}` : null}
+      {range}
     </>
   )
 }

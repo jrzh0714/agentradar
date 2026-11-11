@@ -13,6 +13,7 @@
 import { createServerClient } from '@/lib/supabase/server'
 import type { HomepageItem } from '@/lib/db/homepage'
 import { MAX_EMERGING_STARS } from '@/lib/db/homepage'
+import { recentWindow } from '@/lib/product/content-policy'
 
 // ── Config ─────────────────────────────────────────────────────────────────────
 
@@ -97,8 +98,8 @@ export const SECTION_DEFINITIONS: Omit<DigestSection, 'items'>[] = [
  * Fetch and return all digest sections with items populated.
  * Sections with zero items are included (page hides them).
  */
-export async function getDigestSections(): Promise<DigestSection[]> {
-  const supabase = createServerClient()
+export async function getDigestSections(now = new Date(), supabase = createServerClient()): Promise<DigestSection[]> {
+  const window = recentWindow(now)
   const seen = new Set<string>()
   const sections: DigestSection[] = []
 
@@ -108,6 +109,8 @@ export async function getDigestSections(): Promise<DigestSection[]> {
         .from('items')
         .select(DIGEST_SELECT)
         .eq('status', 'enriched')
+        .gte('published_at', window.since)
+        .lte('published_at', window.until)
         .in('ai_category', def.categories)
         .gte('ai_relevance_score', MIN_RELEVANCE)
         .or(`github_stars.is.null,github_stars.lt.${MAX_EMERGING_STARS}`)
