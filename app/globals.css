@@ -173,6 +173,65 @@ html:not(.dark) {
   }
 }
 
+/* Discovery controls share the same contrast in both color schemes. */
+:root {
+  --discovery-accent: #047857;
+  --discovery-on-accent: #ffffff;
+}
+.dark {
+  --discovery-accent: #6ee7b7;
+  --discovery-on-accent: #052e25;
+}
+.hero-kicker {
+  color: var(--discovery-accent);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.discovery-search {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.375rem 0.375rem 0.375rem 0.875rem;
+  border: 1px solid var(--color-zinc-700);
+  border-radius: 0.875rem;
+  background: var(--color-zinc-900);
+  color: var(--color-zinc-500);
+}
+.discovery-search:focus-within {
+  outline: 2px solid var(--discovery-accent);
+  outline-offset: 3px;
+}
+.button-primary {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  border-radius: 0.625rem;
+  background: var(--discovery-accent);
+  color: var(--discovery-on-accent);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.button-primary:hover { filter: brightness(0.93); }
+.topic-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  text-underline-offset: 4px;
+}
+.topic-link:hover { text-decoration: underline; }
+.refresh-notice summary { list-style: none; }
+.refresh-notice summary::-webkit-details-marker { display: none; }
+:where(a, button, summary, input, select):focus-visible {
+  outline: 2px solid var(--discovery-accent);
+  outline-offset: 3px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

@@ -49,6 +49,8 @@ if (!('WebSocket' in globalThis)) {
 import { createServerClient } from '@/lib/supabase/server'
 import { enrichItem } from '@/lib/ai/enrich'
 import { ProviderRequestError, activeModel } from '@/lib/ai/provider'
+import { acquirePipelineLease, releasePipelineLease, renewPipelineLease, PipelineLeaseLostError } from '@/lib/db/pipeline-lock'
+import { orderItemsForStablePagination } from '@/lib/db/pagination'
 import { parseBoundedPositiveInt } from '@/lib/http/limits'
 import {
   assertWithinDailyAiBudget,
@@ -70,6 +72,7 @@ const requestedLimit = parseBoundedPositiveInt(
 )
 const LIMIT = evalMode ? Math.min(requestedLimit, 10) : requestedLimit
 const DELAY_MS = 500
+const LEASE_TTL_MS = 10 * 60 * 1_000
 
 // --mock overrides AI_PROVIDER before any AI module reads it
 if (mockMode) process.env.AI_PROVIDER = 'mock'
@@ -86,12 +89,11 @@ function sleep(ms: number) {
 
 async function fetchPendingItems(limit: number): Promise<Item[]> {
   const supabase = createServerClient()
-  const { data, error } = await supabase
+  const query = supabase
     .from('items')
     .select('*')
     .or('status.eq.new,ai_summary.is.null')
-    .order('created_at', { ascending: true })
-    .limit(limit)
+  const { data, error } = await orderItemsForStablePagination(query).limit(limit)
 
   if (error) throw new Error(`Failed to fetch items: ${error.message}`)
   return (data ?? []) as Item[]
@@ -114,7 +116,7 @@ async function saveFailure(itemId: string, errorMessage: string): Promise<void> 
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 
-async function main() {
+async function runEnrichment(checkLease: () => Promise<void> = async () => {}) {
   if (evalMode && !dryRun) {
     throw new Error('--eval must be combined with --dry-run so model output cannot mutate the database')
   }
@@ -150,6 +152,7 @@ async function main() {
   let providerError: ProviderRequestError | null = null
 
   for (let i = 0; i < items.length; i++) {
+    await checkLease()
     const item = items[i]
     const prefix = `  [${i + 1}/${items.length}]`
     console.log(`${prefix} ${item.title.slice(0, 80)}`)
@@ -163,6 +166,9 @@ async function main() {
 
     try {
       const result = await enrichItem(item)
+      // A slow provider call may outlive the lease. Do not overwrite another
+      // worker's result if ownership expired while awaiting the response.
+      await checkLease()
 
       if (result.success) {
         const u = result.update
@@ -186,6 +192,7 @@ async function main() {
         failed++
       }
     } catch (err) {
+      if (err instanceof PipelineLeaseLostError) throw err
       if (err instanceof ProviderRequestError) {
         providerError = err
         break // stop batch — do not mark this item as failed
@@ -229,7 +236,36 @@ async function main() {
   }
   console.log()
 
-  if (providerError) process.exit(1)
+  if (providerError) throw providerError
+}
+
+async function main() {
+  // Read-only and eval dry-runs do not mutate rows, so they do not need to
+  // exclude the scheduled production pipeline. Every writing mode shares the
+  // same durable lease used by /api/refresh/daily.
+  if (dryRun) {
+    await runEnrichment()
+    return
+  }
+
+  const lease = await acquirePipelineLease('daily-refresh', LEASE_TTL_MS)
+  if (!lease) throw new Error('Daily refresh is already running; refusing concurrent enrichment')
+
+  try {
+    await runEnrichment(async () => {
+      try {
+        await renewPipelineLease(lease, LEASE_TTL_MS)
+      } catch {
+        // Ownership is unproven on network errors too; fail closed and leave
+        // the current item retryable instead of recording an item failure.
+        throw new PipelineLeaseLostError()
+      }
+    })
+  } finally {
+    await releasePipelineLease(lease).catch((error) => {
+      console.error('Failed to release enrichment lease:', error instanceof Error ? error.message : error)
+    })
+  }
 }
 
 main().catch((err) => {

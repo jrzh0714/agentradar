@@ -5,17 +5,18 @@ import Link from 'next/link'
 import { formatCount, formatRelativeDate } from '@/lib/utils'
 import { TranslatedText } from '@/components/TranslatedText'
 import { T } from '@/components/T'
+import { getDisplayTitle } from '@/lib/ingestion/title'
 import type { HomepageItem } from '@/lib/db/homepage'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 type SourceFilter = 'all' | 'github' | 'hackernews' | 'rss'
 
-const SOURCE_CONFIG: Record<SourceFilter, { label: string; pillCls: string }> = {
-  all:         { label: 'All',     pillCls: 'border-orange-800/40 bg-orange-950/30 text-orange-400' },
-  github:      { label: 'GitHub',  pillCls: 'border-emerald-800/40 bg-emerald-950/30 text-emerald-400' },
-  hackernews:  { label: 'HN',      pillCls: 'border-orange-800/40 bg-orange-950/30 text-orange-400' },
-  rss:         { label: 'Article', pillCls: 'border-sky-800/40 bg-sky-950/30 text-sky-400' },
+const SOURCE_CONFIG: Record<SourceFilter, { en: string; zh: string }> = {
+  all:         { en: 'All', zh: '全部' },
+  github:      { en: 'GitHub', zh: 'GitHub' },
+  hackernews:  { en: 'HN', zh: 'HN' },
+  rss:         { en: 'Articles', zh: '文章' },
 }
 
 // ── Props ─────────────────────────────────────────────────────────────────────
@@ -27,8 +28,6 @@ interface Props {
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export function TrendingSection({ items }: Props) {
-  // Memoised so its identity is stable — prevents cycleSource/effect from
-  // re-running on every render due to a new array reference each time.
   const availableSources = useMemo<SourceFilter[]>(() => {
     const srcs: SourceFilter[] = ['all']
     if (items.some((i) => i.source === 'github'))     srcs.push('github')
@@ -44,22 +43,11 @@ export function TrendingSection({ items }: Props) {
     ? items
     : items.filter((i) => i.source === selectedSource)
 
-  // ── Source cycling ─────────────────────────────────────────────────────────
-
-  function cycleSource(dir: 1 | -1) {
-    setActiveSource((cur) => {
-      const current = availableSources.includes(cur) ? cur : 'all'
-      const idx = availableSources.indexOf(current)
-      const next = (idx + dir + availableSources.length) % availableSources.length
-      return availableSources[next]
-    })
-  }
-
   // ── Render ─────────────────────────────────────────────────────────────────
 
   if (items.length === 0) {
     return (
-      <p className="font-mono text-xs text-zinc-600">
+      <p className="text-sm leading-relaxed text-zinc-500">
         <T k="home.no_trending" />
       </p>
     )
@@ -67,60 +55,36 @@ export function TrendingSection({ items }: Props) {
 
   return (
     <div>
-      {/* ── Source tabs + arrow controls ──────────────────────────────────── */}
-      <div className="mb-4 flex items-center gap-2">
-        {/* Left arrow */}
-        <button
-          type="button"
-          onClick={() => cycleSource(-1)}
-          aria-label="Previous source"
-          className="flex h-6 w-6 items-center justify-center rounded border border-zinc-800 text-zinc-500 transition-colors hover:border-zinc-600 hover:text-zinc-300 focus:outline-none focus:ring-1 focus:ring-zinc-600"
-        >
-          ←
-        </button>
-
-        {/* Source pills */}
-        <div className="flex items-center gap-1.5">
-          {availableSources.map((src) => {
-            const cfg = SOURCE_CONFIG[src]
-            const count = src === 'all' ? items.length : items.filter((i) => i.source === src).length
-            const isActive = selectedSource === src
-            return (
-              <button
-                key={src}
-                type="button"
-                onClick={() => setActiveSource(src)}
-                aria-current={isActive ? 'true' : undefined}
-                className={[
-                  'rounded-full border px-2.5 py-0.5 font-mono text-[11px] transition-colors focus:outline-none',
-                  isActive
-                    ? cfg.pillCls
-                    : 'border-zinc-800 text-zinc-600 hover:border-zinc-700 hover:text-zinc-400',
-                ].join(' ')}
-              >
-                {cfg.label}
-                <span className="ml-1 opacity-60">{count}</span>
-              </button>
-            )
-          })}
-        </div>
-
-        {/* Right arrow */}
-        <button
-          type="button"
-          onClick={() => cycleSource(1)}
-          aria-label="Next source"
-          className="flex h-6 w-6 items-center justify-center rounded border border-zinc-800 text-zinc-500 transition-colors hover:border-zinc-600 hover:text-zinc-300 focus:outline-none focus:ring-1 focus:ring-zinc-600"
-        >
-          →
-        </button>
-
+      {/* Source filters remain directly accessible on small screens. */}
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+        {availableSources.map((src) => {
+          const cfg = SOURCE_CONFIG[src]
+          const count = src === 'all' ? items.length : items.filter((i) => i.source === src).length
+          const isActive = selectedSource === src
+          return (
+            <button
+              key={src}
+              type="button"
+              onClick={() => setActiveSource(src)}
+              aria-pressed={isActive}
+              className={[
+                'inline-flex min-h-10 items-center rounded-lg border px-3 py-2 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500',
+                isActive
+                  ? 'border-zinc-600 bg-zinc-800 text-zinc-100'
+                  : 'border-zinc-800 text-zinc-500 hover:border-zinc-700 hover:text-zinc-300',
+              ].join(' ')}
+            >
+              <TranslatedText en={cfg.en} zh={cfg.zh} />
+              <span className="ml-1.5 tabular-nums text-zinc-500">{count}</span>
+            </button>
+          )
+        })}
       </div>
 
       {/* ── Item list ────────────────────────────────────────────────────── */}
-      <div className="divide-y divide-zinc-800/60 rounded-xl border border-orange-900/30 bg-orange-950/10">
+      <div className="overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900 divide-y divide-zinc-800">
         {filtered.length === 0 ? (
-          <p className="px-4 py-6 font-mono text-xs text-zinc-600">
+          <p className="px-4 py-6 text-sm text-zinc-500">
             <T k="home.no_trending" />
           </p>
         ) : (
@@ -139,11 +103,12 @@ function TrendingRow({ item, rank }: { item: HomepageItem; rank: number }) {
   const summary   = item.ai_summary?.trim() || item.description?.trim()
   const dateLabel = item.published_at ? formatRelativeDate(item.published_at) : null
   const hasUrl    = Boolean(item.url?.trim())
+  const title     = getDisplayTitle(item)
 
   return (
-    <div className="group flex items-start gap-4 px-4 py-3.5">
+    <div className="group flex min-w-0 items-start gap-3 px-4 py-4 transition-colors hover:bg-zinc-800/30 focus-within:bg-zinc-800/30 sm:gap-4">
       {/* Rank */}
-      <span className="mt-0.5 w-5 shrink-0 font-mono text-xs tabular-nums text-orange-600/70">
+      <span className="mt-0.5 w-5 shrink-0 font-mono text-xs tabular-nums text-zinc-500">
         {String(rank).padStart(2, '0')}
       </span>
 
@@ -152,18 +117,18 @@ function TrendingRow({ item, rank }: { item: HomepageItem; rank: number }) {
         <div className="mb-1 flex flex-wrap items-center gap-1.5">
           <SourcePill source={item.source} />
           {item.ai_category && (
-            <span className="rounded border border-zinc-700 px-1.5 py-0.5 font-mono text-[10px] text-zinc-500">
+            <span className="rounded border border-zinc-700 px-1.5 py-0.5 text-[11px] text-zinc-500">
               {item.ai_category}
             </span>
           )}
           {dateLabel && (
-            <span className="ml-auto font-mono text-[10px] text-zinc-600">{dateLabel}</span>
+            <span className="ml-auto text-[11px] text-zinc-500">{dateLabel}</span>
           )}
         </div>
 
-        <Link href={`/items/${item.id}`} className="group/t block">
-          <p className="line-clamp-1 font-mono text-sm font-semibold leading-snug text-zinc-100 transition-colors group-hover/t:text-zinc-200 dark:group-hover/t:text-white">
-            {item.title}
+        <Link href={`/items/${item.id}`} className="mt-2 block min-w-0 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-indigo-500">
+          <p className={`line-clamp-2 break-words [overflow-wrap:anywhere] text-sm font-semibold leading-snug text-zinc-100 ${item.source === 'github' ? 'font-mono' : ''}`}>
+            {title}
           </p>
         </Link>
 
@@ -172,27 +137,38 @@ function TrendingRow({ item, rank }: { item: HomepageItem; rank: number }) {
             as="p"
             en={summary}
             zh={item.ai_summary_zh ?? null}
-            className="mt-0.5 line-clamp-1 font-description text-xs leading-relaxed text-zinc-500"
+            className="mt-1.5 line-clamp-2 break-words font-description text-sm leading-relaxed text-zinc-400"
           />
         )}
 
-        {/* Signals + external link */}
-        <div className="mt-1 flex items-center gap-3 font-mono text-[10px] text-zinc-600">
+        {/* Signals */}
+        <div className="mt-2 flex flex-wrap items-center gap-3 text-xs tabular-nums text-zinc-500">
           {item.github_stars != null && (
             <span>★ {formatCount(item.github_stars)}</span>
           )}
           {item.hn_points != null && item.hn_points > 0 && (
             <span>▲ {item.hn_points} pts</span>
           )}
+        </div>
+        <div className="mt-1 flex flex-wrap items-center gap-x-3 text-xs">
+          <Link
+            href={`/items/${item.id}`}
+            className="inline-flex min-h-10 items-center rounded-md px-2 font-medium text-indigo-700 underline-offset-4 hover:bg-zinc-800 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 dark:text-indigo-300"
+          >
+            <TranslatedText en="Read brief" zh="阅读简报" />
+            <span className="sr-only">: {title}</span>
+            <span aria-hidden="true" className="ml-1">→</span>
+          </Link>
           {hasUrl && (
             <a
               href={item.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="ml-auto inline-flex h-6 w-6 shrink-0 items-center justify-center text-zinc-600 transition-colors hover:text-zinc-300"
-              aria-label="Open source"
+              className="inline-flex min-h-10 items-center rounded-md px-2 text-zinc-500 underline-offset-4 hover:bg-zinc-800 hover:text-zinc-300 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
             >
-              ↗
+              <TranslatedText en="Source" zh="来源" />
+              <span className="sr-only">: {title}</span>
+              <span aria-hidden="true" className="ml-1">↗</span>
             </a>
           )}
         </div>
@@ -203,17 +179,11 @@ function TrendingRow({ item, rank }: { item: HomepageItem; rank: number }) {
 
 // ── Source pill ───────────────────────────────────────────────────────────────
 
-const PILL_STYLES: Record<string, { label: string; cls: string }> = {
-  github:     { label: 'GitHub',  cls: 'border-emerald-800/50 bg-emerald-950/40 text-emerald-400' },
-  hackernews: { label: 'HN',      cls: 'border-orange-800/50 bg-orange-950/40 text-orange-400' },
-  rss:        { label: 'Article', cls: 'border-sky-800/50 bg-sky-950/40 text-sky-400' },
-}
-
 function SourcePill({ source }: { source: string }) {
-  const s = PILL_STYLES[source] ?? { label: source, cls: 'border-zinc-700 text-zinc-500' }
+  const label = SOURCE_CONFIG[source as SourceFilter] ?? { en: source, zh: source }
   return (
-    <span className={`rounded border px-1.5 py-0.5 font-mono text-[10px] ${s.cls}`}>
-      {s.label}
+    <span className="rounded border border-zinc-700 px-1.5 py-0.5 text-[11px] font-medium text-zinc-400">
+      <TranslatedText en={label.en} zh={label.zh} />
     </span>
   )
 }

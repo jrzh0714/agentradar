@@ -6,8 +6,8 @@ import { CATEGORIES, MATURITY_VALUES } from '@/lib/ai/schemas'
 export type Provider = 'anthropic' | 'openai' | 'mock'
 
 const SECRET_PATTERNS = [
-  /\bsk-(?:proj-)?[A-Za-z0-9_-]{8,}\b/g,
-  /\b(?:ghp_|github_pat_|sb_secret_)[A-Za-z0-9_-]{8,}\b/g,
+  /sk-(?:proj-)?[A-Za-z0-9_*-]{8,}/g,
+  /\b(?:gh[opusr]_|github_pat_|sb_secret_)[A-Za-z0-9_*-]{8,}/g,
 ]
 
 /** Remove credentials and control characters before errors reach logs or the database. */
@@ -32,6 +32,13 @@ export class ProviderBillingError extends ProviderRequestError {
   constructor(provider: string, detail: string) {
     super(provider, `billing/quota error — ${detail}`)
     this.name = 'ProviderBillingError'
+  }
+}
+
+export class ProviderAuthenticationError extends ProviderRequestError {
+  constructor(provider: string) {
+    super(provider, 'Authentication rejected (401). Replace the API key in this environment and redeploy production.')
+    this.name = 'ProviderAuthenticationError'
   }
 }
 
@@ -143,8 +150,8 @@ function getOpenAIClient(): OpenAI {
   if (!apiKey) throw new Error('Missing OPENAI_API_KEY')
   if (/\s/.test(apiKey)) throw new Error('OPENAI_API_KEY contains whitespace')
   const baseURL = process.env.OPENAI_BASE_URL
-  // Re-create client if base URL changed (e.g. switching between cloud and Ollama)
-  if (!_openai || baseURL !== _openaiBaseURL) {
+  // Respect rotated credentials even when the process keeps the cached client.
+  if (!_openai || baseURL !== _openaiBaseURL || _openai.apiKey !== apiKey) {
     _openaiBaseURL = baseURL
     _openai = new OpenAI({ apiKey, ...(baseURL ? { baseURL } : {}) })
   }
@@ -178,6 +185,7 @@ async function callOpenAI(options: AiCallOptions): Promise<string> {
     if (!content) throw new Error('Empty response from OpenAI')
     return content
   } catch (err) {
+    if (err instanceof OpenAI.AuthenticationError) throw new ProviderAuthenticationError('openai')
     const msg = err instanceof Error ? err.message : String(err)
     if (OPENAI_BILLING_PATTERNS.some((p) => msg.toLowerCase().includes(p.toLowerCase()))) {
       throw new ProviderBillingError('openai', msg)

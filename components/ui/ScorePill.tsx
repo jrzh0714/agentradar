@@ -26,7 +26,8 @@ export function ScorePill({ score, className }: ScorePillProps) {
   return (
     <span
       className={cn('inline-flex items-baseline gap-0.5 font-mono text-xs', className)}
-      title={`AI relevance: ${display}/10`}
+      title={`AI-estimated relevance: ${display}/10. This measures topic fit, not tested quality or production readiness.`}
+      aria-label={`AI-estimated relevance ${display} out of 10; not a quality rating`}
     >
       <span className={cn('font-semibold tabular-nums', color)}>{display}</span>
       <span className="text-zinc-500 dark:text-zinc-600">/10</span>

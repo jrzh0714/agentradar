@@ -1,8 +1,7 @@
 export const dynamic = 'force-dynamic'
 
-import Link from 'next/link'
 import type { Metadata } from 'next'
-import { ThemeToggle } from '@/components/ThemeToggle'
+import { SiteHeader } from '@/components/SiteHeader'
 import { getRecentPipelineRuns } from '@/lib/db/pipeline-runs'
 import { formatRelativeDate } from '@/lib/utils'
 import type { PipelineRun } from '@/lib/db/pipeline-runs'
@@ -72,23 +71,7 @@ export default async function StatusPage() {
     <div className="flex min-h-screen flex-col bg-zinc-950">
 
       {/* ── Header ─────────────────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-50 border-b border-zinc-800/60 bg-zinc-950/75 backdrop-blur-md">
-        <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="font-mono text-sm font-bold tracking-tight text-zinc-100 transition-colors hover:text-zinc-200 dark:hover:text-white">
-              AgentRadar
-            </Link>
-            <span className="rounded-full bg-zinc-800 px-2 py-0.5 font-mono text-xs text-zinc-500">
-              v1.0
-            </span>
-          </div>
-          <nav className="flex items-center gap-6 font-mono text-xs text-zinc-500">
-            <Link href="/" className="transition-colors hover:text-zinc-200">home</Link>
-            <Link href="/search" className="transition-colors hover:text-zinc-200">search</Link>
-            <ThemeToggle />
-          </nav>
-        </div>
-      </header>
+      <SiteHeader />
 
       <main className="mx-auto w-full max-w-4xl flex-1 px-6 py-10">
 
@@ -96,7 +79,7 @@ export default async function StatusPage() {
         <div className="mb-8">
           <div className="mb-2 flex items-center gap-3">
             <StatusDot success={overallHealthy} />
-            <h1 className="font-mono text-xl font-semibold text-zinc-100">
+            <h1 className="text-3xl font-semibold tracking-tight text-zinc-100">
               Pipeline Status
             </h1>
           </div>
@@ -113,7 +96,7 @@ export default async function StatusPage() {
             ok={lastRun?.success ?? null}
           />
           <StatCard
-            label="7-day success"
+            label="Last 7 runs"
             value={successRate !== null ? `${successRate}%` : '—'}
             ok={successRate !== null ? successRate >= 80 : null}
           />
@@ -186,7 +169,7 @@ export default async function StatusPage() {
       <footer className="border-t border-zinc-800 py-8">
         <div className="mx-auto max-w-4xl px-6">
           <span className="font-mono text-xs text-zinc-600">
-            AgentRadar — built with Next.js, Supabase, and Claude
+            AgentRadar — source discovery and AI-assisted summaries
           </span>
         </div>
       </footer>

@@ -32,26 +32,26 @@ export function ItemSection({
   const empty = emptyMessage ?? <T k="section.empty_default" />
 
   return (
-    <section className={cn('', className)}>
+    <section className={cn('min-w-0', className)}>
       {/* Section header */}
       <div className="mb-5 flex items-start justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <h2 className="font-mono text-base font-semibold text-zinc-100">{title}</h2>
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2">
+            <h2 className="text-lg font-semibold tracking-tight text-zinc-100">{title}</h2>
             {items.length > 0 && (
-              <span className="rounded-full bg-zinc-800 px-2 py-0.5 font-mono text-[10px] tabular-nums text-zinc-500">
+              <span className="rounded-full border border-zinc-800 px-2 py-0.5 text-xs tabular-nums text-zinc-500">
                 {items.length}
               </span>
             )}
           </div>
           {description && (
-            <p className="mt-1 text-sm text-zinc-500">{description}</p>
+            <p className="mt-1 max-w-2xl text-sm leading-relaxed text-zinc-500">{description}</p>
           )}
         </div>
         {viewAllHref && items.length > 0 && (
           <Link
             href={viewAllHref}
-            className="group mt-0.5 shrink-0 flex items-center gap-1 font-mono text-xs text-zinc-500 transition-colors hover:text-zinc-200"
+            className="group flex min-h-10 shrink-0 items-center gap-1 rounded-md px-2 text-sm font-medium text-zinc-500 transition-colors hover:bg-zinc-800 hover:text-zinc-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
           >
             <T k="common.see_all" />
             <span className="transition-transform group-hover:translate-x-0.5">→</span>
@@ -62,7 +62,7 @@ export function ItemSection({
       {/* Grid or empty state */}
       {items.length === 0 ? (
         <div className="flex min-h-[120px] items-center justify-center rounded-xl border border-dashed border-zinc-800 bg-zinc-900/50">
-          <p className="font-mono text-xs text-zinc-600">{empty}</p>
+          <p className="p-5 text-center text-sm leading-relaxed text-zinc-500">{empty}</p>
         </div>
       ) : (
         <div

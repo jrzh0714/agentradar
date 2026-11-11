@@ -14,11 +14,11 @@ import { formatRelativeDate, formatCount } from '@/lib/utils'
 import { getItemById, getRelatedItems } from '@/lib/db/items-detail'
 import { HnPrefixBadge } from '@/components/ui/HnPrefixBadge'
 import { getDisplayTitle, getTitlePrefix } from '@/lib/ingestion/title'
-import { ThemeToggle } from '@/components/ThemeToggle'
-import { LanguageToggle } from '@/components/LanguageToggle'
+import { SiteHeader } from '@/components/SiteHeader'
 import { TranslatedText } from '@/components/TranslatedText'
 import { T } from '@/components/T'
-import { SOCIAL_IMAGE } from '@/lib/site'
+import { CopyBriefLink } from '@/components/CopyBriefLink'
+import { SITE_URL, SOCIAL_IMAGE } from '@/lib/site'
 import type { Metadata } from 'next'
 
 // ── Metadata ───────────────────────────────────────────────────────────────────
@@ -78,28 +78,7 @@ export default async function ItemDetailPage({
     <div className="flex min-h-screen flex-col bg-zinc-950">
 
       {/* ── Header ─────────────────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-50 border-b border-zinc-800/60 bg-zinc-950/75 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="font-mono text-sm font-bold tracking-tight text-zinc-100 transition-colors hover:text-zinc-200 dark:hover:text-white">
-              AgentRadar
-            </Link>
-            <span className="rounded-full bg-zinc-800 px-2 py-0.5 font-mono text-xs text-zinc-500">
-              <T k="common.version" />
-            </span>
-          </div>
-          <nav className="flex items-center gap-3 sm:gap-6 font-mono text-xs text-zinc-500">
-            <Link href="/search" className="transition-colors hover:text-zinc-200">
-              <T k="nav.search" />
-            </Link>
-            <Link href="/digest" className="hidden sm:inline transition-colors hover:text-zinc-200">
-              <T k="nav.digest" />
-            </Link>
-            <LanguageToggle />
-            <ThemeToggle />
-          </nav>
-        </div>
-      </header>
+      <SiteHeader active="explore" />
 
       <main className="mx-auto w-full max-w-4xl flex-1 px-6 py-10">
 
@@ -129,7 +108,7 @@ export default async function ItemDetailPage({
           </div>
 
           {/* Title */}
-          <h1 className="mb-4 font-mono text-2xl font-bold leading-snug tracking-tight text-zinc-100 sm:text-3xl">
+          <h1 className={`mb-4 break-words text-2xl font-semibold leading-snug tracking-tight text-zinc-100 [overflow-wrap:anywhere] sm:text-3xl ${item.source === 'github' ? 'font-mono' : ''}`}>
             {displayTitle}
           </h1>
 
@@ -139,7 +118,12 @@ export default async function ItemDetailPage({
               <span><T k="common.by" /> <span className="text-zinc-400">{item.author}</span></span>
             )}
             {dateLabel && (
-              <span><T k="common.published" /> <span className="text-zinc-400">{dateLabel}</span></span>
+              <span>
+                <TranslatedText
+                  en={item.source === 'github' ? 'Repository activity' : 'Published'}
+                  zh={item.source === 'github' ? '仓库活动' : '发布于'}
+                /> <span className="text-zinc-400">{dateLabel}</span>
+              </span>
             )}
             {item.source === 'github' && item.github_stars != null && (
               <span className="flex items-center gap-1">
@@ -168,18 +152,20 @@ export default async function ItemDetailPage({
             )}
           </div>
 
-          {/* External link button */}
-          {hasUrl && (
-            <a
-              href={item.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 font-mono text-xs text-zinc-300 transition-colors hover:border-zinc-500 hover:text-zinc-100 dark:hover:text-white"
-            >
-              <T k="common.view_source" />
-              <span>↗</span>
-            </a>
-          )}
+          <div className="flex flex-wrap items-start gap-3">
+            {hasUrl && (
+              <a
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-10 items-center gap-1.5 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 font-mono text-xs text-zinc-300 transition-colors hover:border-zinc-500 hover:text-zinc-100 dark:hover:text-white"
+              >
+                <T k="common.view_source" />
+                <span aria-hidden="true">↗</span>
+              </a>
+            )}
+            <CopyBriefLink url={`${SITE_URL}/items/${item.id}`} />
+          </div>
         </section>
 
         <hr className="mb-10 border-zinc-800" />
@@ -189,6 +175,15 @@ export default async function ItemDetailPage({
           <h2 className="font-mono text-xs font-semibold uppercase tracking-widest text-zinc-600">
             <T k="item.ai_briefing" />
           </h2>
+
+          <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 px-5 py-4">
+            <TranslatedText
+              as="p"
+              en="AI-generated from indexed source material. This is not a hands-on review; capabilities and maturity estimates have not been independently verified here. Check the original source before adopting a tool."
+              zh="本简报由 AI 根据已收录的来源生成，并非实测评测；此处的功能描述和成熟度评估未经独立验证。采用工具前，请核对原始来源。"
+              className="text-sm leading-relaxed text-zinc-500"
+            />
+          </div>
 
           {/* Summary */}
           {item.ai_summary?.trim() ? (
@@ -232,6 +227,25 @@ export default async function ItemDetailPage({
           )}
         </section>
 
+        <section className="mb-10 rounded-xl border border-zinc-800 p-6">
+          <h2 className="mb-3 font-mono text-sm font-semibold text-zinc-200">
+            <TranslatedText
+              en={item.source === 'github' ? 'Before you try it' : 'Before you act on this finding'}
+              zh={item.source === 'github' ? '试用前先检查' : '采纳本条信息前先核对'}
+            />
+          </h2>
+          <TranslatedText
+            as="p"
+            en={item.source === 'github'
+              ? 'Use the source documentation to check setup requirements, license or usage terms, and data access. Then evaluate a small workflow representative of your own task. A high relevance score does not establish reliability, security, or production readiness.'
+              : 'Read the original source for its publication date, supporting evidence, evaluation scope, and limitations. Distinguish an announced capability from an independently measured result, and check whether it applies to your own task.'}
+            zh={item.source === 'github'
+              ? '请通过来源文档核对安装要求、许可或使用条款以及数据访问方式，再用一个符合自身需求的小型工作流进行评估。高相关度分数并不代表可靠性、安全性或生产可用性。'
+              : '请阅读原始来源，核对发布日期、支持证据、评估范围及局限性。区分发布者宣称的能力与独立测量的结果，并判断其是否适用于您的实际需求。'}
+            className="text-sm leading-relaxed text-zinc-400"
+          />
+        </section>
+
         {/* ── Classification ─────────────────────────────────────────────────── */}
         <section className="mb-10 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
           <h2 className="mb-5 font-mono text-xs font-semibold uppercase tracking-widest text-zinc-600">
@@ -271,7 +285,11 @@ export default async function ItemDetailPage({
 
             {/* Dates */}
             {dateLabel && (
-              <Row label={<T k="item.published" />}>{dateLabel}</Row>
+              <Row label={
+                item.source === 'github'
+                  ? <TranslatedText en="Repository activity" zh="仓库活动" />
+                  : <T k="item.published" />
+              }>{dateLabel}</Row>
             )}
             {createdLabel && (
               <Row label={<T k="item.indexed" />}>{createdLabel}</Row>

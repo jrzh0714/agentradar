@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: 'AgentRadar — AI tool discovery for developers',
   description:
-    'Track emerging GenAI tools, agent frameworks, GitHub projects, and developer workflows. AI-curated and ranked daily.',
+    'Explore AI tools, agent frameworks, and developer workflows with source links and AI-assisted briefs.',
   alternates: {
     canonical: '/',
     types: { 'application/rss+xml': '/feed.xml' },

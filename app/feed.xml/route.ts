@@ -43,9 +43,9 @@ export async function GET(): Promise<Response> {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
-    <title>AgentRadar Weekly Digest</title>
+    <title>AgentRadar — Past Seven Days</title>
     <link>${SITE_URL}/digest</link>
-    <description>A ranked briefing of emerging agent frameworks, model updates, research, MCP tools, and developer workflows.</description>
+    <description>Algorithmically selected tools and articles with source publication or repository activity in the past seven days. Summaries are AI-generated, not hands-on evaluations.</description>
     <language>en</language>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
 ${items}

@@ -7,6 +7,7 @@
  */
 import { createServerClient } from '@/lib/supabase/server'
 import type { Item } from '@/lib/db/types'
+import { recentWindow } from '@/lib/product/content-policy'
 
 // ── Shared item shape for all homepage queries ───────────────────────────────
 
@@ -91,7 +92,7 @@ export async function getTopPicks(): Promise<HomepageItem[]> {
 // Fetches 16 so dedup against Top Picks still leaves ≥8 unique items.
 // (Low real overlap since Top Picks is GitHub-heavy; headroom is precautionary.)
 
-const NEWS_CATEGORIES = [
+export const NEWS_CATEGORIES = [
   'Research',
   'Product Updates',
   'AI Infrastructure',
@@ -137,7 +138,7 @@ export async function getLatestHighSignal(): Promise<HomepageItem[]> {
 // Fetches 28 (12 Top Picks + up to 8 AI News + 8 buffer = 28 to guarantee 8 unique).
 // Deduplication against all prior sections happens in app/page.tsx.
 
-const AGENT_CATEGORIES = [
+export const AGENT_CATEGORIES = [
   'AI Agents',
   'MCP / Tool Use',
   'Code Agents',
@@ -158,7 +159,7 @@ export async function getAgentTools(limit = 28): Promise<HomepageItem[]> {
 }
 
 // ── Trending ─────────────────────────────────────────────────────────────────
-// Primary: items explicitly flagged trending=true (score rose ≥ threshold since snapshot).
+// Recommendations only: score changes are not evidence of external momentum.
 // Fallback: when fewer than MIN_TRENDING are flagged, query each source separately
 // so GitHub's higher absolute scores can't crowd out HN/RSS items. Each source
 // contributes its best recent items; results are merged and sorted by ranking_score.
@@ -276,9 +277,7 @@ const HIGHLIGHT_CATEGORIES = [
 ]
 
 export async function getWeeklyHighlights(): Promise<HomepageItem[]> {
-  const since = new Date()
-  since.setDate(since.getDate() - 7)
-  const sinceStr = since.toISOString()
+  const window = recentWindow()
 
   return safeQuery<HomepageItem>((sb) =>
     sb
@@ -287,7 +286,8 @@ export async function getWeeklyHighlights(): Promise<HomepageItem[]> {
       .eq('status', 'enriched')
       .in('ai_category', HIGHLIGHT_CATEGORIES)
       .gte('ai_relevance_score', 0.6)
-      .gte('published_at', sinceStr)
+      .gte('published_at', window.since)
+      .lte('published_at', window.until)
       .or(`github_stars.is.null,github_stars.lt.${MAX_EMERGING_STARS}`)
       .order('ranking_score', { ascending: false })
       .limit(8),
