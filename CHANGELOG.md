@@ -8,6 +8,7 @@ Notable changes are documented here using
 ### Changed
 
 - Refresh the interface with shared navigation, homepage search and topic shortcuts, readable card typography, and larger mobile controls in both color themes.
+- Describe successful refresh batches without claiming the entire backlog is processed, and prevent standalone translation from overlapping scheduled refreshes.
 - Recreate cached OpenAI clients after key rotation, classify rejected authentication, and redact masked credentials from diagnostics.
 - Add a read-only `check:connections` command for database and model-access checks without completion tokens.
 - Base public freshness on completed refresh runs and show delayed or unconfirmed states.

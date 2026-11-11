@@ -117,7 +117,7 @@ RSS product/pricing announcements (Vercel, GitHub, etc.) default to 2–4 unless
 
 ## Concurrent workers
 
-Writing CLI runs acquire the same `daily-refresh` lease as the scheduled refresh
+Writing enrichment and translation CLI runs acquire the same `daily-refresh` lease as the scheduled refresh
 before selecting items. A second worker refuses to start while that lease is
 active. The CLI renews the lease before each AI call and before saving its
 result; expired ownership or an unavailable lease check stops the batch and
